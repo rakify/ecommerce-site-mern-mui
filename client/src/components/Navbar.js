@@ -12,6 +12,7 @@ import {
   Badge,
   InputAdornment,
   InputBase,
+  Link,
   Menu,
   MenuItem,
   styled,
@@ -20,6 +21,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -64,13 +66,16 @@ const Search = styled("div")(({ theme }) => ({
 
 const Icons = styled(Box)(({ theme }) => ({
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "center",
   alignItems: "center",
-  gap: "20px",
+  gap: 10,
 }));
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const user = useSelector((state) => state.user.currentUser);
+  const cart = useSelector((state) => state.cart);
+
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#659dbd" }}>
       <StyledToolbar>
@@ -78,7 +83,9 @@ const Navbar = () => {
           variant="h4"
           sx={{ display: { xs: "none", sm: "block", color: "black" } }}
         >
-          Better Buys
+          <Link href="/" underline="none" color="white">
+            Better Buys
+          </Link>
         </Typography>
         <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
         <Search>
@@ -88,27 +95,35 @@ const Navbar = () => {
                 <SearchRounded />
               </InputAdornment>
             }
-            placeholder="Search for products"
+            placeholder="Search for products..."
           ></InputBase>
         </Search>
         <Icons>
-          <Badge badgeContent={4} color="error">
-            <ShoppingCart />
-          </Badge>
-          <StyledBadge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            variant="dot"
-          >
-            <Avatar
-              alt="pic"
-              sx={{ width: 30, height: 30 }}
-              src={
-                "https://cdn130.picsart.com/293313240032201.jpg?to=crop&type=webp&r=675x1000&q=95"
-              }
-              onClick={(e) => setShowMenu(true)}
-            ></Avatar>
-          </StyledBadge>
+          {user ? (
+            <StyledBadge
+              overlap="circular"
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              variant="dot"
+            >
+              <Avatar
+                alt="pic"
+                sx={{ width: 30, height: 30 }}
+                src={user.img}
+                onClick={(e) => setShowMenu(true)}
+              ></Avatar>
+            </StyledBadge>
+          ) : (
+            <Typography sx={{ display: "flex", gap: 1 }}>
+              <Link href="/login" underline="none" color="inherit">
+                Login
+              </Link>
+              |
+              <Link href="/register" underline="none" color="inherit">
+                Register
+              </Link>
+            </Typography>
+          )}
+
           <Menu
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
@@ -118,6 +133,7 @@ const Navbar = () => {
               vertical: "top",
               horizontal: "right",
             }}
+            sx={{ marginTop: 4 }}
           >
             <MenuItem sx={{ gap: 1 }}>
               <AccountCircle />
@@ -132,6 +148,14 @@ const Navbar = () => {
               Wishlist
             </MenuItem>
           </Menu>
+          <Link href="/cart" underline="none" color="inherit">
+            <Badge
+              badgeContent={cart.products ? cart.products.length : 0}
+              color="error"
+            >
+              <ShoppingCart sx={{ width: 30, height: 30 }} />
+            </Badge>
+          </Link>
         </Icons>
       </StyledToolbar>
     </AppBar>

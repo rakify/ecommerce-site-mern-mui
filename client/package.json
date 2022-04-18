@@ -5,14 +5,21 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@firebase/app": "^0.7.21",
+    "@firebase/storage": "^0.9.5",
     "@mui/icons-material": "^5.6.1",
     "@mui/material": "^5.6.1",
+    "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.26.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-redux": "^7.2.8",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "redux-persist": "^6.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
