@@ -33,8 +33,8 @@ const Checkout = () => {
     street: 1 && user.shippingInfo.street,
     deliveryTimeSlot: "",
   });
-  const [saveSuccess, setSaveSuccess] = useState();
-  const [submitSuccess, setSubmitSuccess] = useState();
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));

@@ -4,7 +4,7 @@ import Product from "./pages/Product";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-// import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 // import Announcement from "./components/Announcement";
 // import Footer from "./components/Footer";
@@ -16,6 +16,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Orders from "./pages/Orders";
 
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -28,9 +29,8 @@ const App = () => {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={!user ? <Navigate to="/" /> : <Checkout />} />
-        {/* <Route path="/profile">
-          {!user ? <Navigate to="/" /> : <Profile />}
-        </Route> */}
+        <Route path="/orders" element={!user ? <Navigate to="/" /> : <Orders />} />
+        <Route path="/profile"  element={!user ? <Navigate to="/" /> : <Profile />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route
           path="/register"

@@ -1,4 +1,4 @@
-import { FeedSharp, MenuSharp } from "@mui/icons-material";
+import { Category, FeedSharp, MenuSharp } from "@mui/icons-material";
 import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -23,9 +23,16 @@ const Home = () => {
     <>
       <Box>
         <Stack direction="row" justifyContent="space-between">
-          {showCategory && <Sidebar />}
           <Box flex={7} p={2}>
-            <MenuSharp onClick={() => setShowCategory(!showCategory)} />
+            <Typography
+              variant="h6"
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              <Category sx={{ paddingRight: 1 }} />
+              Categories
+            </Typography>
+            <Sidebar />
+
             <Typography
               variant="h6"
               sx={{ display: "flex", alignItems: "center" }}

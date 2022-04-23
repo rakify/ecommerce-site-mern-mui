@@ -18,7 +18,7 @@ import {
   Tab,
   Box,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 const Cart = () => {
   const [value, setValue] = useState(0);
 
@@ -87,17 +87,21 @@ const Cart = () => {
             <Stack direction="row" justifyContent="space-between">
               <Stack flex="3" direction="column">
                 {cart.products.map((product) => (
-                  <>
+                  <React.Fragment key={product._id}>
                     <Stack
                       direction="row"
                       sx={{ borderBottom: "1px solid gray", gap: 5 }}
                     >
                       <Avatar
                         src={product.img}
-                        sx={{ width: 200, height: 150, borderRadius: 0,
+                        sx={{
+                          width: 200,
+                          height: 150,
+                          borderRadius: 0,
                           transition: "transform .5s",
                           "&:hover": { transform: "scale(1.2)" },
-                          margin: 5, }}
+                          margin: 5,
+                        }}
                       />
 
                       <Stack
@@ -157,7 +161,7 @@ const Cart = () => {
                         </Typography>
                       </Stack>
                     </Stack>
-                  </>
+                  </React.Fragment>
                 ))}
               </Stack>
               <Stack flex="2" alignItems="center">

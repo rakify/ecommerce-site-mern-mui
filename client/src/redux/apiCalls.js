@@ -115,3 +115,13 @@ export const addOrder = async (order) => {
     return err;
   }
 };
+
+export const getOrders = async (id) => {
+  try {
+    const res = await axios.get(`/orders/find/${id}`);
+    console.log(res.data)
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};

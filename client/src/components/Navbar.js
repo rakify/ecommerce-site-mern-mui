@@ -79,10 +79,7 @@ const Navbar = () => {
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#659dbd" }}>
       <StyledToolbar>
-        <Typography
-          variant="h4"
-          sx={{ display: { xs: "none", sm: "block", color: "black" } }}
-        >
+        <Typography variant="h4" sx={{ display: { xs: "none", sm: "block" } }}>
           <Link href="/" underline="none" color="white">
             Better Buys
           </Link>
@@ -137,11 +134,15 @@ const Navbar = () => {
           >
             <MenuItem sx={{ gap: 1 }}>
               <AccountCircle />
-              Profile
+              <Link href="/profile/" underline="none" color="inherit">
+                Profile
+              </Link>
             </MenuItem>
             <MenuItem sx={{ gap: 1 }}>
               <Inventory />
-              Orders
+              <Link href="/orders/" underline="none" color="inherit">
+                Orders
+              </Link>
             </MenuItem>
             <MenuItem sx={{ gap: 1 }}>
               <Favorite />

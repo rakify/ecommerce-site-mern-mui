@@ -23,7 +23,6 @@ export default function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(username,password)
     username.length >= 3 &&
       password.length >= 4 &&
       login(dispatch, { username, password });

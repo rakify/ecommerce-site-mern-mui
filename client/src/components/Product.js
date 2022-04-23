@@ -4,7 +4,6 @@ import {
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import {
-  Box,
   Button,
   ButtonBase,
   Grid,
@@ -54,14 +53,14 @@ const Product = ({ item }) => {
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
-      <Grid container spacing={2} sx={{border:0}}>
-        <Grid item>
+      <Grid container spacing={2} sx={{ border: 0 }}>
+        <Grid item sx={{ "&:hover": { backgroundColor: "#F0FFC0" } }}>
           <Link to={`/product/${item._id}`}>
             <ButtonBase
               sx={{
                 width: 228,
                 height: 128,
-                transition: "transform 2s",
+                transition: "transform 1s",
                 "&:hover": { transform: "scale(1.2)" },
                 margin: 5,
               }}
@@ -77,30 +76,30 @@ const Product = ({ item }) => {
                 {item.title}
               </Typography>
               <Typography variant="subtitle1" component="div">
-              ৳{item.price}
-            </Typography>
+                ৳{item.price}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Stock: {item.inStock ? "Available" : "Stock Out"}
               </Typography>
             </Grid>
           </Grid>
-          <Stack direction="column" alignItems='center'>
-          <Stack
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              cursor: "pointer",
-              gap: 1,
-            }}
-          >
-            <Button onClick={handleClick} variant="outlined">
-              <ShoppingCartOutlined />
-            </Button>
-            <Button variant="outlined">
-              <FavoriteBorderOutlined />
-            </Button>
-          </Stack>
+          <Stack direction="column" alignItems="center">
+            <Stack
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                cursor: "pointer",
+                gap: 1,
+              }}
+            >
+              <Button onClick={handleClick} variant="outlined">
+                <ShoppingCartOutlined />
+              </Button>
+              <Button variant="outlined">
+                <FavoriteBorderOutlined />
+              </Button>
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
