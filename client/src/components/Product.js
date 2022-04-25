@@ -1,6 +1,5 @@
 import {
   FavoriteBorderOutlined,
-  SearchOutlined,
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import {
@@ -8,6 +7,8 @@ import {
   ButtonBase,
   Grid,
   Paper,
+  Slide,
+  Snackbar,
   Stack,
   styled,
   Typography,
@@ -15,8 +16,10 @@ import {
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { addCart } from "../redux/apiCalls";
+import { addToCart, addToWishlist } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
+import { Box } from "@mui/system";
+import { useState } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -25,10 +28,24 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
+function SlideTransition(props) {
+  return <Slide {...props} direction="left" />;
+}
+
 const Product = ({ item }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
+  const [addedToCartMsg, setAddedToCartMsg] = useState(false);
+  const [addedToWishlistMsg, setAddedToWishlistMsg] = useState(false);
 
   const productInfo = {
     productId: item._id,
@@ -38,72 +55,89 @@ const Product = ({ item }) => {
     price: item.price,
   };
 
-  const handleClick = () => {
+  const handleAddToCart = () => {
     !user && navigate("/login");
-    user && addCart(user._id, productInfo, dispatch);
+    user &&
+      addToCart(user._id, productInfo, dispatch).then(() => {
+        setAddedToCartMsg(true);
+      });
+  };
+
+  const handleAddToWishlist = () => {
+    !user && navigate("/login");
+    user &&
+      addToWishlist(user._id, productInfo).then(() => {
+        setAddedToWishlistMsg(true);
+      });
   };
 
   return (
-    <Paper
-      sx={{
-        p: 2,
-        width: 250,
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-      }}
-    >
-      <Grid container spacing={2} sx={{ border: 0 }}>
-        <Grid item sx={{ "&:hover": { backgroundColor: "#F0FFC0" } }}>
-          <Link to={`/product/${item._id}`}>
-            <ButtonBase
-              sx={{
-                width: 228,
-                height: 128,
-                transition: "transform 1s",
-                "&:hover": { transform: "scale(1.2)" },
-                margin: 5,
-              }}
-            >
-              <Img alt="complex" src={item.img} />
-            </ButtonBase>
-          </Link>
-        </Grid>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {item.title}
-              </Typography>
-              <Typography variant="subtitle1" component="div">
-                ৳{item.price}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Stock: {item.inStock ? "Available" : "Stock Out"}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Stack direction="column" alignItems="center">
-            <Stack
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                cursor: "pointer",
-                gap: 1,
-              }}
-            >
-              <Button onClick={handleClick} variant="outlined">
-                <ShoppingCartOutlined />
-              </Button>
-              <Button variant="outlined">
-                <FavoriteBorderOutlined />
-              </Button>
+    <Box sx={{ flexGrow: 1 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={addedToCartMsg}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={2000}
+        onClose={() => setAddedToCartMsg(false)}
+        message="Added To Cart"
+      />
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={addedToWishlistMsg}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={2000}
+        onClose={() => setAddedToWishlistMsg(false)}
+        message="Added To Wishlist"
+      />
+
+      <Grid container>
+        <Grid item xs={12} sm={12}>
+          <Item>
+            <Link to={`/product/${item._id}`}>
+              <ButtonBase
+                sx={{
+                  width: 128,
+                  height: 228,
+                  transition: "transform 1s",
+                  "&:hover": { transform: "scale(1.2)" },
+                  margin: 5,
+                }}
+              >
+                <Img alt="complex" src={item.img} />
+              </ButtonBase>
+            </Link>
+            <Typography gutterBottom variant="subtitle1" component="div">
+              {item.title}
+            </Typography>
+            <Typography variant="subtitle1" component="div">
+              ৳{item.price}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Stock: {item.inStock ? "Available" : "Stock Out"}
+            </Typography>
+            <Stack direction="column" alignItems="center">
+              <Stack
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  cursor: "pointer",
+                  gap: 1,
+                }}
+              >
+                <Button onClick={handleAddToCart} variant="outlined">
+                  <ShoppingCartOutlined />
+                </Button>
+                <Button onClick={handleAddToWishlist} variant="outlined">
+                  <FavoriteBorderOutlined />
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
+          </Item>
         </Grid>
       </Grid>
-    </Paper>
+    </Box>
   );
 };
 

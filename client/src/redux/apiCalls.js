@@ -18,9 +18,9 @@ import {
   getCartStart,
   getCartSuccess,
   getCartFailure,
-  addCartStart,
-  addCartSuccess,
-  addCartFailure,
+  addToCartStart,
+  addToCartSuccess,
+  addToCartFailure,
   deleteCartStart,
   deleteCartSuccess,
   deleteCartFailure,
@@ -30,6 +30,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true; //so its can set automatically the cookie i want
 axios.defaults.baseURL = "http://localhost:4000/api";
 
+//User
 export const logout = async () => {
   await axios.get("/auth/logout");
   window.localStorage.clear();
@@ -67,6 +68,8 @@ export const getUser = async (id, dispatch) => {
     dispatch(getUserFailure());
   }
 };
+
+//Products
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {
@@ -77,23 +80,25 @@ export const getProducts = async (dispatch) => {
   }
 };
 
+//Cart
 export const getCartProducts = async (id, dispatch) => {
   dispatch(getCartStart());
   try {
     const res = await axios.get(`/carts/find/${id}`);
     dispatch(getCartSuccess(res.data));
   } catch (err) {
+    console.log(err)
     dispatch(getCartFailure());
   }
 };
 
-export const addCart = async (id, product, dispatch) => {
-  dispatch(addCartStart());
+export const addToCart = async (id, product, dispatch) => {
+  dispatch(addToCartStart());
   try {
     const res = await axios.post(`/carts/${id}`, product);
-    dispatch(addCartSuccess(res.data));
+    dispatch(addToCartSuccess(res.data));
   } catch (err) {
-    dispatch(addCartFailure());
+    dispatch(addToCartFailure());
   }
 };
 
@@ -107,6 +112,35 @@ export const deleteCart = async (id, dispatch) => {
   }
 };
 
+//Wishlist
+export const getWishlistProducts = async (id) => {
+  try {
+    const res = await axios.get(`/wishlist/find/${id}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const addToWishlist = async (id, product) => {
+  try {
+    const res = await axios.post(`/wishlist/${id}`, product);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteWishlist = async (id) => {
+  try {
+    const res = await axios.delete(`/wishlist/${id}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+//Order
 export const addOrder = async (order) => {
   try {
     const res = await axios.post("/orders", order);
@@ -119,7 +153,6 @@ export const addOrder = async (order) => {
 export const getOrders = async (id) => {
   try {
     const res = await axios.get(`/orders/find/${id}`);
-    console.log(res.data)
     return res.data;
   } catch (err) {
     return err;

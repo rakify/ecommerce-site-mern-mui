@@ -24,16 +24,16 @@ const cartSlice = createSlice({
       state.error = true;
     },
     //Cart
-    addCartStart: (state) => {
+    addToCartStart: (state) => {
       state.isFetching = true;
       state.error = false;
     },
-    addCartSuccess: (state, action) => {
+    addToCartSuccess: (state, action) => {
       state.isFetching = false;
       state.products = [...action.payload.products];
       state.total = action.payload.total;
     },
-    addCartFailure: (state) => {
+    addToCartFailure: (state) => {
       state.isFetching = false;
       state.error = true;
     },
@@ -59,9 +59,9 @@ export const {
   getCartStart,
   getCartSuccess,
   getCartFailure,
-  addCartStart,
-  addCartSuccess,
-  addCartFailure,
+  addToCartStart,
+  addToCartSuccess,
+  addToCartFailure,
   deleteCartStart,
   deleteCartSuccess,
   deleteCartFailure,

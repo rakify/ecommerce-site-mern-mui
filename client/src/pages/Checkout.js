@@ -1,3 +1,4 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -6,7 +7,6 @@ import {
   Typography,
   Link,
   TextField,
-  Card,
   FormControlLabel,
   RadioGroup,
   FormLabel,
@@ -15,6 +15,9 @@ import {
   Snackbar,
   Alert,
   Modal,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import { useState } from "react";
 import { addOrder, updateUser } from "../redux/apiCalls";
@@ -141,12 +144,18 @@ const Checkout = () => {
             direction="row"
             justifyContent="space-between"
             alignItems="center"
-            sx={{ margin: 2, flexDirection: { xs: "column", sm: "row" } }}
+            sx={{ display: { xs: "none", sm: "flex" } }}
           >
-            <Link href="/" underline="none" color="inherit">
-              <Button variant="outlined">Forgot Something to Add?</Button>
-            </Link>
-            <Button variant="outlined" disabled={submitSuccess}>
+            <Button variant="outlined">
+              <Link href="/" underline="none" color="inherit">
+                Forgot Something to Add?
+              </Link>
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleSubmit}
+              disabled={submitSuccess}
+            >
               {submitSuccess ? "Order Placed" : "PLACE ORDER"}
             </Button>
           </Stack>
@@ -159,7 +168,6 @@ const Checkout = () => {
               margin: { xs: 10, sm: 5 },
             }}
           >
-            
             {/* Shipping Address */}
             <Stack sx={{ flex: 1 }}>
               <Typography variant="h6">Shipping Address</Typography>
@@ -287,31 +295,41 @@ const Checkout = () => {
                 </FormControl>
               </Box>
             </Stack>
+
             {/* Cart */}
-            <Stack sx={{ flex: 2, alignItems: "center"}}>
+            <Stack sx={{ flex: 2, alignItems: "center" }}>
               <Typography variant="h6">Your Cart</Typography>
-              {cart.products.map((product) => (
-                <Stack key={product._id}>
-                  <Card sx={{paddingLeft:2}}>
-                    <Avatar
-                      src={product.img}
-                      sx={{
-                        height: 200,
-                        width: 200,
-                        borderRadius: 0,
-                        transition: "transform .5s",
-                        "&:hover": { transform: "scale(1.2)" },
-                        margin: 5,
-                      }}
-                    />
-                    <Typography>Product: {product.title}</Typography>
-                    <Typography>Quantity: {product.quantity} </Typography>
-                    <Typography>
-                      Price: ৳ {product.price * product.quantity}
-                    </Typography>
-                  </Card>
-                </Stack>
-              ))}
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Products</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {cart.products.map((product) => (
+                    <Stack key={product._id}>
+                      <Avatar
+                        src={product.img}
+                        sx={{
+                          height: 200,
+                          width: 200,
+                          borderRadius: 0,
+                          transition: "transform .5s",
+                          "&:hover": { transform: "scale(1.2)" },
+                          margin: 5,
+                        }}
+                      />
+                      <Typography>Product: {product.title}</Typography>
+                      <Typography>Quantity: {product.quantity} </Typography>
+                      <Typography>
+                        Price: ৳ {product.price * product.quantity}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
             </Stack>
             {/* Summary */}
             <Stack sx={{ flex: 1 }} alignItems="center">
@@ -322,7 +340,9 @@ const Checkout = () => {
 
               <Typography>Shipping Discount: ৳ -50</Typography>
               <Typography>Total: ৳ {cart.total}</Typography>
-              <Typography variant="h6" sx={{mt:2}}>Payment Method</Typography>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Payment Method
+              </Typography>
               <RadioGroup
                 row
                 aria-labelledby="demo-form-control-label-placement"

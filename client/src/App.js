@@ -6,8 +6,6 @@ import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
-// import Announcement from "./components/Announcement";
-// import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
 import {
   BrowserRouter as Router,
@@ -17,6 +15,7 @@ import {
 } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Orders from "./pages/Orders";
+import Wishlist from "./pages/Wishlist";
 
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -28,6 +27,7 @@ const App = () => {
         <Route path="/products/:category" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={!user ? <Navigate to="/" /> : <Wishlist />} />
         <Route path="/checkout" element={!user ? <Navigate to="/" /> : <Checkout />} />
         <Route path="/orders" element={!user ? <Navigate to="/" /> : <Orders />} />
         <Route path="/profile"  element={!user ? <Navigate to="/" /> : <Profile />} />

@@ -29,7 +29,6 @@ export default function Profile() {
     phoneNumber: user.phoneNumber,
   });
   const [file, setFile] = useState(null);
-  const [showMsg, setShowMsg] = useState(false);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -93,15 +92,20 @@ export default function Profile() {
 
   return (
     <>
-      <Typography variant="h6">My Profile</Typography>
+      <Typography variant="h6">Your Profile</Typography>
       <Container>
-        <Stack direction="row" alignItems="center">
+        <Stack
+          direction="row"
+          alignItems="center"
+          sx={{ flexDirection: { xs: "column", sm: "row" } }}
+        >
           <Stack direction="column" alignItems="center">
             <Img src={user.img} alt=""></Img>
             <Typography variant="h6">{user.username}</Typography>
           </Stack>
           <Stack direction="column">
-            <Typography variant="h5">Edit Profile</Typography>
+            <Typography variant="h6">Edit Profile</Typography>
+            <hr />
             <Box
               component="form"
               onSubmit={file ? handleSubmitWithFile : handleSubmit}
@@ -156,11 +160,13 @@ export default function Profile() {
                 variant="standard"
               />
 
-              <img
-                src={file ? URL.createObjectURL(file) : user.img}
-                alt=""
-                style={{ width: 100, height: 100 }}
-              />
+              {file && (
+                <img
+                  src={file ? URL.createObjectURL(file) : user.img}
+                  alt=""
+                  style={{ width: 100, height: 100 }}
+                />
+              )}
               <TextField
                 onChange={(e) => setFile(e.target.files[0])}
                 margin="normal"

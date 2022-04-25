@@ -53,7 +53,7 @@ export default function Login() {
             sx={{ mt: 1 }}
           >
             <TextField
-              onChange={(e)=>setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               margin="normal"
               required
               fullWidth
@@ -73,7 +73,7 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               variant="standard"
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type="submit"

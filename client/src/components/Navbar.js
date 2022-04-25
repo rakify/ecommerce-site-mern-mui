@@ -3,6 +3,7 @@ import {
   Favorite,
   Inventory,
   LocalFlorist,
+  LogoutSharp,
   SearchRounded,
   ShoppingCart,
 } from "@mui/icons-material";
@@ -22,6 +23,7 @@ import {
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { logout } from "../redux/apiCalls";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -72,19 +74,75 @@ const Icons = styled(Box)(({ theme }) => ({
 }));
 
 const Navbar = () => {
-  const [showMenu, setShowMenu] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const user = useSelector((state) => state.user.currentUser);
   const cart = useSelector((state) => state.cart);
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#659dbd" }}>
+
+      {/* Menu on click of profile picture */}
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        sx={{ marginTop: 4 }}
+      >
+        <Link href="/profile/" underline="none" color="inherit">
+          <MenuItem sx={{ gap: 1 }}>
+            <AccountCircle />
+            Profile
+          </MenuItem>
+        </Link>
+        <Link href="/orders/" underline="none" color="inherit">
+          <MenuItem sx={{ gap: 1 }}>
+            <Inventory />
+            Orders
+          </MenuItem>
+        </Link>
+        <Link href="/wishlist/" underline="none" color="inherit">
+          <MenuItem sx={{ gap: 1 }}>
+            <Favorite />
+            Wishlist
+          </MenuItem>
+        </Link>
+        <MenuItem sx={{ gap: 1 }} onClick={() => logout()}>
+          <LogoutSharp />
+          Logout
+        </MenuItem>
+      </Menu>
+
       <StyledToolbar>
-        <Typography variant="h4" sx={{ display: { xs: "none", sm: "block" } }}>
-          <Link href="/" underline="none" color="white">
+        <Link
+          href="/"
+          underline="none"
+          color="white"
+          xs={{ cursor: "pointer" }}
+        >
+          <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
+          <Typography
+            variant="h4"
+            sx={{ display: { xs: "none", sm: "block" } }}
+          >
             Better Buys
-          </Link>
-        </Typography>
-        <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
+          </Typography>
+        </Link>
         <Search>
           <InputBase
             startAdornment={
@@ -104,9 +162,12 @@ const Navbar = () => {
             >
               <Avatar
                 alt="pic"
-                sx={{ width: 30, height: 30 }}
+                sx={{ width: 30, height: 30, cursor: "pointer" }}
                 src={user.img}
-                onClick={(e) => setShowMenu(true)}
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
               ></Avatar>
             </StyledBadge>
           ) : (
@@ -121,35 +182,7 @@ const Navbar = () => {
             </Typography>
           )}
 
-          <Menu
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            open={showMenu}
-            onClose={(e) => setShowMenu(false)}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            sx={{ marginTop: 4 }}
-          >
-            <MenuItem sx={{ gap: 1 }}>
-              <AccountCircle />
-              <Link href="/profile/" underline="none" color="inherit">
-                Profile
-              </Link>
-            </MenuItem>
-            <MenuItem sx={{ gap: 1 }}>
-              <Inventory />
-              <Link href="/orders/" underline="none" color="inherit">
-                Orders
-              </Link>
-            </MenuItem>
-            <MenuItem sx={{ gap: 1 }}>
-              <Favorite />
-              Wishlist
-            </MenuItem>
-          </Menu>
-          <Link href="/cart" underline="none" color="inherit">
+          <Link href="/cart/" underline="none" color="inherit">
             <Badge
               badgeContent={cart.products ? cart.products.length : 0}
               color="error"

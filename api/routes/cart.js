@@ -24,9 +24,8 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
           cart.products.splice(itemIndex, 1);
           cart.total -= price;
         } else {
-          console.log(price,quantity)
           cart.products[itemIndex] = productItem;
-          cart.total += (price * quantity);
+          cart.total += price * quantity;
         }
       } else {
         //product does not exists in cart, add new item
@@ -54,19 +53,31 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     await Cart.deleteMany({ userId: req.params.id });
-    res.status(200).json("Cart deleted.");
+    res.status(200);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 //GET CART BY USER
-//It shouldnt be public request but...
 router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.params.id });
-    res.status(200).json(cart);
+    if (cart) {
+      const { __v, ...others } = cart._doc;
+      res.status(200).json(others);
+    }
+    if (!cart) {
+      // cart is null so lets make a default cart for this user
+      initialCart = {
+        userId: req.params.id,
+        products: [],
+        total: 0,
+      };
+      res.status(200).json(initialCart);
+    }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

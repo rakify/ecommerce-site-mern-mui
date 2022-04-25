@@ -8,7 +8,7 @@ const cryptojs = require("crypto-js");
 
 //UPDATE USER
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   if (req.body.password) {
     req.body.password = cryptojs.AES.encrypt(
       req.body.password,
@@ -20,7 +20,8 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(200).json(updatedUser);
+    const { password, ...others } = updatedUser._doc;
+    res.status(200).json(others);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -36,7 +37,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-//GET A USER 
+//GET A USER
 router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

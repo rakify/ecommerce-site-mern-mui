@@ -1,25 +1,15 @@
-import {
-  AddCircle,
-  RemoveCircle,
-} from "@mui/icons-material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addCart } from "../redux/apiCalls";
-import {
-  Avatar,
-  Button,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { addToCart } from "../redux/apiCalls";
+import { Avatar, Button, Stack, Typography } from "@mui/material";
 
 const Product = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [quantity, setQuantity] = useState(1);
-  const [color, setColor] = useState("");
-  const [size, setSize] = useState("");
   const dispatch = useDispatch();
 
   const product = useSelector((state) =>
@@ -43,7 +33,7 @@ const Product = () => {
 
   const handleClick = () => {
     !id && navigate("/login");
-    id && addCart(id, productInfo, dispatch);
+    id && addToCart(id, productInfo, dispatch);
   };
 
   return (
@@ -106,45 +96,6 @@ const Product = () => {
         </Button>
       </Stack>
     </Stack>
-
-    // <Container>
-    //   <Wrapper>
-    //     <ImgContainer>
-    //       <Image src={product.img} />
-    //     </ImgContainer>
-    //     <InfoContainer>
-    //       <Title>{product.title}</Title>
-    //       <Desc>{product.desc}</Desc>
-    //       <Price>$ {product.price}</Price>
-    //       <FilterContainer>
-    //         <Filter>
-    //           <FilterTitle>Color</FilterTitle>
-    //           {product.color?.map((c) => (
-    //             <FilterColor color={c} key={c} onClick={() => setColor(c)} />
-    //           ))}
-    //         </Filter>
-    //         <Filter>
-    //           <FilterTitle>Size</FilterTitle>
-    //           <FilterSize
-    //             onChange={(e) => setSize(e.target.value.toLowerCase())}
-    //           >
-    //             {product.size?.map((s) => (
-    //               <FilterSizeOption key={s}>{s.toUpperCase()}</FilterSizeOption>
-    //             ))}
-    //           </FilterSize>
-    //         </Filter>
-    //       </FilterContainer>
-    //       <AddContainer>
-    //         <AmmountContainer>
-    //           <Remove onClick={() => handleQuantity("dec")} />
-    //           <Ammount>{quantity}</Ammount>
-    //           <Add onClick={() => handleQuantity("inc")} />
-    //         </AmmountContainer>
-    //         <Button onClick={handleClick}>Add to Cart</Button>
-    //       </AddContainer>
-    //     </InfoContainer>
-    //   </Wrapper>
-    // </Container>
   );
 };
 
