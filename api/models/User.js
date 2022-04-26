@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: [300, "Name must be less than 300 characters"],
-      default: "",
+      default: "Not provided",
     },
     email: {
       type: String,
@@ -42,11 +42,11 @@ const UserSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      default: "",
+      default: "Not provided",
     },
     gender: {
       type: String,
-      default: "",
+      default: "Not provided",
     },
   },
   { timestamps: true }

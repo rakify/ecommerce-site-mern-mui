@@ -24,7 +24,11 @@ const OrderSchema = new mongoose.Schema(
     },
     deliveryTimeSlot: {
       type: String,
-      default: "",
+      default: "Not provided",
+    },
+    paymentMethod: {
+      type: String,
+      default: "Cash on delivery",
     },
     orderStatus: {
       type: String,

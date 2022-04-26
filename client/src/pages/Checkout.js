@@ -69,6 +69,7 @@ const Checkout = () => {
       products: cart.products,
       totalAmount: cart.total,
       deliveryTimeSlot: inputs.deliveryTimeSlot,
+      paymentMethod: "Cash on delivery",
     };
     addOrder(order).then((res) =>
       res.status === 200 ? setSubmitSuccess(true) : setSubmitSuccess(false)
