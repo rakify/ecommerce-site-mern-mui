@@ -88,7 +88,7 @@ const Wishlist = () => {
     <>
       {/* Display Prompt */}
       <Dialog
-        open={openEmptyWishlistDialog}
+        open={Boolean(openEmptyWishlistDialog)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}

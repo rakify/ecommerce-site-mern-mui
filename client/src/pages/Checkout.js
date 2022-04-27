@@ -14,6 +14,8 @@ import {
   Radio,
   Snackbar,
   Alert,
+  Select,
+  MenuItem,
   Modal,
   Accordion,
   AccordionSummary,
@@ -48,6 +50,7 @@ const Checkout = () => {
     const shippingInfo = {
       fullName: inputs.fullName,
       phoneNumber: inputs.phoneNumber,
+      gender: inputs.gender,
       division: inputs.division,
       district: inputs.district,
       upazila: inputs.upazila,
@@ -98,7 +101,7 @@ const Checkout = () => {
     <>
       {/* Shipping Info Save Messages */}
       <Snackbar
-        open={saveSuccess}
+        open={Boolean(saveSuccess)}
         autoHideDuration={5000}
         onClose={() => setSaveSuccess()}
       >
@@ -113,7 +116,7 @@ const Checkout = () => {
       </Snackbar>
 
       {/* Modal Open For Successful Order Placement Message */}
-      <Modal open={submitSuccess} onClose={() => setSubmitSuccess()}>
+      <Modal open={Boolean(submitSuccess)} onClose={() => setSubmitSuccess()}>
         <Box sx={style}>
           <Typography
             id="modal-modal-title"
@@ -171,7 +174,7 @@ const Checkout = () => {
           >
             {/* Shipping Address */}
             <Stack sx={{ flex: 1 }}>
-              <Typography variant="h6">Shipping Address</Typography>
+              <Typography variant="h6">Shipping Information</Typography>
               <Box
                 component="form"
                 onSubmit={handleSave}
@@ -249,6 +252,19 @@ const Checkout = () => {
                   autoFocus
                   variant="standard"
                 />
+                <FormControl fullWidth>
+                  <FormLabel id="gender">Gender</FormLabel>
+                  <Select
+                    labelId="gender"
+                    name="gender"
+                    value="male"
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <MenuItem value="male">Male</MenuItem>
+                    <MenuItem value="female">Female</MenuItem>
+                  </Select>
+                </FormControl>
+
                 <Button
                   type="submit"
                   fullWidth

@@ -1,3 +1,13 @@
+import {
+  Inventory2,
+  DashboardSharp,
+  People,
+  Layers,
+  BarChart,
+  ShoppingCart,
+  Reviews,
+  AddBox,
+} from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,33 +23,21 @@ import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "../components/listItems";
 import Orders from "../components/Orders";
 import { getProducts, getUsers } from "../redux/apiCalls";
 import { useEffect, useState } from "react";
 import Users from "../components/Users";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Better Buys
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import {
+  Button,
+  Link,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import UserList from "./UserList";
 
 const drawerWidth = 240;
 
@@ -89,11 +87,17 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+export default function Dashboard() {
   const dispatch = useDispatch();
+  const [nowShowing, setNowShowing] = useState("Dashboard");
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  //Control WHats displaying
+  const handleClick = (content) => {
+    setNowShowing(content);
   };
 
   // Get All Users
@@ -131,13 +135,24 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              {nowShowing}
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            
+            {nowShowing === "Users" && (
+              <Link href="/newUser" color="inherit" underline="hover">
+                <Button variant="contained" startIcon={<AddBox />}>
+                  Add New
+                </Button>
+              </Link>
+            )}
+
+            {nowShowing === "Products" && (
+              <Link href="/newProduct" color="inherit" underline="hover">
+                <Button variant="contained" startIcon={<AddBox />}>
+                  Add New
+                </Button>
+              </Link>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -155,74 +170,112 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <ListItemButton onClick={() => handleClick("Dashboard")}>
+              <ListItemIcon>
+                <DashboardSharp />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleClick("Products")}>
+              <ListItemIcon>
+                <Inventory2 />
+              </ListItemIcon>
+              <ListItemText primary="Products" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleClick("Users")}>
+              <ListItemIcon>
+                <People />
+              </ListItemIcon>
+              <ListItemText primary="Users" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleClick("Orders")}>
+              <ListItemIcon>
+                <ShoppingCart />
+              </ListItemIcon>
+              <ListItemText primary="Orders" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleClick("Reviews")}>
+              <ListItemIcon>
+                <Reviews />
+              </ListItemIcon>
+              <ListItemText primary="Reviews" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleClick("Reports")}>
+              <ListItemIcon>
+                <BarChart />
+              </ListItemIcon>
+              <ListItemText primary="Reports" />
+            </ListItemButton>
           </List>
         </Drawer>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  {/* <Chart /> */}
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  {/* <Deposits /> */}
-                </Paper>
-              </Grid>
-                {/* Latest Users */}
+        {nowShowing === "Dashboard" ? (
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              <Grid container spacing={3}>
+                {/* Chart */}
+                <Grid item xs={12} md={8} lg={9}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: 240,
+                    }}
+                  >
+                    {/* <Chart /> */}
+                  </Paper>
+                </Grid>
+                {/* Recent Deposits */}
+                <Grid item xs={12} md={4} lg={3}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: 240,
+                    }}
+                  >
+                    {/* <Deposits /> */}
+                  </Paper>
+                </Grid>
+                {/* Last 5 Users */}
                 <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Users />
-                </Paper>
+                  <Paper
+                    sx={{ p: 2, display: "flex", flexDirection: "column" }}
+                  >
+                    <Users />
+                  </Paper>
+                </Grid>
+
+                {/* Last 10 Orders */}
+                <Grid item xs={12}>
+                  <Paper
+                    sx={{ p: 2, display: "flex", flexDirection: "column" }}
+                  >
+                    <Orders />
+                  </Paper>
+                </Grid>
               </Grid>
-            
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
-        </Box>
+            </Container>
+          </Box>
+        ) : nowShowing === "Users" ? (
+          <UserList />
+        ) : (
+          ""
+        )}
       </Box>
     </ThemeProvider>
   );
-}
-
-export default function Dashboard() {
-  return <DashboardContent />;
 }

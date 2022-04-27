@@ -75,7 +75,7 @@ const Product = ({ item }) => {
     <Box sx={{ flexGrow: 1 }}>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={addedToCartMsg}
+        open={Boolean(addedToCartMsg)}
         TransitionComponent={SlideTransition}
         autoHideDuration={2000}
         onClose={() => setAddedToCartMsg(false)}

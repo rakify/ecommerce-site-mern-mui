@@ -5,18 +5,21 @@ const jwt = require("jsonwebtoken");
 
 //REGISTER
 router.post("/register", async (req, res) => {
-  req.body.password = CryptoJS.AES.encrypt(
-    req.body.password,
-    process.env.pass_secret
-  ).toString();
+  if (req.body.password)
+    req.body.password = CryptoJS.AES.encrypt(
+      req.body.password,
+      process.env.pass_secret
+    ).toString();
   try {
     //creating new user
     const newUser = new User(req.body);
     //saving user and response
     const user = await newUser.save();
-    res.status(201).json(user);
+    const { password, ...others } = user._doc;
+    res
+      .status(201)
+      .json({ message: "New account creation is successful.", data: others });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -54,6 +57,7 @@ router.post("/login", async (req, res) => {
       })
       .json({ ...others });
   } catch (err) {
+    console.log(err.keyPattern);
     res.status(500).json(err);
   }
 });

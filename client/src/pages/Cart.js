@@ -72,7 +72,7 @@ const Cart = () => {
   return (
     <>
       <Dialog
-        open={openEmptyCartDialog}
+        open={Boolean(openEmptyCartDialog)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
@@ -104,7 +104,14 @@ const Cart = () => {
           centered
           sx={{ width: { xs: 300, sm: "100%" } }}
         >
-          <Tab icon={<ShoppingCartOutlined />} label={cart.products.length===0?"Cart":`Cart (${cart.products.length})`} />
+          <Tab
+            icon={<ShoppingCartOutlined />}
+            label={
+              cart.products.length === 0
+                ? "Cart"
+                : `Cart (${cart.products.length})`
+            }
+          />
           <Link href="/wishlist/" underline="none" color="inherit">
             <Tab icon={<FavoriteBorderOutlined />} label="Wishlist" />
           </Link>

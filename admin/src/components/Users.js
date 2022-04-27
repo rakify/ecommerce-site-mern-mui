@@ -5,7 +5,6 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Typography } from "@mui/material";
-import { format } from "timeago.js";
 import { useSelector } from "react-redux";
 
 function preventDefault(event) {
@@ -14,12 +13,11 @@ function preventDefault(event) {
 
 export default function Users() {
   const users = useSelector((state) => state.user.users);
-  console.log(users);
 
   return (
     <>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        New Customers
+        Last 5 New Users
       </Typography>
       <Table size="small">
         <TableHead>
@@ -35,13 +33,13 @@ export default function Users() {
         <TableBody>
           {users.map((user) => (
             <TableRow key={user._id}>
-              <TableCell>{format(user.createdAt)}</TableCell>
+              <TableCell>{user.createdAt}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.fullName || "Not provided"}</TableCell>
               <TableCell>{user.phoneNumber || "Not provided"}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                {user.shippingInfo.district && user.shippingInfo.division
+                {user.shippingInfo?.district && user.shippingInfo?.division
                   ? user.shippingInfo.district +
                     "," +
                     user.shippingInfo.division

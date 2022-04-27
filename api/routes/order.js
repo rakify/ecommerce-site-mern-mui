@@ -15,7 +15,7 @@ router.post("/", verifyToken, async (req, res) => {
     const savedOrder = await newOrder.save();
     res.status(200).json(savedOrder);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -58,8 +58,13 @@ router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
 
 //GET ALL ORDERS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  const query = req.query.sortBy;
+
   try {
-    const orders = await Order.find();
+    const orders =
+      query === "createdAt"
+        ? await Order.find().sort({ createdAt: -1 }).limit(30)
+        : await Order.find().limit(30);
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);

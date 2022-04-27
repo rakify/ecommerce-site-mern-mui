@@ -48,10 +48,12 @@ export const login = async (dispatch, user) => {
 export const getUsers = async (dispatch) => {
   dispatch(getUserStart());
   try {
-    const res = await axios.get("/users");
+    const res = await axios.get("/users?sortBy=createdAt");
     dispatch(getUserSuccess(res.data));
+    return res.data;
   } catch (err) {
     dispatch(getUserFailure());
+    return err;
   }
 };
 
@@ -69,10 +71,16 @@ export const updateUser = async (id, user, dispatch) => {
   dispatch(updateUserStart());
   try {
     // update
-    await axios.put(`/users/${id}`, user);
+    const res = await axios.put(`/users/${id}`, user);
     dispatch(updateUserSuccess({ id, user }));
+
+    console.log(res);
+    return res;
   } catch (err) {
     dispatch(updateUserFailure());
+
+    console.log(err);
+    return err;
   }
 };
 
@@ -81,8 +89,10 @@ export const addUser = async (user, dispatch) => {
   try {
     const res = await axios.post(`/auth/register`, user);
     dispatch(addUserSuccess(res.data));
+    return res;
   } catch (err) {
     dispatch(addUserFailure());
+    return err;
   }
 };
 
@@ -131,7 +141,7 @@ export const addProduct = async (product, dispatch) => {
 //Orders
 export const getOrders = async () => {
   try {
-    const res = await axios.get(`/orders/`);
+    const res = await axios.get(`/orders?sortBy=createdAt`);
     return res.data;
   } catch (err) {
     return err;

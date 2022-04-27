@@ -7,7 +7,6 @@ import TableRow from "@mui/material/TableRow";
 import { getOrders } from "../redux/apiCalls";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { format } from "timeago.js";
 
 function preventDefault(event) {
   event.preventDefault();
@@ -23,7 +22,7 @@ export default function Orders() {
   return (
     <>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Recent Orders
+       10 Recent Orders
       </Typography>
       <Table size="small">
         <TableHead>
@@ -39,7 +38,7 @@ export default function Orders() {
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order._id}>
-              <TableCell>{format(order.createdAt)}</TableCell>
+              <TableCell>{order.createdAt}</TableCell>
               <TableCell>{order.user.username}</TableCell>
               <TableCell>
                 {order.user.shippingInfo.district &&

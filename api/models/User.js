@@ -4,23 +4,17 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      unique: [true, "Username already exists"],
+      unique: true,
       trim: true,
       minlength: [3, "Username must be more than 3 characters"],
-      maxlength: [30,"Username must be less than 30 characters"],
+      maxlength: [30, "Username must be less than 30 characters"],
       required: [true, "Username is required"],
-    },
-    fullName: {
-      type: String,
-      trim: true,
-      maxlength: [300, "Name must be less than 300 characters"],
-      default: "Not provided",
     },
     email: {
       type: String,
       trim: true,
       required: [true, "Email is required"],
-      unique: [true, "Email already exists"],
+      unique: true,
     },
     password: {
       type: String,
@@ -31,6 +25,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    firstName: String,
+    lastName: String,
+    gender: String,
+    phoneNumber: String,
     img: {
       type: String,
       default:
@@ -38,15 +36,11 @@ const UserSchema = new mongoose.Schema(
     },
     shippingInfo: {
       type: Object,
-      default: "",
+      default: {},
     },
-    phoneNumber: {
-      type: String,
-      default: "Not provided",
-    },
-    gender: {
-      type: String,
-      default: "Not provided",
+    billingInfo: {
+      type: Object,
+      default: {},
     },
   },
   { timestamps: true }
