@@ -84,7 +84,7 @@ export const addUser = async (user, dispatch) => {
   dispatch(addUserStart());
   try {
     const res = await axios.post(`/auth/register`, user);
-    dispatch(addUserSuccess(res.data));
+    dispatch(addUserSuccess(res.data.data));
     return res;
   } catch (err) {
     dispatch(addUserFailure());
@@ -139,7 +139,7 @@ export const addProduct = async (product, dispatch) => {
   dispatch(addProductStart());
   try {
     const res = await axios.post(`/products`, product);
-    dispatch(addProductSuccess(res.data));
+    dispatch(addProductSuccess(res.data.data));
     return res;
   } catch (err) {
     dispatch(addProductFailure());

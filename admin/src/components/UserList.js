@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useId, useState } from "react";
 import {
   Avatar,
   Button,
@@ -96,6 +96,8 @@ export default function UserList() {
       },
     },
   ];
+
+  const key = useId();
 
   return (
     <Container>

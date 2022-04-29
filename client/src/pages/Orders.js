@@ -15,6 +15,7 @@ import { getOrders } from "../redux/apiCalls";
 
 const Orders = () => {
   const user = useSelector((state) => state.user.currentUser);
+  console.log(user._id)
   const [orders, setOrders] = useState([]);
   useEffect(() => {
     getOrders(user._id).then((res) => setOrders(res));

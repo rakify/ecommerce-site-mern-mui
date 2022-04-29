@@ -42,7 +42,7 @@ const steps = [
       "An ad group contains one or more ads which target a shared set of keywords.",
   },
   {
-    label: "Place Order",
+    label: "Place order",
     description: `Try out different ad text to see what brings in the most customers,
               and learn how to enhance your ads using features like ad extensions.
               If you run into any problems with your ads, find out how to tell if
@@ -338,22 +338,18 @@ const Checkout = () => {
                 {index === 1 && (
                   <Stack
                     direction="column"
-                    alignItems="center"
-                    justifyContent="center"
+                    justifyContent="space-between"
                     sx={{
-                      overflowX: "auto",
+                      overflow: "auto",
                       maxWidth: "100%",
-                      maxHeight: "40%",
-                      "-webkit-scrollbar-track": {
-                        backgroundColor: "transparent",
-                      },
+                      maxHeight: "50vh",
                     }}
                   >
                     {cart.products.map((product) => (
                       <Stack
                         key={product._id}
                         direction="row"
-                        sx={{ minWidth: 300, minHeight: 200 }}
+                        alignItems="center"
                       >
                         <Avatar
                           src={product.img}
