@@ -155,15 +155,15 @@ const Cart = () => {
                       direction="row"
                       sx={{
                         borderBottom: "1px solid gray",
-                        gap: 5,
+                        gap: 3,
                         flexDirection: { xs: "column", sm: "row" },
                       }}
                     >
                       <Avatar
                         src={product.img}
                         sx={{
-                          width: 200,
-                          height: 150,
+                          width: 100,
+                          height: 70,
                           borderRadius: 0,
                           transition: "transform .5s",
                           "&:hover": { transform: "scale(1.2)" },
@@ -177,8 +177,8 @@ const Cart = () => {
                         alignItems="center"
                         sx={{ flexDirection: { xs: "row", sm: "column" } }}
                       >
-                        <ArrowUpwardOutlined
-                          style={{ cursor: "pointer", color: "grey" }}
+                        <Button
+                          variant="text"
                           onClick={() =>
                             handleQuantity(
                               "inc",
@@ -188,10 +188,14 @@ const Cart = () => {
                               product.price
                             )
                           }
-                        />
-                        <Typography>{product.quantity}</Typography>
-                        <ArrowDownwardOutlined
-                          style={{ cursor: "pointer", color: "grey" }}
+                        >
+                          <ArrowUpwardOutlined sx={{ width: 15, height: 15 }} />
+                        </Button>
+                        <Typography color="primary">
+                          {product.quantity}
+                        </Typography>
+                        <Button
+                          variant="text"
                           onClick={() =>
                             handleQuantity(
                               "dec",
@@ -201,7 +205,11 @@ const Cart = () => {
                               product.price
                             )
                           }
-                        />
+                        >
+                          <ArrowDownwardOutlined
+                            sx={{ width: 15, height: 15 }}
+                          />
+                        </Button>
                       </Stack>
 
                       <Stack>

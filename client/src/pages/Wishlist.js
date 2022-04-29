@@ -150,7 +150,7 @@ const Wishlist = () => {
 
         {wishlistProducts.length === 0 && (
           <Typography sx={{ textAlign: "center", marginTop: 5 }}>
-            THERE IS NO PRODUCT AVAILABLE IN YOUR WISHLIST.
+            THERE ARE NO PRODUCT AVAILABLE IN YOUR WISHLIST.
           </Typography>
         )}
 
