@@ -7,17 +7,13 @@ import TableRow from "@mui/material/TableRow";
 import { Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 export default function Users() {
   const users = useSelector((state) => state.user.users);
 
   return (
     <>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Last 5 New Users
+        Last 5 Users
       </Typography>
       <Table size="small">
         <TableHead>
@@ -27,29 +23,25 @@ export default function Users() {
             <TableCell>Full Name</TableCell>
             <TableCell>Phone Number</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell align="right">Saved Address</TableCell>
+            <TableCell>Gender</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user) => (
+          {users.slice(0,5).map((user) => (
             <TableRow key={user._id}>
               <TableCell>{user.createdAt}</TableCell>
               <TableCell>{user.username}</TableCell>
-              <TableCell>{user.fullName || "Not provided"}</TableCell>
+              <TableCell>{user.firstName} {user.lastName}</TableCell>
               <TableCell>{user.phoneNumber || "Not provided"}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                {user.shippingInfo?.district && user.shippingInfo?.division
-                  ? user.shippingInfo.district +
-                    "," +
-                    user.shippingInfo.division
-                  : "Not provided"}
+                {user.gender}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+      <Link color="primary" href="/?s=Users" sx={{ mt: 3 }}>
         See more users
       </Link>
     </>

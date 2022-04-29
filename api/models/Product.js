@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema(
     },
     img: {
       type: String,
-      required: true,
+      default: "https://cdn-icons-png.flaticon.com/512/40/40162.png?w=740",
     },
     slug: {
       type: String,
@@ -33,18 +33,14 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    size: {
-      type: Array,
-    },
-    color: {
-      type: Array,
-    },
     price: {
       type: Number,
       required: true,
     },
+    unit: String,
     inStock: {
       type: Boolean,
+      required: true,
       default: true,
     },
   },

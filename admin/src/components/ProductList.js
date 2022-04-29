@@ -17,54 +17,60 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
-import { deleteUser, getUsers } from "../redux/apiCalls";
+import { deleteProduct, getProducts } from "../redux/apiCalls";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function UserList() {
+export default function ProductList() {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.users);
-  const [deleteUserId, setDeleteUserId] = useState(false);
+  const products = useSelector((state) => state.product.products);
+  const [deleteProductId, setDeleteProductId] = useState(false);
 
   useEffect(() => {
-    getUsers(dispatch);
+    getProducts(dispatch);
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    setDeleteUserId(false);
-    deleteUser(id, dispatch);
+    setDeleteProductId(false);
+    deleteProduct(id, dispatch);
   };
 
   const handleCloseDialog = () => {
-    setDeleteUserId(false);
+    setDeleteProductId(false);
   };
 
   const columns = [
     {
-      field: "username",
-      headerName: "User",
+      field: "title",
+      headerName: "Product",
       width: 300,
       editable: true,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
             <Avatar src={params.row.img} alt="" />
-            <Typography>{params.row.username}</Typography>
+            <Typography>{params.row.title}</Typography>
           </Stack>
         );
       },
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "price",
+      headerName: "Price",
       width: 200,
       editable: true,
     },
     {
-      field: "phoneNumber",
-      headerName: "Phone Number",
+      field: "unit",
+      headerName: "Unit",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "desc",
+      headerName: "Description",
       width: 150,
       editable: true,
     },
@@ -76,7 +82,7 @@ function UserList() {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
             <Link
-              href={"/user/" + params.row._id}
+              href={"/product/" + params.row._id}
               underline="none"
               color="inherit"
             >
@@ -87,7 +93,7 @@ function UserList() {
             <IconButton
               disabled={params.row.isAdmin === true}
               aria-label="delete"
-              onClick={() => setDeleteUserId(params.row._id)}
+              onClick={() => setDeleteProductId(params.row._id)}
             >
               <DeleteOutlined />
             </IconButton>
@@ -100,7 +106,7 @@ function UserList() {
   return (
     <Container>
       <Dialog
-        open={Boolean(deleteUserId)}
+        open={Boolean(deleteProductId)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
@@ -109,13 +115,13 @@ function UserList() {
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            If you proceed now user with ID {deleteUserId} will be erased. This
-            action is non reversible.
+            If you proceed now product with ID {deleteProductId} will be erased.
+            This action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={() => handleDelete(deleteUserId)}>Proceed</Button>
+          <Button onClick={() => handleDelete(deleteProductId)}>Proceed</Button>
         </DialogActions>
       </Dialog>
 
@@ -123,10 +129,10 @@ function UserList() {
       <DataGrid
         experimentalFeatures={{ newEditingApi: true }}
         editMode="row"
-        rows={users}
+        rows={products}
         getRowId={(row) => row._id}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
@@ -135,5 +141,3 @@ function UserList() {
     </Container>
   );
 }
-
-export default UserList;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowBackIos, ArrowLeft } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,18 +8,19 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { addUser } from "../redux/apiCalls";
+import { addProduct, addUser } from "../redux/apiCalls";
 import {
   Avatar,
   Button,
   Container,
   FormControl,
   FormLabel,
+  Input,
   Link,
   MenuItem,
-  Select,
   Slide,
   Snackbar,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -36,14 +37,30 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-export default function NewUser() {
+export default function AddProduct() {
   const dispatch = useDispatch();
-  const [inputs, setInputs] = useState();
+  const [inputs, setInputs] = useState({
+    title: "",
+  });
   const [file, setFile] = useState(null);
+  const [cat, setCat] = useState([]);
   const [response, setResponse] = useState(false);
+  const [tags, setTags] = useState([]);
 
+  // set tags everytime title changes
+  useEffect(() => {
+    setTags(
+      inputs.title
+        .toLowerCase()
+        .replace(/[^a-zA-Z ]/g, "")
+        .split(" ")
+    );
+  }, [inputs.title]);
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+  const handleCat = (e) => {
+    setCat(e.target.value.toLowerCase().split(","));
   };
 
   const handleSubmitWithFile = (e) => {
@@ -82,15 +99,21 @@ export default function NewUser() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const user = {
+          const slug = inputs.title.toLowerCase().split(" ").join("-");
+          const updatedProduct = {
             ...inputs,
             img: downloadURL,
+            cat: cat,
+            tags: tags,
+            slug: slug,
           };
-          addUser(user, dispatch).then((res) => {
+          addProduct(updatedProduct, dispatch).then((res) => {
             res.status === 201
               ? setResponse(res.data)
               : res.response.data?.code === 11000
-              ? setResponse({ message: "Username or email already exists" })
+              ? setResponse({
+                  message: "A similar product with the title already exists",
+                })
               : setResponse(res.response.data);
           });
         });
@@ -100,21 +123,27 @@ export default function NewUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = {
+    const slug = inputs.title.toLowerCase().split(" ").join("-");
+    const updatedProduct = {
       ...inputs,
+      cat: cat,
+      tags: tags,
+      slug: slug,
     };
-    addUser(user, dispatch).then((res) => {
+    addProduct(updatedProduct, dispatch).then((res) => {
       res.status === 201
         ? setResponse(res.data)
         : res.response.data?.code === 11000
-        ? setResponse({ message: "Username or email already exists" })
+        ? setResponse({
+            message: "A similar product with the title already exists",
+          })
         : setResponse(res.response.data);
     });
   };
 
   return (
     <>
-      <Link href="/" color="inherit" underline="none">
+      <Link href="/products" color="inherit" underline="none">
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
@@ -128,12 +157,11 @@ export default function NewUser() {
         message={response.message}
       />
 
-      <Typography variant="h6">Add New User</Typography>
+      <Typography variant="h6">Add New Product</Typography>
       <Container>
         <Box
           component="form"
           onSubmit={file ? handleSubmitWithFile : handleSubmit}
-          noValidate
           sx={{ mt: 1 }}
         >
           <TextField
@@ -141,81 +169,82 @@ export default function NewUser() {
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
+            id="title"
+            label="Title"
+            name="title"
             autoFocus
             variant="standard"
           />
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
-            type="password"
             required
             fullWidth
-            id="password"
-            label="Password"
-            name="password"
+            id="desc"
+            label="Description"
+            name="desc"
             variant="standard"
           />
-
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            required
-            fullWidth
-            name="fullName"
-            label="Full Name"
-            id="fullName"
-            variant="standard"
-          />
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            required
-            fullWidth
-            name="email"
-            label="Email"
-            id="email"
-            variant="standard"
-          />
-
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            required
-            fullWidth
-            name="phoneNumber"
-            label="Phone Number"
-            type="number"
-            id="phoneNumber"
-            variant="standard"
-          />
-
-          <FormControl fullWidth>
-            <FormLabel id="gender">Gender</FormLabel>
-            <Select
-              labelId="gender"
-              name="gender"
-              value="male"
+          <Stack direction="row" sx={{gap:2}}>
+            <TextField
+              sx={{ flex: 3 }}
               onChange={(e) => handleChange(e)}
-            >
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel id="isAdmin">Account Type</FormLabel>
-            <Select
-              labelId="isAdmin"
-              name="isAdmin"
-              value="false"
+              margin="normal"
+              required
+              name="price"
+              label="Price"
+              id="price"
+              type="number"
+              error={inputs.price < 1}
+              helperText={inputs.price < 1 && "Minimun price is 1"}
+              variant="standard"
+            />
+            <TextField
+              sx={{ flex: 1 }}
+              select
               onChange={(e) => handleChange(e)}
+              margin="normal"
+              required
+              name="unit"
+              label="Unit"
+              id="unit"
+              value={inputs.unit || "kg"}
+              variant="standard"
             >
-              <MenuItem value="true">Admin</MenuItem>
-              <MenuItem value="false">User</MenuItem>
-            </Select>
-          </FormControl>
+              <MenuItem value="kg">Kg</MenuItem>
+              <MenuItem value="Liter">Liter</MenuItem>
+              <MenuItem value="piece">Piece</MenuItem>
+            </TextField>
+          </Stack>
+
+          <TextField
+            required
+            onChange={(e) => handleCat(e)}
+            margin="normal"
+            fullWidth
+            name="cat"
+            label="Categories"
+            id="cat"
+            variant="standard"
+            placeholder="tshirt, dress,male-clothing"
+            helperText="Add categories separated by comma"
+          />
+
+          <TextField
+            select
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            fullWidth
+            required
+            name="inStock"
+            label="Stock"
+            id="inStock"
+            value={inputs.inStock || "true"}
+            variant="standard"
+          >
+            <MenuItem value="true">Available</MenuItem>
+            <MenuItem value="false">Unavailable</MenuItem>
+          </TextField>
 
           {file && (
             <Avatar
@@ -229,15 +258,27 @@ export default function NewUser() {
               }}
             />
           )}
+
+          <FormControl fullWidth sx={{ mt: 3 }}>
+            <FormLabel filled id="file">
+              Product Image
+            </FormLabel>
+            <Input
+              id="file"
+              name="file"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </FormControl>
+
           <TextField
-            onChange={(e) => setFile(e.target.files[0])}
             margin="normal"
-            required
+            disabled
             fullWidth
-            name="file"
-            label="Upload Image"
-            type="file"
-            id="file"
+            label="Tags"
+            value={tags}
+            autoFocus
             variant="standard"
           />
 

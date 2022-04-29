@@ -30,12 +30,23 @@ const Checkout = () => {
   const user = useSelector((state) => state.user.currentUser);
   const cart = useSelector((state) => state.cart);
   const [inputs, setInputs] = useState({
-    fullName: 1 && user.shippingInfo.fullName,
-    phoneNumber: 1 && user.shippingInfo.phoneNumber,
-    division: 1 && user.shippingInfo.division,
-    district: 1 && user.shippingInfo.district,
-    upazila: 1 && user.shippingInfo.upazila,
-    street: 1 && user.shippingInfo.street,
+    //Shipping Info
+    sFullName: user.shippingInfo.fullName,
+    sGender: user.shippingInfo.gender,
+    sPhoneNumber: user.shippingInfo.phoneNumber,
+    sDivision: user.shippingInfo.division,
+    sDistrict: user.shippingInfo.district,
+    sUpazila: user.shippingInfo.upazila,
+    sStreet: user.shippingInfo.street,
+    //Billing Info
+    bFullName: user.billingInfo.fullName,
+    bGender: user.billingInfo.gender,
+    bPhoneNumber: user.billingInfo.phoneNumber,
+    bDivision: user.billingInfo.division,
+    bDistrict: user.billingInfo.district,
+    bUpazila: user.billingInfo.upazila,
+    bStreet: user.billingInfo.street,
+
     deliveryTimeSlot: "",
   });
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -48,17 +59,27 @@ const Checkout = () => {
   const handleSave = (e) => {
     e.preventDefault();
     const shippingInfo = {
-      fullName: inputs.fullName,
-      phoneNumber: inputs.phoneNumber,
-      gender: inputs.gender,
-      division: inputs.division,
-      district: inputs.district,
-      upazila: inputs.upazila,
-      street: inputs.street,
+      fullName: inputs.sFullName,
+      phoneNumber: inputs.sPhoneNumber,
+      gender: inputs.sGender,
+      division: inputs.sDivision,
+      district: inputs.sDistrict,
+      upazila: inputs.sUpazila,
+      street: inputs.sStreet,
+    };
+    const billingInfo = {
+      fullName: inputs.bFullName,
+      phoneNumber: inputs.bPhoneNumber,
+      gender: inputs.bGender,
+      division: inputs.bDivision,
+      district: inputs.bDistrict,
+      upazila: inputs.bUpazila,
+      street: inputs.bStreet,
     };
     const updatedUser = {
       ...user,
       shippingInfo,
+      billingInfo,
     };
     updateUser(user._id, updatedUser, dispatch).then((res) =>
       res.status === 200 ? setSaveSuccess(true) : setSaveSuccess(false)
@@ -111,7 +132,7 @@ const Checkout = () => {
           sx={{ width: "100%" }}
           onClose={() => setSaveSuccess()}
         >
-          Shipping Information Saved Successfully!
+          Shipping & Billing Information Saved Successfully!
         </Alert>
       </Snackbar>
 
@@ -174,96 +195,163 @@ const Checkout = () => {
           >
             {/* Shipping Address */}
             <Stack sx={{ flex: 1 }}>
-              <Typography variant="h6">Shipping Information</Typography>
               <Box
                 component="form"
                 onSubmit={handleSave}
                 noValidate
                 sx={{ mt: 1 }}
               >
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.fullName}
-                  id="fullName"
-                  label="Full Name"
-                  name="fullName"
-                  autoFocus
-                  variant="standard"
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.phoneNumber}
-                  name="phoneNumber"
-                  label="Phone Number"
-                  id="phoneNumber"
-                  variant="standard"
-                  onChange={(e) => handleChange(e)}
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.division}
-                  id="division"
-                  label="Division"
-                  name="division"
-                  autoFocus
-                  variant="standard"
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.district}
-                  id="district"
-                  label="District"
-                  name="district"
-                  autoFocus
-                  variant="standard"
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.upazila}
-                  id="upazila"
-                  label="Upazila"
-                  name="upazila"
-                  autoFocus
-                  variant="standard"
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={inputs.street}
-                  id="street"
-                  label="Street"
-                  name="street"
-                  autoFocus
-                  variant="standard"
-                />
-                <FormControl fullWidth>
-                  <FormLabel id="gender">Gender</FormLabel>
-                  <Select
-                    labelId="gender"
-                    name="gender"
-                    value="male"
+                {/* Shipping */}
+
+                <Stack direction="column">
+                  <Typography variant="h6" color="primary">
+                    Shipping Info
+                  </Typography>
+                  <TextField
                     onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Full Name"
+                    id="sfullName"
+                    name="sFullName"
+                    value={inputs.sFullName || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Phone Number"
+                    id="sPhoneNumber"
+                    name="sPhoneNumber"
+                    value={inputs.sPhoneNumber || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    select
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    fullWidth
+                    label="Gender"
+                    id="sGender"
+                    name="sGender"
+                    value={inputs.sGender || "male"}
+                    variant="standard"
                   >
                     <MenuItem value="male">Male</MenuItem>
                     <MenuItem value="female">Female</MenuItem>
-                  </Select>
-                </FormControl>
+                  </TextField>
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Division"
+                    id="sDivision"
+                    name="sDivision"
+                    value={inputs.sDivision || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="District"
+                    id="sDistrict"
+                    name="sDistrict"
+                    value={inputs.sDistrict || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Upazila"
+                    id="sUpazila"
+                    name="sUpazila"
+                    value={inputs.sUpazila || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Street"
+                    id="sStreet"
+                    name="sStreet"
+                    value={inputs.sStreet || ""}
+                    variant="standard"
+                  />
+                </Stack>
+
+                {/* Billing */}
+
+                <Stack direction="column">
+                  <Typography variant="h6" color="primary">
+                    Billing Info
+                  </Typography>
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Full Name"
+                    id="bFullName"
+                    name="bFullName"
+                    value={inputs.bFullName || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Phone Number"
+                    id="bPhoneNumber"
+                    name="bPhoneNumber"
+                    value={inputs.bPhoneNumber || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    select
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    fullWidth
+                    label="Gender"
+                    id="bGender"
+                    name="bGender"
+                    value={inputs.bGender || "male"}
+                    variant="standard"
+                  >
+                    <MenuItem value="male">Male</MenuItem>
+                    <MenuItem value="female">Female</MenuItem>
+                  </TextField>
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Division"
+                    id="bDivision"
+                    name="bDivision"
+                    value={inputs.bDivision || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="District"
+                    id="bDistrict"
+                    name="bDistrict"
+                    value={inputs.bDistrict || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Upazila"
+                    id="bUpazila"
+                    name="bUpazila"
+                    value={inputs.bUpazila || ""}
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    label="Street"
+                    id="bStreet"
+                    name="bStreet"
+                    value={inputs.bStreet || ""}
+                    variant="standard"
+                  />
+                </Stack>
 
                 <Button
                   type="submit"

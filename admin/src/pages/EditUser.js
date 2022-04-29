@@ -16,6 +16,7 @@ import {
   Card,
   Container,
   FormControl,
+  FormControlLabel,
   FormLabel,
   Link,
   MenuItem,
@@ -54,24 +55,22 @@ export default function EditUser() {
     lastName: user.lastName,
     gender: user.gender,
     phoneNumber: user.phoneNumber,
-    // //Shipping Info
-    // sFullName: user.shippingInfo.fullName,
-    // sGender: user.shippingInfo.Gender,
-    // sPhoneNumber: user.shippingInfo.PhoneNumber,
-    // sDivision: user.shippingInfo.Division,
-    // sDistrict: user.shippingInfo.District,
-    // sUpazila: user.shippingInfo.Upazila,
-    // sStreet: user.shippingInfo.Street,
-    // sGender: user.shippingInfo.Gender,
-    // //Billing Info
-    // bFullName: user.billingInfo.fullName,
-    // bGender: user.billingInfo.Gender,
-    // bPhoneNumber: user.billingInfo.PhoneNumber,
-    // bDivision: user.billingInfo.Division,
-    // bDistrict: user.billingInfo.District,
-    // bUpazila: user.billingInfo.Upazila,
-    // bStreet: user.billingInfo.Street,
-    // bGender: user.billingInfo.Gender,
+    //Shipping Info
+    sFullName: user.shippingInfo.fullName,
+    sGender: user.shippingInfo.gender,
+    sPhoneNumber: user.shippingInfo.phoneNumber,
+    sDivision: user.shippingInfo.division,
+    sDistrict: user.shippingInfo.district,
+    sUpazila: user.shippingInfo.upazila,
+    sStreet: user.shippingInfo.street,
+    //Billing Info
+    bFullName: user.billingInfo.fullName,
+    bGender: user.billingInfo.gender,
+    bPhoneNumber: user.billingInfo.phoneNumber,
+    bDivision: user.billingInfo.division,
+    bDistrict: user.billingInfo.district,
+    bUpazila: user.billingInfo.upazila,
+    bStreet: user.billingInfo.street,
   });
 
   const [file, setFile] = useState(null);
@@ -117,9 +116,29 @@ export default function EditUser() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          const shippingInfo = {
+            fullName: inputs.sFullName,
+            phoneNumber: inputs.sPhoneNumber,
+            gender: inputs.sGender,
+            division: inputs.sDivision,
+            district: inputs.sDistrict,
+            upazila: inputs.sUpazila,
+            street: inputs.sStreet,
+          };
+          const billingInfo = {
+            fullName: inputs.bFullName,
+            phoneNumber: inputs.bPhoneNumber,
+            gender: inputs.bGender,
+            division: inputs.bDivision,
+            district: inputs.bDistrict,
+            upazila: inputs.bUpazila,
+            street: inputs.bStreet,
+          };
           const updatedUser = {
             ...user,
             ...inputs,
+            ...shippingInfo,
+            ...billingInfo,
             img: downloadURL,
           };
           updateUser(userId, updatedUser, dispatch).then((res) => {
@@ -136,9 +155,29 @@ export default function EditUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const shippingInfo = {
+      fullName: inputs.sFullName,
+      phoneNumber: inputs.sPhoneNumber,
+      gender: inputs.sGender,
+      division: inputs.sDivision,
+      district: inputs.sDistrict,
+      upazila: inputs.sUpazila,
+      street: inputs.sStreet,
+    };
+    const billingInfo = {
+      fullName: inputs.bFullName,
+      phoneNumber: inputs.bPhoneNumber,
+      gender: inputs.bGender,
+      division: inputs.bDivision,
+      district: inputs.bDistrict,
+      upazila: inputs.bUpazila,
+      street: inputs.bStreet,
+    };
     const updatedUser = {
       ...user,
       ...inputs,
+      ...shippingInfo,
+      ...billingInfo,
     };
     updateUser(userId, updatedUser, dispatch).then((res) => {
       res.status === 200
@@ -151,7 +190,7 @@ export default function EditUser() {
 
   return (
     <>
-      <Link href="/" color="inherit" underline="none">
+      <Link href="/users" color="inherit" underline="none">
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
@@ -172,7 +211,6 @@ export default function EditUser() {
             <Box
               component="form"
               onSubmit={file ? handleSubmitWithFile : handleSubmit}
-              noValidate
               sx={{
                 mt: 1,
                 display: "flex",
@@ -195,12 +233,8 @@ export default function EditUser() {
                   {user.username}
                 </Typography>
               </Stack>
-              <Stack direction="column"
-                  sx={{ flex: 5 }}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                >
+              <Stack direction="column" sx={{ flex: 3 }}>
+                <Stack direction="row" justifyContent="space-evenly">
                   <Stack direction="column">
                     <Typography variant="h6" color="primary">
                       Account Details
@@ -209,7 +243,6 @@ export default function EditUser() {
                       onChange={(e) => handleChange(e)}
                       margin="normal"
                       required
-                      id="username"
                       value={inputs.username}
                       label="Username"
                       name="username"
@@ -220,7 +253,6 @@ export default function EditUser() {
                       onChange={(e) => handleChange(e)}
                       margin="normal"
                       type="password"
-                      required
                       id="password"
                       value={inputs.password}
                       label="Password"
@@ -232,6 +264,17 @@ export default function EditUser() {
                       onChange={(e) => handleChange(e)}
                       margin="normal"
                       required
+                      name="email"
+                      label="Email"
+                      id="email"
+                      type="email"
+                      value={inputs.email}
+                      variant="standard"
+                    />
+
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
                       name="firstName"
                       label="First Name"
                       id="firstName"
@@ -242,7 +285,6 @@ export default function EditUser() {
                     <TextField
                       onChange={(e) => handleChange(e)}
                       margin="normal"
-                      required
                       name="lastName"
                       label="Last Name"
                       id="lastName"
@@ -253,20 +295,6 @@ export default function EditUser() {
                     <TextField
                       onChange={(e) => handleChange(e)}
                       margin="normal"
-                      required
-                      fullWidth
-                      name="email"
-                      label="Email"
-                      id="email"
-                      value={inputs.email}
-                      variant="standard"
-                    />
-
-                    <TextField
-                      onChange={(e) => handleChange(e)}
-                      margin="normal"
-                      required
-                      fullWidth
                       name="phoneNumber"
                       label="Phone Number"
                       type="number"
@@ -275,30 +303,34 @@ export default function EditUser() {
                       variant="standard"
                     />
 
-                    <FormControl fullWidth>
-                      <FormLabel id="gender">Gender</FormLabel>
-                      <Select
-                        labelId="gender"
-                        name="gender"
-                        value={inputs.gender || "male"}
-                        onChange={(e) => handleChange(e)}
-                      >
-                        <MenuItem value="male">Male</MenuItem>
-                        <MenuItem value="female">Female</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl fullWidth>
-                      <FormLabel id="isAdmin">Account Type</FormLabel>
-                      <Select
-                        labelId="isAdmin"
-                        name="isAdmin"
-                        value="false"
-                        onChange={(e) => handleChange(e)}
-                      >
-                        <MenuItem value="true">Admin</MenuItem>
-                        <MenuItem value="false">User</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <TextField
+                      select
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      fullWidth
+                      name="gender"
+                      label="Gender"
+                      id="gender"
+                      value={inputs.gender || "male"}
+                      variant="standard"
+                    >
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                    </TextField>
+                    <TextField
+                      select
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      fullWidth
+                      name="isAdmin"
+                      label="Account Type"
+                      id="isAdmin"
+                      value={inputs.isAdmin || "false"}
+                      variant="standard"
+                    >
+                      <MenuItem value="true">Admin</MenuItem>
+                      <MenuItem value="false">User</MenuItem>
+                    </TextField>
 
                     {file && (
                       <Avatar
@@ -312,27 +344,171 @@ export default function EditUser() {
                         }}
                       />
                     )}
-                    <TextField
-                      onChange={(e) => setFile(e.target.files[0])}
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="file"
-                      label="Upload Image"
-                      type="file"
-                      id="file"
-                      variant="standard"
-                    />
+
+                    <FormControl fullWidth>
+                      <FormLabel filled id="file">
+                        Upload Image
+                      </FormLabel>
+                      <input
+                        id="file"
+                        name="file"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setFile(e.target.files[0])}
+                      />
+                    </FormControl>
                   </Stack>
+
+                  {/* Shipping */}
+
                   <Stack direction="column">
                     <Typography variant="h6" color="primary">
                       Shipping Info
                     </Typography>
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Full Name"
+                      id="sfullName"
+                      name="sFullName"
+                      value={inputs.sFullName || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Phone Number"
+                      id="sPhoneNumber"
+                      name="sPhoneNumber"
+                      value={inputs.sPhoneNumber || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      select
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      fullWidth
+                      label="Gender"
+                      id="sGender"
+                      name="sGender"
+                      value={inputs.sGender || "male"}
+                      variant="standard"
+                    >
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                    </TextField>
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Division"
+                      id="sDivision"
+                      name="sDivision"
+                      value={inputs.sDivision || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="District"
+                      id="sDistrict"
+                      name="sDistrict"
+                      value={inputs.sDistrict || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Upazila"
+                      id="sUpazila"
+                      name="sUpazila"
+                      value={inputs.sUpazila || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Street"
+                      id="sStreet"
+                      name="sStreet"
+                      value={inputs.sStreet || ""}
+                      variant="standard"
+                    />
                   </Stack>
+
+                  {/* Billing */}
+
                   <Stack direction="column">
                     <Typography variant="h6" color="primary">
                       Billing Info
                     </Typography>
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Full Name"
+                      id="bFullName"
+                      name="bFullName"
+                      value={inputs.bFullName || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Phone Number"
+                      id="bPhoneNumber"
+                      name="bPhoneNumber"
+                      value={inputs.bPhoneNumber || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      select
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      fullWidth
+                      label="Gender"
+                      id="bGender"
+                      name="bGender"
+                      value={inputs.bGender || "male"}
+                      variant="standard"
+                    >
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                    </TextField>
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Division"
+                      id="bDivision"
+                      name="bDivision"
+                      value={inputs.bDivision || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="District"
+                      id="bDistrict"
+                      name="bDistrict"
+                      value={inputs.bDistrict || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Upazila"
+                      id="bUpazila"
+                      name="bUpazila"
+                      value={inputs.bUpazila || ""}
+                      variant="standard"
+                    />
+                    <TextField
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      label="Street"
+                      id="bStreet"
+                      name="bStreet"
+                      value={inputs.bStreet || ""}
+                      variant="standard"
+                    />
                   </Stack>
                 </Stack>
                 <Stack>

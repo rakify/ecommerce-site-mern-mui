@@ -13,12 +13,27 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Orders from "./pages/Orders";
 import Wishlist from "./pages/Wishlist";
+import { getCartProducts, getProducts, getUser } from "./redux/apiCalls";
+import { useEffect } from "react";
 
 const App = () => {
-  const user = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser?._id);
+
+  //Even when theres no user available get products
+  useEffect(() => {
+    getProducts(dispatch);
+  }, [dispatch]);
+
+  //When theres user get cart and user info
+  useEffect(() => {
+    user && getUser(user, dispatch);
+    user && getCartProducts(user, dispatch);
+  });
+
   return (
     <Router>
       <Navbar />
@@ -27,10 +42,22 @@ const App = () => {
         <Route path="/products/:category" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={!user ? <Navigate to="/" /> : <Wishlist />} />
-        <Route path="/checkout" element={!user ? <Navigate to="/" /> : <Checkout />} />
-        <Route path="/orders" element={!user ? <Navigate to="/" /> : <Orders />} />
-        <Route path="/profile"  element={!user ? <Navigate to="/" /> : <Profile />} />
+        <Route
+          path="/wishlist"
+          element={!user ? <Navigate to="/" /> : <Wishlist />}
+        />
+        <Route
+          path="/checkout"
+          element={!user ? <Navigate to="/" /> : <Checkout />}
+        />
+        <Route
+          path="/orders"
+          element={!user ? <Navigate to="/" /> : <Orders />}
+        />
+        <Route
+          path="/profile"
+          element={!user ? <Navigate to="/" /> : <Profile />}
+        />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route
           path="/register"

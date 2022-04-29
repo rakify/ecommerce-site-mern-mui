@@ -73,13 +73,9 @@ export const updateUser = async (id, user, dispatch) => {
     // update
     const res = await axios.put(`/users/${id}`, user);
     dispatch(updateUserSuccess({ id, user }));
-
-    console.log(res);
     return res;
   } catch (err) {
     dispatch(updateUserFailure());
-
-    console.log(err);
     return err;
   }
 };
@@ -97,10 +93,19 @@ export const addUser = async (user, dispatch) => {
 };
 
 //Products
+export const getProduct = async (id) => {
+  try {
+    const res = await axios.get(`/products/find/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {
-    const res = await axios.get("/products");
+    const res = await axios.get("/products?new=true");
     dispatch(getProductSuccess(res.data));
   } catch (err) {
     dispatch(getProductFailure());
@@ -121,10 +126,12 @@ export const updateProduct = async (id, product, dispatch) => {
   dispatch(updateProductStart());
   try {
     // update
-    await axios.put(`/products/${id}`, product);
+    const res = await axios.put(`/products/${id}`, product);
     dispatch(updateProductSuccess({ id, product }));
+    return res;
   } catch (err) {
     dispatch(updateProductFailure());
+    return err;
   }
 };
 
@@ -133,8 +140,10 @@ export const addProduct = async (product, dispatch) => {
   try {
     const res = await axios.post(`/products`, product);
     dispatch(addProductSuccess(res.data));
+    return res;
   } catch (err) {
     dispatch(addProductFailure());
+    return err;
   }
 };
 

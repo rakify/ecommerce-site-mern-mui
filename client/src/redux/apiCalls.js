@@ -73,7 +73,7 @@ export const getUser = async (id, dispatch) => {
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {
-    const res = await axios.get("/products");
+    const res = await axios.get("/products?new=true");
     dispatch(getProductSuccess(res.data));
   } catch (err) {
     dispatch(getProductFailure());
@@ -87,7 +87,7 @@ export const getCartProducts = async (id, dispatch) => {
     const res = await axios.get(`/carts/find/${id}`);
     dispatch(getCartSuccess(res.data));
   } catch (err) {
-    console.log(err)
+    console.log(err);
     dispatch(getCartFailure());
   }
 };

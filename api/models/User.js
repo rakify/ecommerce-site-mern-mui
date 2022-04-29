@@ -25,10 +25,22 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    firstName: String,
-    lastName: String,
-    gender: String,
-    phoneNumber: String,
+    firstName: {
+      type: String,
+      default: "",
+    },
+    lastName: {
+      type: String,
+      default: "",
+    },
+    gender: {
+      type: String,
+      default: "male",
+    },
+    phoneNumber: {
+      type: String,
+      default: "",
+    },
     img: {
       type: String,
       default:
@@ -36,11 +48,27 @@ const UserSchema = new mongoose.Schema(
     },
     shippingInfo: {
       type: Object,
-      default: {},
+      default: {
+        fullName: "",
+        phoneNumber: "",
+        gender: "male",
+        division: "",
+        distrcit: "",
+        upazila: "",
+        street: "",
+      },
     },
     billingInfo: {
       type: Object,
-      default: {},
+      default: {
+        fullName: "",
+        phoneNumber: "",
+        gender: "male",
+        division: "",
+        distrcit: "",
+        upazila: "",
+        street: "",
+      },
     },
   },
   { timestamps: true }

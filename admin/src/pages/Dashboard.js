@@ -37,7 +37,9 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import UserList from "./UserList";
+import UserList from "../components/UserList";
+import { useLocation, useNavigate } from "react-router-dom";
+import ProductList from "../components/ProductList";
 
 const drawerWidth = 240;
 
@@ -89,15 +91,21 @@ const mdTheme = createTheme();
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-  const [nowShowing, setNowShowing] = useState("Dashboard");
+  const navigate = useNavigate();
+  const [nowShowing, setNowShowing] = useState("");
   const [open, setOpen] = useState(true);
+  const url = useLocation();
+
+  //Control which screen is displaying
+  useEffect(() => {
+    url.pathname === "/"
+      ? setNowShowing("")
+      : setNowShowing(url.pathname[1].toUpperCase() + url.pathname.slice(2));
+  }, [url]);
+
+  //Control drawer open or close
   const toggleDrawer = () => {
     setOpen(!open);
-  };
-
-  //Control WHats displaying
-  const handleClick = (content) => {
-    setNowShowing(content);
   };
 
   // Get All Users
@@ -135,11 +143,11 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              {nowShowing}
+              {nowShowing === "" ? "Dashboard" : nowShowing}
             </Typography>
-            
+
             {nowShowing === "Users" && (
-              <Link href="/newUser" color="inherit" underline="hover">
+              <Link href="/user" color="inherit" underline="hover">
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
@@ -147,7 +155,7 @@ export default function Dashboard() {
             )}
 
             {nowShowing === "Products" && (
-              <Link href="/newProduct" color="inherit" underline="hover">
+              <Link href="/product" color="inherit" underline="hover">
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
@@ -170,37 +178,55 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <ListItemButton onClick={() => handleClick("Dashboard")}>
+            <ListItemButton
+              onClick={() => navigate("/")}
+              selected={nowShowing === ""}
+            >
               <ListItemIcon>
                 <DashboardSharp />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
-            <ListItemButton onClick={() => handleClick("Products")}>
+            <ListItemButton
+              onClick={() => navigate("/products")}
+              selected={nowShowing === "Products"}
+            >
               <ListItemIcon>
                 <Inventory2 />
               </ListItemIcon>
               <ListItemText primary="Products" />
             </ListItemButton>
-            <ListItemButton onClick={() => handleClick("Users")}>
+            <ListItemButton
+              onClick={() => navigate("/users")}
+              selected={nowShowing === "Users"}
+            >
               <ListItemIcon>
                 <People />
               </ListItemIcon>
               <ListItemText primary="Users" />
             </ListItemButton>
-            <ListItemButton onClick={() => handleClick("Orders")}>
+            <ListItemButton
+              onClick={() => navigate("/orders")}
+              selected={nowShowing === "Orders"}
+            >
               <ListItemIcon>
                 <ShoppingCart />
               </ListItemIcon>
               <ListItemText primary="Orders" />
             </ListItemButton>
-            <ListItemButton onClick={() => handleClick("Reviews")}>
+            <ListItemButton
+              onClick={() => navigate("/reviews")}
+              selected={nowShowing === "Reviews"}
+            >
               <ListItemIcon>
                 <Reviews />
               </ListItemIcon>
               <ListItemText primary="Reviews" />
             </ListItemButton>
-            <ListItemButton onClick={() => handleClick("Reports")}>
+            <ListItemButton
+              onClick={() => navigate("/reports")}
+              selected={nowShowing === "Reports"}
+            >
               <ListItemIcon>
                 <BarChart />
               </ListItemIcon>
@@ -208,7 +234,7 @@ export default function Dashboard() {
             </ListItemButton>
           </List>
         </Drawer>
-        {nowShowing === "Dashboard" ? (
+        {nowShowing === "" ? (
           <Box
             component="main"
             sx={{
@@ -272,6 +298,8 @@ export default function Dashboard() {
           </Box>
         ) : nowShowing === "Users" ? (
           <UserList />
+        ) : nowShowing === "Products" ? (
+          <ProductList />
         ) : (
           ""
         )}

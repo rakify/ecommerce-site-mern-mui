@@ -36,7 +36,7 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((order) => (
+          {orders.slice(0,10).map((order) => (
             <TableRow key={order._id}>
               <TableCell>{order.createdAt}</TableCell>
               <TableCell>{order.user.username}</TableCell>

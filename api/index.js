@@ -22,10 +22,9 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
 //middlewares
 //we should use them before routes
-const whitelist = ["http://localhost:5000", "http://localhost:3000"];
+const whitelist = ["http://localhost:5000", "http://localhost:5001",];
 app.use(
   cors({
     origin: function (origin, callback) {
