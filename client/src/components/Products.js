@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
-import {Grid, styled} from "@mui/material";
+import { Grid, styled } from "@mui/material";
 import Product from "./Product";
 import { useSelector } from "react-redux";
 
 const Products = ({ cat, filters, sort }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
- 
+
   useEffect(() => {
-    cat &&
-      setFilteredProducts(
-        products.filter((item) =>
-          Object.entries(filters).every(([key, value]) =>
-            item[key].includes(value)
-          )
-        )
-      );
-  }, [products, cat, filters]);
+    setFilteredProducts(
+      products.filter((item) => {
+        return item.cat.indexOf(cat) >= 0;
+      })
+    );
+  }, [cat]);
 
   useEffect(() => {
     if (sort === "newest") {

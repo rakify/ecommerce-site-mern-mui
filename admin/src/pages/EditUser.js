@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
+import { ArrowBackIos, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStorage,
@@ -71,10 +71,11 @@ export default function EditUser() {
   const [response, setResponse] = useState(false);
   const [loading, setLoading] = useState("Update");
 
+  // This handle the change in main user profile
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
+  // this handle the changes in user saved address
   const handleChange2 = (e) => {
     setInputs2((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -134,6 +135,7 @@ export default function EditUser() {
             upazila: inputs2.bUpazila,
             street: inputs2.bStreet,
           };
+
           const updatedUser = {
             ...user,
             ...inputs,
@@ -563,7 +565,7 @@ export default function EditUser() {
         <Typography>No user found with the {userId}</Typography>
       )}
 
-{/* Display error or success message */}
+      {/* Display error or success message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={Boolean(response)}
