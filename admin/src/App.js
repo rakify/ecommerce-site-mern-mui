@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import EditUser from "./pages/EditUser";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
+import EditOrder from "./pages/EditOrder";
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -20,6 +21,7 @@ function App() {
         <Route path="/user/:userId" element={user ? <EditUser /> : <Login />} />
         <Route exact path="/product" element={user ? <AddProduct /> : <Login />} />
         <Route path="/product/:productId" element={user ? <EditProduct /> : <Login />} />
+        <Route path="/order/:orderId" element={user ? <EditOrder /> : <Login />} />
         <Route exact path="/:screen" element={user ? <Dashboard /> : <Login />} />
 
       </Routes>

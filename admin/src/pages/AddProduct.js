@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowBackIos, ArrowLeft } from "@mui/icons-material";
+import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStorage,
@@ -15,6 +15,7 @@ import {
   Container,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
   Link,
   MenuItem,
@@ -46,7 +47,7 @@ export default function AddProduct() {
   const [cat, setCat] = useState([]);
   const [response, setResponse] = useState(false);
   const [tags, setTags] = useState([]);
-
+  const [loading, setLoading] = useState("Add");
   // set tags everytime title changes
   useEffect(() => {
     setTags(
@@ -65,6 +66,7 @@ export default function AddProduct() {
 
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
+    setLoading("Ading");
     const fileName = new Date().getTime() + file.name;
     const storage = getStorage(app);
     const storageRef = ref(storage, fileName);
@@ -84,10 +86,10 @@ export default function AddProduct() {
         console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
           case "paused":
-            console.log("Upload is paused");
+            setLoading("Upload is paused");
             break;
           case "running":
-            console.log("Upload is running");
+            setLoading("Uploading Image");
             break;
           default:
         }
@@ -99,6 +101,7 @@ export default function AddProduct() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setLoading("Uploaded");
           const slug = inputs.title.toLowerCase().split(" ").join("-");
           const updatedProduct = {
             ...inputs,
@@ -108,13 +111,18 @@ export default function AddProduct() {
             slug: slug,
           };
           addProduct(updatedProduct, dispatch).then((res) => {
-            res.status === 201
-              ? setResponse(res.data)
-              : res.response.data?.code === 11000
-              ? setResponse({
-                  message: "A similar product with the title already exists",
-                })
-              : setResponse(res.response.data);
+            if (res.status === 201) {
+              setResponse(res.data);
+              setLoading("Add");
+            } else if (res.response.data?.code === 11000) {
+              setResponse({
+                message: "A similar product with the title already exists.",
+              });
+              setLoading("Add");
+            } else {
+              setResponse(res.response.data);
+              setLoading("Add");
+            }
           });
         });
       }
@@ -123,6 +131,7 @@ export default function AddProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading("Adding");
     const slug = inputs.title.toLowerCase().split(" ").join("-");
     const updatedProduct = {
       ...inputs,
@@ -131,13 +140,18 @@ export default function AddProduct() {
       slug: slug,
     };
     addProduct(updatedProduct, dispatch).then((res) => {
-      res.status === 201
-        ? setResponse(res.data)
-        : res.response.data?.code === 11000
-        ? setResponse({
-            message: "A similar product with the title already exists",
-          })
-        : setResponse(res.response.data);
+      if (res.status === 201) {
+        setResponse(res.data);
+        setLoading("Add");
+      } else if (res.response.data?.code === 11000) {
+        setResponse({
+          message: "A similar product with the title already exists",
+        });
+        setLoading("Add");
+      } else {
+        setResponse(res.response.data);
+        setLoading("Add");
+      }
     });
   };
 
@@ -185,7 +199,7 @@ export default function AddProduct() {
             name="desc"
             variant="standard"
           />
-          <Stack direction="row" sx={{gap:2}}>
+          <Stack direction="row" sx={{ gap: 2 }}>
             <TextField
               sx={{ flex: 3 }}
               onChange={(e) => handleChange(e)}
@@ -216,7 +230,6 @@ export default function AddProduct() {
               <MenuItem value="piece">Piece</MenuItem>
             </TextField>
           </Stack>
-
           <TextField
             required
             onChange={(e) => handleCat(e)}
@@ -229,7 +242,6 @@ export default function AddProduct() {
             placeholder="tshirt, dress,male-clothing"
             helperText="Add categories separated by comma"
           />
-
           <TextField
             select
             onChange={(e) => handleChange(e)}
@@ -245,7 +257,17 @@ export default function AddProduct() {
             <MenuItem value="true">Available</MenuItem>
             <MenuItem value="false">Unavailable</MenuItem>
           </TextField>
+          <TextField
+            margin="normal"
+            disabled
+            fullWidth
+            label="Tags"
+            value={tags}
+            autoFocus
+            variant="standard"
+          />
 
+   
           {file && (
             <Avatar
               src={file && URL.createObjectURL(file)}
@@ -258,37 +280,32 @@ export default function AddProduct() {
               }}
             />
           )}
-
-          <FormControl fullWidth sx={{ mt: 3 }}>
-            <FormLabel filled id="file">
-              Product Image
-            </FormLabel>
-            <Input
+   
+          <label htmlFor="file">
+            <input
+              accept=".png, .jpg, .jpeg"
               id="file"
               name="file"
               type="file"
-              accept="image/*"
+              style={{ display: "none" }}
               onChange={(e) => setFile(e.target.files[0])}
             />
-          </FormControl>
-
-          <TextField
-            margin="normal"
-            disabled
-            fullWidth
-            label="Tags"
-            value={tags}
-            autoFocus
-            variant="standard"
-          />
-
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera /> Upload Picture
+            </IconButton>
+          </label>
           <Button
             type="submit"
+            disabled={loading!=="Add"}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            {loading}
           </Button>
         </Box>
       </Container>

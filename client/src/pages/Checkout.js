@@ -1,4 +1,4 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -32,21 +32,12 @@ import { Box } from "@mui/system";
 const steps = [
   {
     label: "Add shipping & billing info",
-    description: `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`,
   },
   {
     label: "Confirm products you are about to order",
-    description:
-      "An ad group contains one or more ads which target a shared set of keywords.",
   },
   {
     label: "Place order",
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
   },
 ];
 
@@ -90,6 +81,8 @@ const Checkout = () => {
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // save billing and shipping info to the user object for re-use purpose
   const handleSave = (e) => {
     e.preventDefault();
     const shippingInfo = {
@@ -127,6 +120,8 @@ const Checkout = () => {
     e.preventDefault();
     const order = {
       user,
+      shippingInfo: user.shippingInfo,
+      billingInfo: user.billingInfo,
       products: cart.products,
       totalAmount: cart.total,
       deliveryTimeSlot: inputs.deliveryTimeSlot,
@@ -151,8 +146,8 @@ const Checkout = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "green",
+    width: 200,
+    bgcolor: "#4bd67b",
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
@@ -181,7 +176,11 @@ const Checkout = () => {
               </StepLabel>
               <StepContent>
                 {index === 0 && (
-                  <Stack direction="row" justifyContent="space-evenly">
+                  <Stack
+                    direction="row"
+                    justifyContent="space-evenly"
+                    sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                  >
                     {/* Shipping */}
 
                     <Stack direction="column">
@@ -374,7 +373,11 @@ const Checkout = () => {
                   </Stack>
                 )}
                 {index === 2 && (
-                  <Stack direction="row" justifyContent="space-evenly">
+                  <Stack
+                    direction="row"
+                    justifyContent="space-evenly"
+                    sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                  >
                     {/* Delivery Time Slot */}
                     <Box component="form" sx={{ mt: 1 }}>
                       <Typography variant="h6">
@@ -510,9 +513,9 @@ const Checkout = () => {
         <Box sx={style}>
           <Typography
             id="modal-modal-title"
-            variant="h6"
+            variant="h4"
             component="h2"
-            sx={{ color: "cyan" }}
+            sx={{ color: "black", fontWeight:"bolder" }}
           >
             Order Placed Successfully
           </Typography>

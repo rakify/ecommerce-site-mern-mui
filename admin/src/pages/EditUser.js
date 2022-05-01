@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowBackIos, ArrowLeft } from "@mui/icons-material";
+import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStorage,
@@ -18,6 +18,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
   Link,
   MenuItem,
   Select,
@@ -55,6 +56,9 @@ export default function EditUser() {
     lastName: user.lastName,
     gender: user.gender,
     phoneNumber: user.phoneNumber,
+  });
+
+  const [inputs2, setInputs2] = useState({
     //Shipping Info
     sFullName: user.shippingInfo.fullName,
     sGender: user.shippingInfo.gender,
@@ -75,13 +79,19 @@ export default function EditUser() {
 
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
+  const [loading, setLoading] = useState("Update");
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleChange2 = (e) => {
+    setInputs2((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
+    setLoading("Updating");
     const fileName = new Date().getTime() + file.name;
     const storage = getStorage(app);
     const storageRef = ref(storage, fileName);
@@ -101,10 +111,10 @@ export default function EditUser() {
         console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
           case "paused":
-            console.log("Upload is paused");
+            setLoading("Upload is Paused");
             break;
           case "running":
-            console.log("Upload is running");
+            setLoading("Uploading Picture");
             break;
           default:
         }
@@ -117,36 +127,41 @@ export default function EditUser() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           const shippingInfo = {
-            fullName: inputs.sFullName,
-            phoneNumber: inputs.sPhoneNumber,
-            gender: inputs.sGender,
-            division: inputs.sDivision,
-            district: inputs.sDistrict,
-            upazila: inputs.sUpazila,
-            street: inputs.sStreet,
+            fullName: inputs2.sFullName,
+            phoneNumber: inputs2.sPhoneNumber,
+            gender: inputs2.sGender,
+            division: inputs2.sDivision,
+            district: inputs2.sDistrict,
+            upazila: inputs2.sUpazila,
+            street: inputs2.sStreet,
           };
           const billingInfo = {
-            fullName: inputs.bFullName,
-            phoneNumber: inputs.bPhoneNumber,
-            gender: inputs.bGender,
-            division: inputs.bDivision,
-            district: inputs.bDistrict,
-            upazila: inputs.bUpazila,
-            street: inputs.bStreet,
+            fullName: inputs2.bFullName,
+            phoneNumber: inputs2.bPhoneNumber,
+            gender: inputs2.bGender,
+            division: inputs2.bDivision,
+            district: inputs2.bDistrict,
+            upazila: inputs2.bUpazila,
+            street: inputs2.bStreet,
           };
           const updatedUser = {
             ...user,
             ...inputs,
-            ...shippingInfo,
-            ...billingInfo,
+            shippingInfo,
+            billingInfo,
             img: downloadURL,
           };
           updateUser(userId, updatedUser, dispatch).then((res) => {
-            res.status === 200
-              ? setResponse(res.data)
-              : res.response.data?.code === 11000
-              ? setResponse({ message: "Username or email already exists" })
-              : setResponse(res.response.data);
+            if (res.status === 200) {
+              setResponse(res.data);
+              setLoading("Update");
+            } else if (res.response.data?.code === 11000) {
+              setResponse({ message: "Username or email already exists" });
+              setLoading("Update");
+            } else {
+              setResponse(res.response.data);
+              setLoading("Update");
+            }
           });
         });
       }
@@ -155,36 +170,43 @@ export default function EditUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading("Updating");
     const shippingInfo = {
-      fullName: inputs.sFullName,
-      phoneNumber: inputs.sPhoneNumber,
-      gender: inputs.sGender,
-      division: inputs.sDivision,
-      district: inputs.sDistrict,
-      upazila: inputs.sUpazila,
-      street: inputs.sStreet,
+      fullName: inputs2.sFullName,
+      phoneNumber: inputs2.sPhoneNumber,
+      gender: inputs2.sGender,
+      division: inputs2.sDivision,
+      district: inputs2.sDistrict,
+      upazila: inputs2.sUpazila,
+      street: inputs2.sStreet,
     };
     const billingInfo = {
-      fullName: inputs.bFullName,
-      phoneNumber: inputs.bPhoneNumber,
-      gender: inputs.bGender,
-      division: inputs.bDivision,
-      district: inputs.bDistrict,
-      upazila: inputs.bUpazila,
-      street: inputs.bStreet,
+      fullName: inputs2.bFullName,
+      phoneNumber: inputs2.bPhoneNumber,
+      gender: inputs2.bGender,
+      division: inputs2.bDivision,
+      district: inputs2.bDistrict,
+      upazila: inputs2.bUpazila,
+      street: inputs2.bStreet,
     };
     const updatedUser = {
       ...user,
       ...inputs,
-      ...shippingInfo,
-      ...billingInfo,
+      shippingInfo,
+      billingInfo,
     };
+    console.log(updatedUser);
     updateUser(userId, updatedUser, dispatch).then((res) => {
-      res.status === 200
-        ? setResponse(res.data)
-        : res.response.data?.code === 11000
-        ? setResponse({ message: "Username or email already exists" })
-        : setResponse(res.response.data);
+      if (res.status === 200) {
+        setResponse(res.data);
+        setLoading("Update");
+      } else if (res.response.data?.code === 11000) {
+        setResponse({ message: "Username or email already exists" });
+        setLoading("Update");
+      } else {
+        setResponse(res.response.data);
+        setLoading("Update");
+      }
     });
   };
 
@@ -214,8 +236,12 @@ export default function EditUser() {
               sx={{
                 mt: 1,
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: {
+                  xs: "column",
+                  md: "row",
+                },
                 justifyContent: "space-between",
+                gap:5
               }}
             >
               <Stack
@@ -234,7 +260,16 @@ export default function EditUser() {
                 </Typography>
               </Stack>
               <Stack direction="column" sx={{ flex: 3 }}>
-                <Stack direction="row" justifyContent="space-evenly">
+                <Stack
+                  direction="row"
+                  justifyContent="space-evenly"
+                  sx={{
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                    },
+                  }}
+                >
                   <Stack direction="column">
                     <Typography variant="h6" color="primary">
                       Account Details
@@ -297,7 +332,6 @@ export default function EditUser() {
                       margin="normal"
                       name="phoneNumber"
                       label="Phone Number"
-                      type="number"
                       id="phoneNumber"
                       value={inputs.phoneNumber || ""}
                       variant="standard"
@@ -345,18 +379,23 @@ export default function EditUser() {
                       />
                     )}
 
-                    <FormControl fullWidth>
-                      <FormLabel filled id="file">
-                        Upload Image
-                      </FormLabel>
+                    <label htmlFor="file">
                       <input
+                        accept=".png, .jpg, .jpeg"
                         id="file"
                         name="file"
                         type="file"
-                        accept="image/*"
+                        style={{ display: "none" }}
                         onChange={(e) => setFile(e.target.files[0])}
                       />
-                    </FormControl>
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera /> Upload Picture
+                      </IconButton>
+                    </label>
                   </Stack>
 
                   {/* Shipping */}
@@ -366,71 +405,71 @@ export default function EditUser() {
                       Shipping Info
                     </Typography>
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Full Name"
                       id="sfullName"
                       name="sFullName"
-                      value={inputs.sFullName || ""}
+                      value={inputs2.sFullName || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Phone Number"
                       id="sPhoneNumber"
                       name="sPhoneNumber"
-                      value={inputs.sPhoneNumber || ""}
+                      value={inputs2.sPhoneNumber || ""}
                       variant="standard"
                     />
                     <TextField
                       select
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       fullWidth
                       label="Gender"
                       id="sGender"
                       name="sGender"
-                      value={inputs.sGender || "male"}
+                      value={inputs2.sGender || "male"}
                       variant="standard"
                     >
                       <MenuItem value="male">Male</MenuItem>
                       <MenuItem value="female">Female</MenuItem>
                     </TextField>
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Division"
                       id="sDivision"
                       name="sDivision"
-                      value={inputs.sDivision || ""}
+                      value={inputs2.sDivision || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="District"
                       id="sDistrict"
                       name="sDistrict"
-                      value={inputs.sDistrict || ""}
+                      value={inputs2.sDistrict || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Upazila"
                       id="sUpazila"
                       name="sUpazila"
-                      value={inputs.sUpazila || ""}
+                      value={inputs2.sUpazila || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Street"
                       id="sStreet"
                       name="sStreet"
-                      value={inputs.sStreet || ""}
+                      value={inputs2.sStreet || ""}
                       variant="standard"
                     />
                   </Stack>
@@ -442,71 +481,71 @@ export default function EditUser() {
                       Billing Info
                     </Typography>
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Full Name"
                       id="bFullName"
                       name="bFullName"
-                      value={inputs.bFullName || ""}
+                      value={inputs2.bFullName || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Phone Number"
                       id="bPhoneNumber"
                       name="bPhoneNumber"
-                      value={inputs.bPhoneNumber || ""}
+                      value={inputs2.bPhoneNumber || ""}
                       variant="standard"
                     />
                     <TextField
                       select
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       fullWidth
                       label="Gender"
                       id="bGender"
                       name="bGender"
-                      value={inputs.bGender || "male"}
+                      value={inputs2.bGender || "male"}
                       variant="standard"
                     >
                       <MenuItem value="male">Male</MenuItem>
                       <MenuItem value="female">Female</MenuItem>
                     </TextField>
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Division"
                       id="bDivision"
                       name="bDivision"
-                      value={inputs.bDivision || ""}
+                      value={inputs2.bDivision || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="District"
                       id="bDistrict"
                       name="bDistrict"
-                      value={inputs.bDistrict || ""}
+                      value={inputs2.bDistrict || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Upazila"
                       id="bUpazila"
                       name="bUpazila"
-                      value={inputs.bUpazila || ""}
+                      value={inputs2.bUpazila || ""}
                       variant="standard"
                     />
                     <TextField
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => handleChange2(e)}
                       margin="normal"
                       label="Street"
                       id="bStreet"
                       name="bStreet"
-                      value={inputs.bStreet || ""}
+                      value={inputs2.bStreet || ""}
                       variant="standard"
                     />
                   </Stack>
@@ -514,11 +553,12 @@ export default function EditUser() {
                 <Stack>
                   <Button
                     type="submit"
+                    disabled={loading !== "Update"}
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    Update
+                    {loading}
                   </Button>
                 </Stack>
               </Stack>

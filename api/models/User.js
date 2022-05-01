@@ -51,6 +51,7 @@ const UserSchema = new mongoose.Schema(
       default: {
         fullName: "",
         phoneNumber: "",
+        email: "",
         gender: "male",
         division: "",
         distrcit: "",
@@ -63,6 +64,7 @@ const UserSchema = new mongoose.Schema(
       default: {
         fullName: "",
         phoneNumber: "",
+        email: "",
         gender: "male",
         division: "",
         distrcit: "",

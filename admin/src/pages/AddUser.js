@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowBackIos, ArrowLeft } from "@mui/icons-material";
+import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStorage,
@@ -16,6 +16,8 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
+  Input,
   Link,
   MenuItem,
   Select,
@@ -42,6 +44,7 @@ export default function AddUser() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
+  const [loading, setLoading] = useState("Add");
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -49,6 +52,7 @@ export default function AddUser() {
 
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
+    setLoading("Adding");
     const fileName = new Date().getTime() + file.name;
     const storage = getStorage(app);
     const storageRef = ref(storage, fileName);
@@ -68,10 +72,10 @@ export default function AddUser() {
         console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
           case "paused":
-            console.log("Upload is paused");
+            setLoading("Upload is Paused");
             break;
           case "running":
-            console.log("Upload is running");
+            setLoading("Uploading Image");
             break;
           default:
         }
@@ -83,16 +87,22 @@ export default function AddUser() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setLoading("Uploaded");
           const user = {
             ...inputs,
             img: downloadURL,
           };
           addUser(user, dispatch).then((res) => {
-            res.status === 201
-              ? setResponse(res.data)
-              : res.response.data?.code === 11000
-              ? setResponse({ message: "Username or email already exists" })
-              : setResponse(res.response.data);
+            if (res.status === 201) {
+              setResponse(res.data);
+              setLoading("Add");
+            } else if (res.response.data?.code === 11000) {
+              setResponse({ message: "Username or email already exists" });
+              setLoading("Add");
+            } else {
+              setResponse(res.response.data);
+              setLoading("Add");
+            }
           });
         });
       }
@@ -101,15 +111,21 @@ export default function AddUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading("Adding");
     const user = {
       ...inputs,
     };
     addUser(user, dispatch).then((res) => {
-      res.status === 201
-        ? setResponse(res.data)
-        : res.response.data?.code === 11000
-        ? setResponse({ message: "Username or email already exists" })
-        : setResponse(res.response.data);
+      if (res.status === 201) {
+        setResponse(res.data);
+        setLoading("Add");
+      } else if (res.response.data?.code === 11000) {
+        setResponse({ message: "Username or email already exists" });
+        setLoading("Add");
+      } else {
+        setResponse(res.response.data);
+        setLoading("Add");
+      }
     });
   };
 
@@ -175,9 +191,19 @@ export default function AddUser() {
             onChange={(e) => handleChange(e)}
             margin="normal"
             fullWidth
-            name="fullName"
-            label="Full Name"
-            id="fullName"
+            name="firstName"
+            label="First Name"
+            id="firstName"
+            variant="standard"
+          />
+
+          <TextField
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            fullWidth
+            name="lastName"
+            label="Last Name"
+            id="lastName"
             variant="standard"
           />
 
@@ -233,26 +259,32 @@ export default function AddUser() {
               }}
             />
           )}
-          <FormControl fullWidth>
-            <FormLabel filled id="file">
-              Upload Image
-            </FormLabel>
+
+          <label htmlFor="file">
             <input
+              accept=".png, .jpg, .jpeg"
               id="file"
               name="file"
               type="file"
-              accept="image/*"
+              style={{ display: "none" }}
               onChange={(e) => setFile(e.target.files[0])}
             />
-          </FormControl>
-
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera /> Upload Picture
+            </IconButton>
+          </label>
           <Button
             type="submit"
+            disabled={loading !== "Add"}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            {loading}
           </Button>
         </Box>
       </Container>

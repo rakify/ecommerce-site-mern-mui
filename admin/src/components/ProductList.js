@@ -43,8 +43,16 @@ export default function ProductList() {
 
   const columns = [
     {
+      field: "_id",
+      headerClassName: "super-app-theme--header",
+      headerName: "Product ID",
+      width: 200,
+      editable: true,
+    },
+    {
       field: "title",
       headerName: "Product",
+      headerClassName: "super-app-theme--header",
       width: 300,
       editable: true,
       renderCell: (params) => {
@@ -59,24 +67,28 @@ export default function ProductList() {
     {
       field: "price",
       headerName: "Price",
+      headerClassName: "super-app-theme--header",
       width: 200,
       editable: true,
     },
     {
       field: "unit",
       headerName: "Unit",
+      headerClassName: "super-app-theme--header",
       width: 150,
       editable: true,
     },
     {
       field: "desc",
       headerName: "Description",
+      headerClassName: "super-app-theme--header",
       width: 150,
       editable: true,
     },
     {
       field: "action",
       headerName: "Action",
+      headerClassName: "super-app-theme--header",
       width: 150,
       renderCell: (params) => {
         return (
@@ -104,7 +116,13 @@ export default function ProductList() {
   ];
 
   return (
-    <Container>
+    <Container
+      sx={{
+        "& .super-app-theme--header": {
+          backgroundColor: "#c2cad0",
+        },
+      }}
+    >
       <Dialog
         open={Boolean(deleteProductId)}
         TransitionComponent={Transition}
@@ -125,18 +143,15 @@ export default function ProductList() {
         </DialogActions>
       </Dialog>
 
-      <h1>Users</h1>
       <DataGrid
-        experimentalFeatures={{ newEditingApi: true }}
-        editMode="row"
         rows={products}
         getRowId={(row) => row._id}
         columns={columns}
         pageSize={10}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
+        rowsPerPageOptions={[4]}
         disableSelectionOnClick
-        autoHeight
+        density="comfortable"
+        sx={{ mt: 10, height: 500 }}
       />
     </Container>
   );

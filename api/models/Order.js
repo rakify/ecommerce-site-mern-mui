@@ -34,6 +34,32 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
+    shippingInfo: {
+      type: Object,
+      default: {
+        fullName: "",
+        phoneNumber: "",
+        email:"",
+        gender: "male",
+        division: "",
+        distrcit: "",
+        upazila: "",
+        street: "",
+      },
+    },
+    billingInfo: {
+      type: Object,
+      default: {
+        fullName: "",
+        phoneNumber: "",
+        email:"",
+        gender: "male",
+        division: "",
+        distrcit: "",
+        upazila: "",
+        street: "",
+      },
+    },
   },
   { timestamps: true }
 );

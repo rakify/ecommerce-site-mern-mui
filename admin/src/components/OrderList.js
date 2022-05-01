@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useId, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -15,93 +15,99 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
-import { deleteUser, getUsers } from "../redux/apiCalls";
+import { deleteOrder, getOrders } from "../redux/apiCalls";
+import { Box } from "@mui/system";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function UserList() {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.users);
-  const [deleteUserId, setDeleteUserId] = useState(false);
+export default function OrderList() {
+  const [orders, setOrders] = useState(false);
+  const [deleteOrderId, setDeleteOrderId] = useState(false);
 
   useEffect(() => {
-    getUsers(dispatch);
-  }, [dispatch]);
+    getOrders().then((res) => setOrders(res));
+  }, []);
 
   const handleDelete = (id) => {
-    setDeleteUserId(false);
-    deleteUser(id, dispatch);
+    setDeleteOrderId(false);
+    deleteOrder(id).then(() => getOrders().then((res) => setOrders(res)));
   };
 
   const handleCloseDialog = () => {
-    setDeleteUserId(false);
+    setDeleteOrderId(false);
   };
 
-  function getFullName(params) {
-    return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-  }
-  
   const columns = [
     {
       field: "_id",
       headerClassName: "super-app-theme--header",
-      headerName: "User ID",
+      headerName: "Order ID",
       width: 200,
       editable: true,
     },
     {
-      field: "username",
+      field: "user.username",
       headerName: "User",
       headerClassName: "super-app-theme--header",
-      width: 300,
+      width: 200,
+      editable: true,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
-            <Avatar src={params.row.img} alt="" />
-            <Typography>{params.row.username}</Typography>
+            <Avatar src={params.row.user.img} alt="" />
+            <Typography>{params.row.user.username}</Typography>
           </Stack>
         );
       },
     },
     {
-      field: "fullName",
-      headerName: "Full Name",
+      field: "createdAt",
       headerClassName: "super-app-theme--header",
-      width: 300,
-      valueGetter: getFullName,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      headerClassName: "super-app-theme--header",
+      headerName: "Created At",
       width: 200,
+      editable: true,
     },
     {
-      field: "phoneNumber",
-      headerName: "Phone Number",
+      field: "deliveryTimeSlot",
       headerClassName: "super-app-theme--header",
+      headerName: "Time Slot",
       width: 150,
+      editable: true,
     },
     {
-      field: "gender",
-      headerName: "Gender",
+      field: "orderStatus",
       headerClassName: "super-app-theme--header",
+      headerName: "Status",
+      width: 100,
+      editable: true,
+    },
+    {
+      field: "paymentMethod",
+      headerClassName: "super-app-theme--header",
+      headerName: "Payment",
       width: 150,
+      editable: true,
+    },
+    {
+      field: "totalAmount",
+      headerClassName: "super-app-theme--header",
+      headerName: "Amount",
+      width: 100,
+      editable: true,
     },
     {
       field: "action",
-      headerName: "Action",
       headerClassName: "super-app-theme--header",
+      headerName: "Action",
       width: 150,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
             <Link
-              href={"/user/" + params.row._id}
+              href={"/order/" + params.row._id}
               underline="none"
               color="inherit"
             >
@@ -112,7 +118,7 @@ export default function UserList() {
             <IconButton
               disabled={params.row.isAdmin === true}
               aria-label="delete"
-              onClick={() => setDeleteUserId(params.row._id)}
+              onClick={() => setDeleteOrderId(params.row._id)}
             >
               <DeleteOutlined />
             </IconButton>
@@ -122,8 +128,6 @@ export default function UserList() {
     },
   ];
 
-  const key = useId();
-
   return (
     <Container
       sx={{
@@ -132,8 +136,22 @@ export default function UserList() {
         },
       }}
     >
+      <DataGrid
+        rows={orders}
+        getRowId={(row) => row._id}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[4]}
+        density="comfortable"
+        loading={!orders}
+        sx={{
+          mt: 10,
+          height: 500,
+        }}
+      />
+
       <Dialog
-        open={Boolean(deleteUserId)}
+        open={Boolean(deleteOrderId)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
@@ -142,25 +160,15 @@ export default function UserList() {
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            If you proceed now user with ID {deleteUserId} will be erased. This
-            action is irreversible.
+            If you proceed now order with ID {deleteOrderId} will be erased.
+            This action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={() => handleDelete(deleteUserId)}>Proceed</Button>
+          <Button onClick={() => handleDelete(deleteOrderId)}>Proceed</Button>
         </DialogActions>
       </Dialog>
-
-      <DataGrid
-        rows={users}
-        getRowId={(row) => row._id}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[4]}
-        density="comfortable"
-        sx={{ mt: 10, height: 500 }}
-      />
     </Container>
   );
 }

@@ -40,7 +40,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
-    res.status(200).json("Order has been deleted...");
+    res.status(200).json({ msg: "Order has been deleted." });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -56,6 +56,18 @@ router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//GET single order
+router.get("/order/:id", verifyTokenAndAuthorization, async (req, res) => {
+  console.log(req.params.id);
+  try {
+    const order = await Order.findById(req.params.id);
+    res.status(200).json(order);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
 
 //GET ALL ORDERS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {

@@ -148,10 +148,38 @@ export const addProduct = async (product, dispatch) => {
 };
 
 //Orders
+export const getOrder = async (id) => {
+  try {
+    const res = await axios.get(`/orders/order/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
 export const getOrders = async () => {
   try {
     const res = await axios.get(`/orders?sortBy=createdAt`);
     return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteOrder = async (id) => {
+  try {
+    const res = await axios.delete(`/orders/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateOrder = async (id, order) => {
+  try {
+    // update
+    const res = await axios.put(`/orders/${id}`, order);
+    return res;
   } catch (err) {
     return err;
   }

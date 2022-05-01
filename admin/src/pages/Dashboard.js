@@ -2,7 +2,6 @@ import {
   Inventory2,
   DashboardSharp,
   People,
-  Layers,
   BarChart,
   ShoppingCart,
   Reviews,
@@ -19,13 +18,11 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Orders from "../components/Orders";
 import { getProducts, getUsers } from "../redux/apiCalls";
 import { useEffect, useState } from "react";
@@ -40,8 +37,9 @@ import {
 import UserList from "../components/UserList";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductList from "../components/ProductList";
+import OrderList from "../components/OrderList";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -93,7 +91,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [nowShowing, setNowShowing] = useState("");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const url = useLocation();
 
   //Control which screen is displaying
@@ -300,8 +298,14 @@ export default function Dashboard() {
           <UserList />
         ) : nowShowing === "Products" ? (
           <ProductList />
+        ) : nowShowing === "Orders" ? (
+          <OrderList />
         ) : (
-          ""
+          <Container>
+            <Typography sx={{ mt: 10 }} variant="h6">
+              What you are looking for is not available yet...
+            </Typography>
+          </Container>
         )}
       </Box>
     </ThemeProvider>

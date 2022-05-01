@@ -8,13 +8,20 @@ const cryptojs = require("crypto-js");
 
 //UPDATE USER
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  console.log(req.body)
+  //if the password is not empty and greater than 3 characters accept
   if (req.body.password && req.body.password.length > 3) {
     req.body.password = cryptojs.AES.encrypt(
       req.body.password,
       process.env.pass_secret
     ).toString();
   }
-  if (req.body.password && req.body.password.length <= 3) delete req.body.password;
+
+  //if the password is not available or empty or smaller than 3 characters dont accept it
+  if (!req.body.password || req.body.password === "" || req.body.password.length <= 3) {
+    delete req.body["password"];
+    console.log(req.body);
+  }
 
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -57,7 +64,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
   try {
     const users =
       query === "createdAt"
-        ? await User.find().sort({ createdAt: -1 }).limit(30)
+        ? await User.find().sort({ createdAt: -1 })
         : await User.find();
 
     res.status(200).json(users);
