@@ -10,6 +10,7 @@ import {
 import app from "../firebase";
 import { getProduct, updateProduct } from "../redux/apiCalls";
 import {
+  Alert,
   Avatar,
   Button,
   Container,
@@ -131,15 +132,19 @@ export default function EditProduct() {
           };
           updateProduct(productId, updatedProduct, dispatch).then((res) => {
             if (res.status === 200) {
-              setResponse(res.data);
+              setResponse({ result: "success", message: res.data.message });
               setLoading("Update");
             } else if (res.response.data?.code === 11000) {
               setResponse({
+                result: "error",
                 message: "A similar product with the title already exists",
               });
               setLoading("Update");
             } else {
-              setResponse(res.response.data);
+              setResponse({
+                result: "error",
+                message: res.response.data.message,
+              });
               setLoading("Update");
             }
           });
@@ -165,15 +170,19 @@ export default function EditProduct() {
     };
     updateProduct(productId, updatedProduct, dispatch).then((res) => {
       if (res.status === 200) {
-        setResponse(res.data);
+        setResponse({ result: "success", message: res.data.message });
         setLoading("Update");
       } else if (res.response.data?.code === 11000) {
         setResponse({
+          result: "error",
           message: "A similar product with the title already exists",
         });
         setLoading("Update");
       } else {
-        setResponse(res.response.data);
+        setResponse({
+          result: "error",
+          message: res.response.data.message,
+        });
         setLoading("Update");
       }
     });
@@ -186,21 +195,13 @@ export default function EditProduct() {
           Go Back
         </Button>
       </Link>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
-        TransitionComponent={SlideTransition}
-        autoHideDuration={3000}
-        onClose={() => setResponse(false)}
-        message={response.message || "Updated Successfully"}
-      />
-
       {product ? (
         <>
           <Typography variant="h6">Update Info For {product.title}</Typography>
           <Container>
             <Box
               component="form"
+              onSubmit={file ? handleSubmitWithFile : handleSubmit}
               sx={{
                 mt: 1,
                 display: "flex",
@@ -211,7 +212,7 @@ export default function EditProduct() {
                 justifyContent: "space-between",
                 gap: 5,
               }}
-              onSubmit={file ? handleSubmitWithFile : handleSubmit}
+              noValidate
             >
               <Stack
                 direction="column"
@@ -379,6 +380,23 @@ export default function EditProduct() {
       ) : (
         <Typography>404 Not Found</Typography>
       )}
+
+      {/* Display error or success message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(response)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={4000}
+        onClose={() => setResponse(false)}
+      >
+        <Alert
+          onClose={() => setResponse(false)}
+          severity={response.result}
+          sx={{ width: "100%" }}
+        >
+          {response.message || "Updated Successfully"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

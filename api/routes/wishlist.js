@@ -4,7 +4,7 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require("../middlewares/verification");
 
 //CREATE Wishlist
 router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {

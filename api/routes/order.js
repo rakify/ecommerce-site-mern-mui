@@ -4,7 +4,7 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require("../middlewares/verification");
 
 //CREATE ORDER
 router.post("/", verifyToken, async (req, res) => {

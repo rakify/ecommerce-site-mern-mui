@@ -1,6 +1,6 @@
-import { Input, styled } from "@mui/material";
+import { Alert, Input, Snackbar, styled } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   getStorage,
   ref,
@@ -8,20 +8,11 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { login } from "../redux/apiCalls";
-import axios from "axios";
-import {
-  PersonOutlineTwoTone,
-  VpnKeyTwoTone,
-  EmailTwoTone,
-  ImageTwoTone,
-} from "@mui/icons-material";
+import { login, register } from "../redux/apiCalls";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -34,10 +25,11 @@ import Footer from "../components/Footer";
 const theme = createTheme();
 
 export default function Register() {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
-  const [error, setError] = useState(false);
+  //fetch api response to display error or success message
+  const [response, setResponse] = useState(false);
 
   const handleChange = (e) => {
     setInputs((prev) => {
@@ -45,21 +37,17 @@ export default function Register() {
     });
   };
 
-  const addUser = async (user) => {
-    try {
-      await axios.post(`/auth/register`, user);
-      login(dispatch, { username: user.username, password: user.password });
-    } catch (err) {
-      setError(true);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = {
       ...inputs,
     };
-    addUser(user);
+    register(user).then((res) => {
+      if (res.response) setResponse(res.response.data);
+      else {
+        navigate("/login?registerSuccess=1");
+      }
+    });
   };
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
@@ -99,7 +87,12 @@ export default function Register() {
             ...inputs,
             img: downloadURL,
           };
-          addUser(user);
+          register(user).then((res) => {
+            if (res.response) setResponse(res.response.data);
+            else {
+              navigate("/login?registerSuccess=1");
+            }
+          });
         });
       }
     );
@@ -165,6 +158,18 @@ export default function Register() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="repeat_password"
+                  label="Repeat Password"
+                  type="password"
+                  id="repeat_password"
+                  autoComplete="password"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Input
                   type="file"
                   id="file"
@@ -191,6 +196,21 @@ export default function Register() {
           </Box>
         </Box>
         <Footer sx={{ mt: 5 }} />
+
+{/* Display register error message */}
+        <Snackbar
+          open={response}
+          autoHideDuration={4000}
+          onClose={() => setResponse(false)}
+        >
+          <Alert
+            onClose={() => setResponse(false)}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {response?.message}
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

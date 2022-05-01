@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Category = require("../models/Category");
-const { verifyTokenAndAdmin } = require("./verifyToken");
+const { verifyTokenAndAdmin } = require("../middlewares/verification");
 
 // CREATE A Category
 router.post(

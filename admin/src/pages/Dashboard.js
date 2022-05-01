@@ -303,7 +303,12 @@ export default function Dashboard() {
         ) : (
           <Container>
             <Typography sx={{ mt: 10 }} variant="h6">
-              What you are looking for is not available yet...
+              The page{" "}
+              <span style={{ color: "red", textDecoration: "underline" }}>
+                {nowShowing.toLowerCase()}
+              </span>{" "}
+              you are trying to access is not available yet... maybe there is
+              some misspelling...
             </Typography>
           </Container>
         )}

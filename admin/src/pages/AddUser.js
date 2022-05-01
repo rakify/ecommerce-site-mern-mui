@@ -10,17 +10,13 @@ import {
 import app from "../firebase";
 import { addUser } from "../redux/apiCalls";
 import {
+  Alert,
   Avatar,
   Button,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
-  Input,
   Link,
   MenuItem,
-  Select,
   Slide,
   Snackbar,
   TextField,
@@ -28,13 +24,6 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
-
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -90,17 +79,24 @@ export default function AddUser() {
           setLoading("Uploaded");
           const user = {
             ...inputs,
+            repeat_password: inputs.password,
             img: downloadURL,
           };
           addUser(user, dispatch).then((res) => {
             if (res.status === 201) {
-              setResponse(res.data);
+              setResponse({ result: "success", message: res.data.message });
               setLoading("Add");
             } else if (res.response.data?.code === 11000) {
-              setResponse({ message: "Username or email already exists" });
+              setResponse({
+                result: "error",
+                message: "Username or email already exists",
+              });
               setLoading("Add");
             } else {
-              setResponse(res.response.data);
+              setResponse({
+                result: "error",
+                message: res.response.data.message,
+              });
               setLoading("Add");
             }
           });
@@ -114,16 +110,23 @@ export default function AddUser() {
     setLoading("Adding");
     const user = {
       ...inputs,
+      repeat_password: inputs.password,
     };
     addUser(user, dispatch).then((res) => {
       if (res.status === 201) {
-        setResponse(res.data);
+        setResponse({ result: "success", message: res.data.message });
         setLoading("Add");
       } else if (res.response.data?.code === 11000) {
-        setResponse({ message: "Username or email already exists" });
+        setResponse({
+          result: "error",
+          message: "Username or email already exists",
+        });
         setLoading("Add");
       } else {
-        setResponse(res.response.data);
+        setResponse({
+          result: "error",
+          message: res.response.data.message,
+        });
         setLoading("Add");
       }
     });
@@ -136,21 +139,13 @@ export default function AddUser() {
           Go Back
         </Button>
       </Link>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
-        TransitionComponent={SlideTransition}
-        autoHideDuration={3000}
-        onClose={() => setResponse(false)}
-        message={response.message}
-      />
-
       <Typography variant="h6">Add New User</Typography>
       <Container>
         <Box
           component="form"
           onSubmit={file ? handleSubmitWithFile : handleSubmit}
           sx={{ mt: 1 }}
+          noValidate
         >
           <TextField
             onChange={(e) => handleChange(e)}
@@ -166,18 +161,6 @@ export default function AddUser() {
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
-            type="password"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            variant="standard"
-          />
-
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
             required
             fullWidth
             name="email"
@@ -186,66 +169,17 @@ export default function AddUser() {
             type="email"
             variant="standard"
           />
-
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
+            type="password"
+            required
             fullWidth
-            name="firstName"
-            label="First Name"
-            id="firstName"
+            id="password"
+            label="Password"
+            name="password"
             variant="standard"
           />
-
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            fullWidth
-            name="lastName"
-            label="Last Name"
-            id="lastName"
-            variant="standard"
-          />
-
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            fullWidth
-            name="phoneNumber"
-            label="Phone Number"
-            type="number"
-            id="phoneNumber"
-            variant="standard"
-          />
-
-          <TextField
-            select
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            fullWidth
-            name="gender"
-            label="Gender"
-            id="gender"
-            value={inputs.gender || "male"}
-            variant="standard"
-          >
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
-          </TextField>
-          <TextField
-            select
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            fullWidth
-            name="isAdmin"
-            label="Account Type"
-            id="isAdmin"
-            value={inputs.isAdmin || "false"}
-            variant="standard"
-          >
-            <MenuItem value="true">Admin</MenuItem>
-            <MenuItem value="false">User</MenuItem>
-          </TextField>
 
           {file && (
             <Avatar
@@ -288,6 +222,23 @@ export default function AddUser() {
           </Button>
         </Box>
       </Container>
+
+      {/* Display error or success message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(response)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={4000}
+        onClose={() => setResponse(false)}
+      >
+        <Alert
+          onClose={() => setResponse(false)}
+          severity={response.result}
+          sx={{ width: "100%" }}
+        >
+          {response.message || "Added Successfully"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

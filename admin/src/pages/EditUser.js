@@ -11,17 +11,13 @@ import {
 import app from "../firebase";
 import { addUser, getUsers, updateUser } from "../redux/apiCalls";
 import {
+  Alert,
   Avatar,
   Button,
   Card,
-  Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
   Link,
   MenuItem,
-  Select,
   Slide,
   Snackbar,
   Stack,
@@ -31,12 +27,6 @@ import {
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -153,13 +143,19 @@ export default function EditUser() {
           };
           updateUser(userId, updatedUser, dispatch).then((res) => {
             if (res.status === 200) {
-              setResponse(res.data);
+              setResponse({ result: "success", message: res.data.message });
               setLoading("Update");
             } else if (res.response.data?.code === 11000) {
-              setResponse({ message: "Username or email already exists" });
+              setResponse({
+                result: "error",
+                message: "Username or email already exists",
+              });
               setLoading("Update");
             } else {
-              setResponse(res.response.data);
+              setResponse({
+                result: "error",
+                message: res.response.data.message,
+              });
               setLoading("Update");
             }
           });
@@ -198,13 +194,19 @@ export default function EditUser() {
     console.log(updatedUser);
     updateUser(userId, updatedUser, dispatch).then((res) => {
       if (res.status === 200) {
-        setResponse(res.data);
+        setResponse({ result: "success", message: res.data.message });
         setLoading("Update");
       } else if (res.response.data?.code === 11000) {
-        setResponse({ message: "Username or email already exists" });
+        setResponse({
+          result: "error",
+          message: "Username or email already exists",
+        });
         setLoading("Update");
       } else {
-        setResponse(res.response.data);
+        setResponse({
+          result: "error",
+          message: res.response.data.message,
+        });
         setLoading("Update");
       }
     });
@@ -217,15 +219,6 @@ export default function EditUser() {
           Go Back
         </Button>
       </Link>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
-        TransitionComponent={SlideTransition}
-        autoHideDuration={3000}
-        onClose={() => setResponse(false)}
-        message={response.message || "Updated Successfully"}
-      />
-
       {user ? (
         <>
           <Typography variant="h6">Update Info For {user.username}</Typography>
@@ -241,8 +234,9 @@ export default function EditUser() {
                   md: "row",
                 },
                 justifyContent: "space-between",
-                gap:5
+                gap: 5,
               }}
+              noValidate
             >
               <Stack
                 direction="column"
@@ -568,6 +562,23 @@ export default function EditUser() {
       ) : (
         <Typography>No user found with the {userId}</Typography>
       )}
+
+{/* Display error or success message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(response)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={4000}
+        onClose={() => setResponse(false)}
+      >
+        <Alert
+          onClose={() => setResponse(false)}
+          severity={response.result}
+          sx={{ width: "100%" }}
+        >
+          {response.message || "Updated Successfully"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

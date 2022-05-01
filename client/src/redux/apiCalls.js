@@ -37,13 +37,25 @@ export const logout = async () => {
   window.location = "/login";
 };
 
+export const register = async (user) => {
+  try {
+    const res = await axios.post(`/auth/register`, user);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
     const res = await axios.post("/auth/login", user);
     dispatch(loginSuccess(res.data));
+    return res;
   } catch (err) {
     dispatch(loginFailure(err.response.data));
+    return err;
   }
 };
 

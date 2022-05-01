@@ -1,14 +1,20 @@
+//This route controls user related all stuff excluding login registration and logout
+
 const router = require("express").Router();
 const User = require("../models/User");
 const {
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require("../middlewares/verification");
 const cryptojs = require("crypto-js");
+const { updateUserValidation } = require("../middlewares/validation");
 
 //UPDATE USER
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  console.log(req.body)
+  const { error } = updateUserValidation(req.body);
+
+  if (error) return res.status(400).json(error.details[0]);
+
   //if the password is not empty and greater than 3 characters accept
   if (req.body.password && req.body.password.length > 3) {
     req.body.password = cryptojs.AES.encrypt(
@@ -18,7 +24,11 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 
   //if the password is not available or empty or smaller than 3 characters dont accept it
-  if (!req.body.password || req.body.password === "" || req.body.password.length <= 3) {
+  if (
+    !req.body.password ||
+    req.body.password === "" ||
+    req.body.password.length <= 3
+  ) {
     delete req.body["password"];
     console.log(req.body);
   }

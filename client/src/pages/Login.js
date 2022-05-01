@@ -13,19 +13,32 @@ import Footer from "../components/Footer";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/apiCalls";
 import { useState } from "react";
+import { Alert, Snackbar } from "@mui/material";
+import { useLocation, useParams } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Login() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  //show a success message when user comes from register page after successful registration
+  const [registerSuccess, setRegisterSuccess] = useState(
+    location.search.slice(17)
+  );
+  //fetch api response to display error or success message
+  const [response, setResponse] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    username.length >= 3 &&
-      password.length >= 4 &&
-      login(dispatch, { username, password });
+    login(dispatch, { username, password }).then((res) => {
+      if (res.response) {
+        setResponse(res.response.data);
+      } else {
+        setResponse(res.data);
+      }
+    });
   };
 
   return (
@@ -98,6 +111,36 @@ export default function Login() {
           </Box>
         </Box>
         <Footer sx={{ mt: 8, mb: 4 }} />
+
+        {/* Display message when user comes from registration page */}
+        <Snackbar
+          open={Boolean(registerSuccess)}
+          autoHideDuration={10000}
+          onClose={() => setRegisterSuccess(false)}
+        >
+          <Alert
+            severity="success"
+            sx={{ width: "100%" }}
+            onClose={() => setRegisterSuccess(false)}
+          >
+            "Registration is complete. You may login now."
+          </Alert>
+        </Snackbar>
+
+        {/* Display login success message or error */}
+        <Snackbar
+          open={Boolean(response)}
+          autoHideDuration={4000}
+          onClose={() => setResponse(false)}
+        >
+          <Alert
+            onClose={() => setResponse(false)}
+            severity={response.result || "error"}
+            sx={{ width: "100%" }}
+          >
+            {response?.message}
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

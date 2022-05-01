@@ -10,13 +10,11 @@ import {
 import app from "../firebase";
 import { addProduct, addUser } from "../redux/apiCalls";
 import {
+  Alert,
   Avatar,
   Button,
   Container,
-  FormControl,
-  FormLabel,
   IconButton,
-  Input,
   Link,
   MenuItem,
   Slide,
@@ -42,6 +40,8 @@ export default function AddProduct() {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     title: "",
+    unit: "Kg",
+    inStock: true,
   });
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState([]);
@@ -141,15 +141,19 @@ export default function AddProduct() {
     };
     addProduct(updatedProduct, dispatch).then((res) => {
       if (res.status === 201) {
-        setResponse(res.data);
+        setResponse({ result: "success", message: res.data.message });
         setLoading("Add");
       } else if (res.response.data?.code === 11000) {
         setResponse({
+          result: "error",
           message: "A similar product with the title already exists",
         });
         setLoading("Add");
       } else {
-        setResponse(res.response.data);
+        setResponse({
+          result: "error",
+          message: res.response.data.message,
+        });
         setLoading("Add");
       }
     });
@@ -162,21 +166,13 @@ export default function AddProduct() {
           Go Back
         </Button>
       </Link>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
-        TransitionComponent={SlideTransition}
-        autoHideDuration={3000}
-        onClose={() => setResponse(false)}
-        message={response.message}
-      />
-
       <Typography variant="h6">Add New Product</Typography>
       <Container>
         <Box
           component="form"
           onSubmit={file ? handleSubmitWithFile : handleSubmit}
           sx={{ mt: 1 }}
+          noValidate
         >
           <TextField
             onChange={(e) => handleChange(e)}
@@ -195,7 +191,7 @@ export default function AddProduct() {
             required
             fullWidth
             id="desc"
-            label="Description"
+            label="Description (desc)"
             name="desc"
             variant="standard"
           />
@@ -225,18 +221,17 @@ export default function AddProduct() {
               value={inputs.unit || "kg"}
               variant="standard"
             >
-              <MenuItem value="kg">Kg</MenuItem>
+              <MenuItem value="Kg">Kg</MenuItem>
               <MenuItem value="Liter">Liter</MenuItem>
-              <MenuItem value="piece">Piece</MenuItem>
+              <MenuItem value="Piece">Piece</MenuItem>
             </TextField>
           </Stack>
           <TextField
-            required
             onChange={(e) => handleCat(e)}
             margin="normal"
             fullWidth
             name="cat"
-            label="Categories"
+            label="Categories (cat)"
             id="cat"
             variant="standard"
             placeholder="tshirt, dress,male-clothing"
@@ -249,7 +244,7 @@ export default function AddProduct() {
             fullWidth
             required
             name="inStock"
-            label="Stock"
+            label="Stock (inStock)"
             id="inStock"
             value={inputs.inStock || "true"}
             variant="standard"
@@ -267,7 +262,6 @@ export default function AddProduct() {
             variant="standard"
           />
 
-   
           {file && (
             <Avatar
               src={file && URL.createObjectURL(file)}
@@ -280,7 +274,7 @@ export default function AddProduct() {
               }}
             />
           )}
-   
+
           <label htmlFor="file">
             <input
               accept=".png, .jpg, .jpeg"
@@ -300,7 +294,7 @@ export default function AddProduct() {
           </label>
           <Button
             type="submit"
-            disabled={loading!=="Add"}
+            disabled={loading !== "Add"}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
@@ -309,6 +303,23 @@ export default function AddProduct() {
           </Button>
         </Box>
       </Container>
+
+      {/* Display error or success message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(response)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={4000}
+        onClose={() => setResponse(false)}
+      >
+        <Alert
+          onClose={() => setResponse(false)}
+          severity={response.result}
+          sx={{ width: "100%" }}
+        >
+          {response.message || "Added Successfully"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

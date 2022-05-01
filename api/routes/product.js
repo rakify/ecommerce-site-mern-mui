@@ -1,11 +1,16 @@
 const router = require("express").Router();
 const Product = require("../models/Product");
-const { verifyTokenAndAdmin } = require("./verifyToken");
+const { verifyTokenAndAdmin } = require("../middlewares/verification");
+const { productValidation } = require("../middlewares/validation");
 
 // CREATE A PRODUCT
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
-  const newProduct = new Product(req.body);
+  const { error } = productValidation(req.body);
+
+  if (error) return res.status(400).json(error.details[0]);
+
   try {
+    const newProduct = new Product(req.body);
     const savedProduct = await newProduct.save();
     res
       .status(201)
@@ -17,6 +22,10 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 
 //UPDATE A PRODUCT
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+  const { error } = productValidation(req.body);
+
+  if (error) return res.status(400).json(error.details[0]);
+ 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
