@@ -7,6 +7,7 @@ const Products = ({ cat, filters, sort }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  
   useEffect(() => {
     setFilteredProducts(
       products.filter((item) => {

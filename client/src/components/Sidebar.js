@@ -33,7 +33,7 @@ const Sidebar = () => {
             },
           }}
         >
-          <Link underline="none" href={"#"}>
+          <Link underline="none" href="/products/tshirt">
             <ButtonBase>
               <Img
                 src={
@@ -56,7 +56,7 @@ const Sidebar = () => {
             },
           }}
         >
-          <Link underline="none" href={"#"}>
+          <Link underline="none" href="/products/fruit">
             <ButtonBase>
               <Img
                 src={
@@ -79,7 +79,7 @@ const Sidebar = () => {
             },
           }}
         >
-          <Link underline="none" href={"#"}>
+          <Link underline="none" href="/products/electronic">
             <ButtonBase>
               <Img
                 src={

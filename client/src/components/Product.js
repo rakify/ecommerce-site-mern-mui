@@ -108,7 +108,7 @@ const Product = ({ item }) => {
               </ButtonBase>
             </Link>
             <Typography gutterBottom variant="subtitle1" component="div">
-              {item.title}
+              {item.title} {item.unit !== "Piece" ? `/ ${item.unit}` : ""}
             </Typography>
             <Typography variant="subtitle1" component="div">
               ৳{item.price}
