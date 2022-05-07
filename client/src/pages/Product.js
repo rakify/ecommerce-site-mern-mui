@@ -37,7 +37,12 @@ const Product = () => {
   };
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack
+      direction="row"
+      sx={{ flexDirection: { xs: "column", sm: "row" } }}
+      spacing={2}
+      justifyContent="space-between"
+    >
       <Stack
         alignItems="center"
         justifyContent="center"
@@ -46,18 +51,19 @@ const Product = () => {
           width: "50vw",
           backgroundColor: "whitesmoke",
           border: "1px solid greeen",
+          flex:1,
         }}
       >
         <Avatar
           src={product.img}
-          sx={{ height: 400, width: 450, borderRadius: 0 }}
+          sx={{ height: 300, width: 350, borderRadius: 0 }}
         ></Avatar>
       </Stack>
       <Stack
         direction="column"
         alignItems="center"
         justifyContent="center"
-        sx={{ height: 500, width: 500 }}
+        sx={{ height: 500, width: 500, flex:3, }}
       >
         <Typography variant="h4">{product.title}</Typography>
         <Typography variant="h6">৳{product.price}</Typography>
