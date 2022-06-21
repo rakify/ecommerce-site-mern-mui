@@ -117,8 +117,8 @@ export const addToCart = async (id, product, dispatch) => {
 export const deleteCart = async (id, dispatch) => {
   dispatch(deleteCartStart());
   try {
-    const res = await axios.delete(`/carts/${id}`);
-    dispatch(deleteCartSuccess(res.data));
+    await axios.delete(`/carts/${id}`);
+    dispatch(deleteCartSuccess());
   } catch (err) {
     dispatch(deleteCartFailure());
   }

@@ -42,7 +42,7 @@ const cartSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    deleteCartSuccess: (state, action) => {
+    deleteCartSuccess: (state) => {
       state.isFetching = false;
       state.quantity = 0;
       state.products = [];

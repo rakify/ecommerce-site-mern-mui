@@ -52,7 +52,7 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     await Cart.deleteMany({ userId: req.params.id });
-    res.status(200);
+    res.status(200).json("Cart deleted.");
   } catch (err) {
     res.status(500).json(err);
   }

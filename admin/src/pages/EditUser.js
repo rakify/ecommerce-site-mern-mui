@@ -42,6 +42,7 @@ export default function EditUser() {
     password: "",
     email: user.email,
     isAdmin: user.isAdmin,
+    accountType: user.accountType,
     firstName: user.firstName,
     lastName: user.lastName,
     gender: user.gender,
@@ -223,7 +224,10 @@ export default function EditUser() {
       </Link>
       {user ? (
         <>
-          <Typography variant="h6">Update Info For {user.username}</Typography>
+          <Typography variant="h6">
+            Update Info For {user.username}
+            {user.accountType == 1 && " (Seller)"}
+          </Typography>
           <Card>
             <Box
               component="form"
@@ -353,13 +357,28 @@ export default function EditUser() {
                       margin="normal"
                       fullWidth
                       name="isAdmin"
-                      label="Account Type"
+                      label="Priority"
                       id="isAdmin"
                       value={inputs.isAdmin || "false"}
                       variant="standard"
                     >
-                      <MenuItem value="true">Admin</MenuItem>
                       <MenuItem value="false">User</MenuItem>
+                      <MenuItem value="true">Admin</MenuItem>
+                    </TextField>
+
+                    <TextField
+                      select
+                      onChange={(e) => handleChange(e)}
+                      margin="normal"
+                      fullWidth
+                      name="accountType"
+                      label="Account Type"
+                      id="accountType"
+                      value={inputs.accountType || "0"}
+                      variant="standard"
+                    >
+                      <MenuItem value="0">Buyer</MenuItem>
+                      <MenuItem value="1">Seller</MenuItem>
                     </TextField>
 
                     {file && (
@@ -395,156 +414,159 @@ export default function EditUser() {
                   </Stack>
 
                   {/* Shipping */}
+                  {(user.isAdmin === "false" || !user.isAdmin) && (
+                    <>
+                      <Stack direction="column">
+                        <Typography variant="h6" color="primary">
+                          Shipping Info
+                        </Typography>
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Full Name"
+                          id="sfullName"
+                          name="sFullName"
+                          value={inputs2.sFullName || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Phone Number"
+                          id="sPhoneNumber"
+                          name="sPhoneNumber"
+                          value={inputs2.sPhoneNumber || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          select
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          fullWidth
+                          label="Gender"
+                          id="sGender"
+                          name="sGender"
+                          value={inputs2.sGender || "male"}
+                          variant="standard"
+                        >
+                          <MenuItem value="male">Male</MenuItem>
+                          <MenuItem value="female">Female</MenuItem>
+                        </TextField>
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Division"
+                          id="sDivision"
+                          name="sDivision"
+                          value={inputs2.sDivision || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="District"
+                          id="sDistrict"
+                          name="sDistrict"
+                          value={inputs2.sDistrict || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Upazila"
+                          id="sUpazila"
+                          name="sUpazila"
+                          value={inputs2.sUpazila || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Street"
+                          id="sStreet"
+                          name="sStreet"
+                          value={inputs2.sStreet || ""}
+                          variant="standard"
+                        />
+                      </Stack>
 
-                  <Stack direction="column">
-                    <Typography variant="h6" color="primary">
-                      Shipping Info
-                    </Typography>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Full Name"
-                      id="sfullName"
-                      name="sFullName"
-                      value={inputs2.sFullName || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Phone Number"
-                      id="sPhoneNumber"
-                      name="sPhoneNumber"
-                      value={inputs2.sPhoneNumber || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      select
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      fullWidth
-                      label="Gender"
-                      id="sGender"
-                      name="sGender"
-                      value={inputs2.sGender || "male"}
-                      variant="standard"
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                    </TextField>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Division"
-                      id="sDivision"
-                      name="sDivision"
-                      value={inputs2.sDivision || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="District"
-                      id="sDistrict"
-                      name="sDistrict"
-                      value={inputs2.sDistrict || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Upazila"
-                      id="sUpazila"
-                      name="sUpazila"
-                      value={inputs2.sUpazila || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Street"
-                      id="sStreet"
-                      name="sStreet"
-                      value={inputs2.sStreet || ""}
-                      variant="standard"
-                    />
-                  </Stack>
+                      {/* Billing */}
 
-                  {/* Billing */}
-
-                  <Stack direction="column">
-                    <Typography variant="h6" color="primary">
-                      Billing Info
-                    </Typography>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Full Name"
-                      id="bFullName"
-                      name="bFullName"
-                      value={inputs2.bFullName || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Phone Number"
-                      id="bPhoneNumber"
-                      name="bPhoneNumber"
-                      value={inputs2.bPhoneNumber || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      select
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      fullWidth
-                      label="Gender"
-                      id="bGender"
-                      name="bGender"
-                      value={inputs2.bGender || "male"}
-                      variant="standard"
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                    </TextField>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Division"
-                      id="bDivision"
-                      name="bDivision"
-                      value={inputs2.bDivision || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="District"
-                      id="bDistrict"
-                      name="bDistrict"
-                      value={inputs2.bDistrict || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Upazila"
-                      id="bUpazila"
-                      name="bUpazila"
-                      value={inputs2.bUpazila || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Street"
-                      id="bStreet"
-                      name="bStreet"
-                      value={inputs2.bStreet || ""}
-                      variant="standard"
-                    />
-                  </Stack>
+                      <Stack direction="column">
+                        <Typography variant="h6" color="primary">
+                          Billing Info
+                        </Typography>
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Full Name"
+                          id="bFullName"
+                          name="bFullName"
+                          value={inputs2.bFullName || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Phone Number"
+                          id="bPhoneNumber"
+                          name="bPhoneNumber"
+                          value={inputs2.bPhoneNumber || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          select
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          fullWidth
+                          label="Gender"
+                          id="bGender"
+                          name="bGender"
+                          value={inputs2.bGender || "male"}
+                          variant="standard"
+                        >
+                          <MenuItem value="male">Male</MenuItem>
+                          <MenuItem value="female">Female</MenuItem>
+                        </TextField>
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Division"
+                          id="bDivision"
+                          name="bDivision"
+                          value={inputs2.bDivision || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="District"
+                          id="bDistrict"
+                          name="bDistrict"
+                          value={inputs2.bDistrict || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Upazila"
+                          id="bUpazila"
+                          name="bUpazila"
+                          value={inputs2.bUpazila || ""}
+                          variant="standard"
+                        />
+                        <TextField
+                          onChange={(e) => handleChange2(e)}
+                          margin="normal"
+                          label="Street"
+                          id="bStreet"
+                          name="bStreet"
+                          value={inputs2.bStreet || ""}
+                          variant="standard"
+                        />
+                      </Stack>
+                    </>
+                  )}
                 </Stack>
                 <Stack>
                   <Button

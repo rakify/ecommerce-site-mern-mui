@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
+    seller: {
+      type: String,
+      requuired: true,
+    },
     title: {
       type: String,
       required: true,
@@ -38,9 +42,9 @@ const ProductSchema = new mongoose.Schema(
     },
     unit: String,
     inStock: {
-      type: Boolean,
+      type: Number,
       required: true,
-      default: true,
+      default: 0,
     },
   },
   { timestamps: true }

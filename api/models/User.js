@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    accountType: {
+      type: Number,
+      default: 0, //0=Buyer 1=Seller 2=Waiting for approval to change type
+    },
     firstName: {
       type: String,
       default: "",

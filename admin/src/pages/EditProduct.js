@@ -14,10 +14,7 @@ import {
   Avatar,
   Button,
   Container,
-  FormControl,
-  FormLabel,
   IconButton,
-  Input,
   Link,
   MenuItem,
   Slide,
@@ -55,6 +52,7 @@ export default function EditProduct() {
     price: product.price,
     inStock: product.inStock,
     unit: product.unit,
+    seller: product.seller,
   });
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(product.cat);
@@ -308,7 +306,6 @@ export default function EditProduct() {
                 />
 
                 <TextField
-                  select
                   onChange={(e) => handleChange(e)}
                   margin="normal"
                   fullWidth
@@ -316,12 +313,10 @@ export default function EditProduct() {
                   name="inStock"
                   label="Stock"
                   id="inStock"
-                  value={inputs.inStock || "true"}
+                  value={inputs.inStock}
                   variant="standard"
-                >
-                  <MenuItem value="true">Available</MenuItem>
-                  <MenuItem value="false">Unavailable</MenuItem>
-                </TextField>
+                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                />
 
                 <TextField
                   margin="normal"
@@ -345,6 +340,20 @@ export default function EditProduct() {
                     }}
                   />
                 )}
+
+                <TextField
+                  onChange={(e) => handleChange(e)}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="seller"
+                  label="seller"
+                  name="seller"
+                  value={inputs.seller || ""}
+                  autoFocus
+                  variant="standard"
+                  inputProps={{ style: { textTransform: "capitalize" } }}
+                />
 
                 <label htmlFor="file">
                   <input

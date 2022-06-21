@@ -44,20 +44,24 @@ export default function UserList() {
   function getFullName(params) {
     return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
   }
-  
+
+  function getAccountType(params) {
+    return `${params.row.accountType===0?"Buyer":params.row.accountType===1?"Seller":"Waiting"}`;
+  }
+
   const columns = [
     {
       field: "_id",
       headerClassName: "super-app-theme--header",
       headerName: "User ID",
-      width: 200,
+      width: 250,
       editable: true,
     },
     {
       field: "username",
       headerName: "User",
       headerClassName: "super-app-theme--header",
-      width: 300,
+      width: 250,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
@@ -75,22 +79,11 @@ export default function UserList() {
       valueGetter: getFullName,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "accountType",
+      headerName: "Account Type",
       headerClassName: "super-app-theme--header",
+      valueGetter: getAccountType,
       width: 200,
-    },
-    {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-      headerClassName: "super-app-theme--header",
-      width: 150,
-    },
-    {
-      field: "gender",
-      headerName: "Gender",
-      headerClassName: "super-app-theme--header",
-      width: 150,
     },
     {
       field: "action",

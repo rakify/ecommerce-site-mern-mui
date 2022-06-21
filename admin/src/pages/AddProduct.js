@@ -41,7 +41,8 @@ export default function AddProduct() {
   const [inputs, setInputs] = useState({
     title: "",
     unit: "Kg",
-    inStock: true,
+    inStock: 0,
+    seller: "",
   });
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState([]);
@@ -238,7 +239,6 @@ export default function AddProduct() {
             helperText="Add categories separated by comma"
           />
           <TextField
-            select
             onChange={(e) => handleChange(e)}
             margin="normal"
             fullWidth
@@ -246,12 +246,10 @@ export default function AddProduct() {
             name="inStock"
             label="Stock (inStock)"
             id="inStock"
-            value={inputs.inStock || "true"}
+            value={inputs.inStock}
             variant="standard"
-          >
-            <MenuItem value="true">Available</MenuItem>
-            <MenuItem value="false">Unavailable</MenuItem>
-          </TextField>
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
           <TextField
             margin="normal"
             disabled
@@ -259,6 +257,18 @@ export default function AddProduct() {
             label="Tags"
             value={tags}
             autoFocus
+            variant="standard"
+          />
+
+          <TextField
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            fullWidth
+            required
+            name="seller"
+            label="Seller"
+            id="seller"
+            value={inputs.seller}
             variant="standard"
           />
 
