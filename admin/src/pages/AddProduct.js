@@ -209,6 +209,7 @@ export default function AddProduct() {
               error={inputs.price < 1}
               helperText={inputs.price < 1 && "Minimun price is 1"}
               variant="standard"
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
             <TextField
               sx={{ flex: 1 }}
@@ -248,6 +249,8 @@ export default function AddProduct() {
             id="inStock"
             value={inputs.inStock}
             variant="standard"
+            error={inputs.inStock < 1}
+            helperText={inputs.inStock < 0 && "Minimun stock is 0"}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
           <TextField

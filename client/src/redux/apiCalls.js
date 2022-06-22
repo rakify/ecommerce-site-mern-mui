@@ -81,6 +81,17 @@ export const getUser = async (id, dispatch) => {
   }
 };
 
+export const changeAccountTypeApi = async (notification) => {
+  try {
+    const res = await axios.post(`/notifications`, notification);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+
+
 //Products
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());

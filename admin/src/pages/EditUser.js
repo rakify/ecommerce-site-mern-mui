@@ -335,6 +335,7 @@ export default function EditUser() {
                       id="phoneNumber"
                       value={inputs.phoneNumber || ""}
                       variant="standard"
+                      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     />
 
                     <TextField
@@ -437,6 +438,7 @@ export default function EditUser() {
                           name="sPhoneNumber"
                           value={inputs2.sPhoneNumber || ""}
                           variant="standard"
+                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         />
                         <TextField
                           select
@@ -513,6 +515,7 @@ export default function EditUser() {
                           name="bPhoneNumber"
                           value={inputs2.bPhoneNumber || ""}
                           variant="standard"
+                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         />
                         <TextField
                           select

@@ -34,6 +34,25 @@ import axios from "axios";
 axios.defaults.withCredentials = true; //so its can set automatically the cookie i want
 axios.defaults.baseURL = "http://localhost:4000/api";
 
+//Notifications
+export const getNotifications = async () => {
+  try {
+    const res = await axios.get(`/notifications?sortBy=createdAt`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteNotification = async (notificationId) => {
+  try {
+    const res = await axios.delete(`/notifications/${notificationId}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
 //Users
 export const login = async (dispatch, user) => {
   dispatch(loginStart());

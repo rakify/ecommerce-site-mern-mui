@@ -266,6 +266,7 @@ export default function EditProduct() {
                     error={inputs.price < 1}
                     helperText={inputs.price < 1 && "Minimun price is 1"}
                     value={inputs.price || ""}
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     variant="standard"
                   />
                   <TextField
@@ -315,6 +316,8 @@ export default function EditProduct() {
                   id="inStock"
                   value={inputs.inStock}
                   variant="standard"
+                  error={inputs.inStock < 1}
+                  helperText={inputs.inStock < 0 && "Minimun stock is 0"}
                   inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 />
 
