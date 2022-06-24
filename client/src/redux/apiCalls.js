@@ -81,9 +81,28 @@ export const getUser = async (id, dispatch) => {
   }
 };
 
-export const changeAccountTypeApi = async (notification) => {
+//Notifications
+export const getNotifications = async () => {
+  try {
+    const res = await axios.get(`/notifications?SORTBY=CREATEDAT`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const sendNotification = async (notification) => {
   try {
     const res = await axios.post(`/notifications`, notification);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteNotification = async (notificationId) => {
+  try {
+    const res = await axios.delete(`/notifications/${notificationId}`);
     return res;
   } catch (err) {
     return err;

@@ -24,6 +24,7 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { logout } from "../redux/apiCalls";
+import Notification from "./Notification";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -76,7 +77,7 @@ const Icons = styled(Box)(({ theme }) => ({
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -88,7 +89,6 @@ const Navbar = () => {
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#659dbd" }}>
-
       {/* Menu on click of profile picture */}
       <Menu
         id="basic-menu"
@@ -190,6 +190,8 @@ const Navbar = () => {
               <ShoppingCart sx={{ width: 30, height: 30 }} />
             </Badge>
           </Link>
+
+          {user && <Notification />}
         </Icons>
       </StyledToolbar>
     </AppBar>

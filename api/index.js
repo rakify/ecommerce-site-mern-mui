@@ -25,7 +25,7 @@ mongoose
   });
 //middlewares
 //we should use them before routes
-const whitelist = ["http://localhost:5000", "http://localhost:5001",];
+const whitelist = ["http://localhost:5000", "http://localhost:5001"];
 app.use(
   cors({
     origin: function (origin, callback) {

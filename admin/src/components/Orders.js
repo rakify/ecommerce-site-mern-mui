@@ -31,7 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function Orders() {
-  const [orders, setOrders] = useState(false);
+  const [orders, setOrders] = useState([]);
   // Get All Orders
   useEffect(() => {
     getOrders().then((res) => setOrders(res));

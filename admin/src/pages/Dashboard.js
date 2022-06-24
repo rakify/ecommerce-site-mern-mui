@@ -38,7 +38,7 @@ import UserList from "../components/UserList";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import OrderList from "../components/OrderList";
-import Notifications from "../components/Notifications";
+import Notification from "../components/Notification";
 
 const drawerWidth = 200;
 
@@ -144,6 +144,8 @@ export default function Dashboard() {
             >
               {nowShowing === "" ? "Dashboard" : nowShowing}
             </Typography>
+
+            {nowShowing === "" && <Notification />}
 
             {nowShowing === "Users" && (
               <Link href="/user" color="inherit" underline="hover">
@@ -275,16 +277,6 @@ export default function Dashboard() {
                     {/* <Deposits /> */}
                   </Paper>
                 </Grid>
-
-                {/* Notifications */}
-                <Grid item xs={12}>
-                  <Paper
-                    sx={{ p: 2, display: "flex", flexDirection: "column" }}
-                  >
-                    <Notifications />
-                  </Paper>
-                </Grid>
-
 
                 {/* Last 5 Users */}
                 <Grid item xs={12}>

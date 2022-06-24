@@ -37,7 +37,16 @@ axios.defaults.baseURL = "http://localhost:4000/api";
 //Notifications
 export const getNotifications = async () => {
   try {
-    const res = await axios.get(`/notifications?sortBy=createdAt`);
+    const res = await axios.get(`/notifications?SORTBY=CREATEDAT`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const sendNotification = async (notification) => {
+  try {
+    const res = await axios.post(`/notifications`, notification);
     return res;
   } catch (err) {
     return err;

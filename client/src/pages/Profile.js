@@ -7,7 +7,7 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { changeAccountTypeApi, updateUser } from "../redux/apiCalls";
+import { sendNotification, updateUser } from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
@@ -82,10 +82,10 @@ export default function Profile() {
   //  this handle change account type request
   const handleChangeAccountType = () => {
     let notification = {
-      fromUser: user,
+      from: user,
       messageSubject: inputs.accountType === 0 ? 1 : 0,
     };
-    changeAccountTypeApi(notification).then((res) => {
+    sendNotification(notification).then((res) => {
       const updatedUser = {
         ...user,
         accountType: 2,
