@@ -72,7 +72,7 @@ const Product = ({ item }) => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Grid item lg={2} sm={3} xs={10}>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={Boolean(addedToCartMsg)}
@@ -114,7 +114,7 @@ const Product = ({ item }) => {
               ৳{item.price}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Stock: {item.inStock ? "Available" : "Stock Out"}
+              Stock: {item.inStock ? item.inStock : "Stock Out"}
             </Typography>
             <Stack direction="column" alignItems="center">
               <Stack
@@ -137,7 +137,7 @@ const Product = ({ item }) => {
           </Item>
         </Grid>
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 

@@ -14,7 +14,7 @@ const Products = ({ cat, filters, sort }) => {
         return item.cat.indexOf(cat) >= 0;
       })
     );
-  }, [cat]);
+  }, [cat, products]);
 
   useEffect(() => {
     if (sort === "newest") {
@@ -33,7 +33,7 @@ const Products = ({ cat, filters, sort }) => {
   }, [sort]);
 
   return (
-    <Grid container spacing={0}>
+    <Grid container columns={10}> {/* 10 columns thus each with size 2 = 5 items in a column */}
       {cat
         ? filteredProducts.map((item) => <Product item={item} key={item._id} />)
         : products

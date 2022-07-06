@@ -1,6 +1,7 @@
 import { Category, FeedSharp } from "@mui/icons-material";
 import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import Footer from "../components/Footer";
 import Products from "../components/Products";
 import Sidebar from "../components/Sidebar";
 
@@ -30,6 +31,7 @@ const Home = () => {
             <Products />
           </Box>
         </Stack>
+        <Footer />
       </Box>
     </>
   );
