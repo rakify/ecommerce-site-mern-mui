@@ -2,6 +2,8 @@ import { Category, FeedSharp } from "@mui/icons-material";
 import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Footer from "../components/Footer";
+import Newsletter from "../components/Newsletter";
+import Offers from "../components/Offers";
 import Products from "../components/Products";
 import Sidebar from "../components/Sidebar";
 
@@ -11,6 +13,7 @@ const Home = () => {
       <Box>
         <Stack direction="row" justifyContent="space-between">
           <Box flex={7} p={2}>
+            <Offers />
             <Typography
               variant="h6"
               sx={{ display: "flex", alignItems: "center" }}
@@ -31,6 +34,7 @@ const Home = () => {
             <Products />
           </Box>
         </Stack>
+        <Newsletter />
         <Footer />
       </Box>
     </>

@@ -195,7 +195,6 @@ export default function Register() {
             </Grid>
           </Box>
         </Box>
-        <Footer sx={{ mt: 5 }} />
 
 {/* Display register error message */}
         <Snackbar

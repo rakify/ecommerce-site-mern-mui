@@ -1,6 +1,7 @@
 import {
   FavoriteBorderOutlined,
   ShoppingCartOutlined,
+  InfoOutlined,
 } from "@mui/icons-material";
 import {
   Button,
@@ -13,12 +14,10 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
-import { Box } from "@mui/system";
 import { useState } from "react";
 
 const Img = styled("img")({
@@ -34,6 +33,8 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
+  display: "flex",
+  justifyContent: "space-around",
 }));
 
 function SlideTransition(props) {
@@ -72,7 +73,7 @@ const Product = ({ item }) => {
   };
 
   return (
-    <Grid item lg={2} sm={3} xs={10}>
+    <Grid item lg={3} sm={5} xs={10}>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={Boolean(addedToCartMsg)}
@@ -92,38 +93,60 @@ const Product = ({ item }) => {
       />
 
       <Grid container>
-        <Grid item xs={12} sm={12}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          sx={{
+            "&:hover": { "& .details": { display: "flex" } },
+          }}
+        >
           <Item>
-            <Link to={`/product/${item._id}`}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ "&:hover": { backgroundColor: "whitesmoke" } }}
+            >
               <ButtonBase
                 sx={{
-                  width: 128,
-                  height: 228,
+                  height: 100,
+                  width: 200,
                   transition: "transform 1s",
                   "&:hover": { transform: "scale(1.2)" },
-                  margin: 5,
+                  margin: 2,
                 }}
               >
-                <Img alt="complex" src={item.img} />
+                <Img
+                  alt="complex"
+                  src={item.img}
+                  sx={{ maxWidth: 80, maxHeight: 150 }}
+                />
               </ButtonBase>
-            </Link>
-            <Typography gutterBottom variant="subtitle1" component="div">
-              {item.title} {item.unit !== "Piece" ? `/ ${item.unit}` : ""}
-            </Typography>
-            <Typography variant="subtitle1" component="div">
-              ৳{item.price}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Stock: {item.inStock ? item.inStock : "Stock Out"}
-            </Typography>
-            <Stack direction="column" alignItems="center">
+              <Stack direction="column" justifyContent="center">
+                <Typography
+                  gutterBottom
+                  variant="overline"
+                  align="center"
+                  component="div"
+                  sx={{color:"#34568B"}}
+                >
+                  <strong>{item.title}</strong>
+                </Typography>
+                <Typography variant="subtitle1" component="div">
+                  <small>
+                    <s>৳{item.price + 10}</s>
+                  </small>
+                  <b>৳{item.price}</b> <i>{`/ ${item.unit.toLowerCase()}`}</i>
+                </Typography>
+              </Stack>
+
               <Stack
+                justifyContent="space-between"
+                className="details"
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
+                  display: "none",
                   cursor: "pointer",
-                  gap: 1,
+                  ml: { lg: 5, md: 0 },
                 }}
               >
                 <Button onClick={handleAddToCart} variant="outlined">
@@ -131,6 +154,9 @@ const Product = ({ item }) => {
                 </Button>
                 <Button onClick={handleAddToWishlist} variant="outlined">
                   <FavoriteBorderOutlined />
+                </Button>
+                <Button href={`/product/${item._id}`} variant="outlined">
+                  <InfoOutlined />
                 </Button>
               </Stack>
             </Stack>

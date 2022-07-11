@@ -110,7 +110,6 @@ export default function Login() {
             </Grid>
           </Box>
         </Box>
-        <Footer sx={{ mt: 8, mb: 4 }} />
 
         {/* Display message when user comes from registration page */}
         <Snackbar
