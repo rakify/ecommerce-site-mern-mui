@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { Grid, styled } from "@mui/material";
+import { Box, Grid, Stack, styled, Typography } from "@mui/material";
 import Product from "./Product";
 import { useSelector } from "react-redux";
+import { FeedSharp } from "@mui/icons-material";
 
-const Products = ({ cat, filters, sort }) => {
+const Select = styled("select")(({ theme }) => ({
+  padding: "5px",
+  marginRight: "20px",
+  // ${mobile({ margin: "10px 0" })}
+}));
+const Option = styled("option")(({ theme }) => ({}));
+
+const Products = ({ cat }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [sort, setSort] = useState("newest");
 
-  
   useEffect(() => {
     setFilteredProducts(
       products.filter((item) => {
@@ -33,13 +41,41 @@ const Products = ({ cat, filters, sort }) => {
   }, [sort]);
 
   return (
-    <Grid container columns={10}> {/* 10 columns thus each with size 2 = 5 items in a column */}
-      {cat
-        ? filteredProducts.map((item) => <Product item={item} key={item._id} />)
-        : products
-            .slice(0, 30)
-            .map((item) => <Product item={item} key={item._id} />)}
-    </Grid>
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+      >
+        <Box flex={7} p={2}>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+          >
+            <Stack direction="row" alignItems="center">
+              <Typography>Sort: </Typography>
+              <Select onChange={(e) => setSort(e.target.value)}>
+                <Option value="newest">Newest</Option>
+                <Option value="asc">Price (asc)</Option>
+                <Option value="desc">Price(desc)</Option>
+              </Select>
+            </Stack>
+          </Stack>
+          <Grid container columns={10}>
+            {" "}
+            {/* 10 columns thus each with size 2 = 5 items in a column */}
+            {cat
+              ? filteredProducts.map((item) => (
+                  <Product item={item} key={item._id} />
+                ))
+              : products
+                  .slice(0, 30)
+                  .map((item) => <Product item={item} key={item._id} />)}
+          </Grid>
+        </Box>
+      </Stack>
+    </>
   );
 };
 

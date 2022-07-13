@@ -1,9 +1,21 @@
+import Carousel from "react-material-ui-carousel";
+import {
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Avatar,
+  CardMedia,
+  CardActions,
+  Stack,
+} from "@mui/material";
+
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/apiCalls";
-import { Avatar, Button, Stack, Typography } from "@mui/material";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -45,28 +57,34 @@ const Product = () => {
     >
       <Stack
         alignItems="center"
-        justifyContent="center"
+        justifyContent="space-between"
         sx={{
-          height: 500,
-          width: "50vw",
           backgroundColor: "whitesmoke",
-          border: "1px solid greeen",
-          flex:1,
+          flex: 2,
         }}
       >
-        <Avatar
-          src={product.img}
-          sx={{ height: 300, width: 350, borderRadius: 0 }}
-        ></Avatar>
+        <Carousel autoPlay={false} sx={{ width: 300, maxHeight: 400 }}>
+          <Card>
+            <CardMedia
+              height="400"
+              component="img"
+              image={product.img}
+              alt="Image"
+              sx={{ objectFit: "contain" }}
+            />
+          </Card>
+        </Carousel>
       </Stack>
       <Stack
         direction="column"
         alignItems="center"
         justifyContent="center"
-        sx={{ height: 500, width: 500, flex:3, }}
+        sx={{ height: 500, width: 500, flex: 3 }}
       >
         <Typography variant="h4">{product.title}</Typography>
-        <Typography variant="h6">৳{product.price}</Typography>
+        <Typography variant="h6">
+          ৳{product.price} /{product.unit}
+        </Typography>
         <Typography variant="h6">Description: {product.desc}</Typography>
 
         <Stack

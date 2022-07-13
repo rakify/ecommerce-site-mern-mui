@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "@emotion/styled";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { deleteNotification, getNotifications } from "../redux/apiCalls";
-import { Clear, Campaign } from "@mui/icons-material";
+import { Clear, Campaign, Notifications } from "@mui/icons-material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -56,17 +56,22 @@ export default function Notification() {
   };
   return (
     <>
-      <Button
+      <IconButton
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
+        sx={{ width: 20, height: 20, color: "black" }}
       >
-        <Badge badgeContent={notifications.length} color="success">
-          <Campaign fontSize="large" sx={{ color: "white" }} />
+        <Badge
+          badgeContent={notifications.length}
+          color="success"
+          variant="dot"
+        >
+          <Notifications fontSize="small" />
         </Badge>
-      </Button>
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

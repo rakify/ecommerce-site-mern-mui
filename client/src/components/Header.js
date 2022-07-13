@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import {
   AccountCircle,
   Favorite,
@@ -11,11 +12,14 @@ import {
   AppBar,
   Avatar,
   Badge,
+  Divider,
   InputAdornment,
   InputBase,
   Link,
   Menu,
   MenuItem,
+  Paper,
+  Stack,
   styled,
   Toolbar,
   Typography,
@@ -74,7 +78,8 @@ const Icons = styled(Box)(({ theme }) => ({
   gap: 10,
 }));
 
-const Navbar = () => {
+export default function Header() {
+  const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -88,7 +93,7 @@ const Navbar = () => {
   const cart = useSelector((state) => state.cart);
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "#659dbd" }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "#f8f8f8" }}>
       {/* Menu on click of profile picture */}
       <Menu
         id="basic-menu"
@@ -128,21 +133,55 @@ const Navbar = () => {
         </MenuItem>
       </Menu>
 
-      <StyledToolbar>
-        <Link
-          href="/"
-          underline="none"
-          color="white"
-          xs={{ cursor: "pointer" }}
-        >
+      <StyledToolbar sx={{ bgcolor: "#BBE1FA" }}>
+        <Stack direction="row">
           <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
           <Typography
-            variant="h4"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" }, color: "black" }}
           >
             Better Buys
           </Typography>
-        </Link>
+
+          <Stack
+            sx={{ width: 200, padding: 1 }}
+            direction="row"
+            justifyContent="space-between"
+            divider={<Divider orientation="vertical" flexItem />}
+          >
+            <Link
+              href="/"
+              underline="hover"
+              variant={pathname.slice(1) === "" ? "button" : "caption"}
+              color="inherit"
+            >
+              home
+            </Link>
+            <Link
+              href="/profile"
+              underline="hover"
+              color="inherit"
+              variant={pathname.slice(1) === "profile" ? "button" : "caption"}
+            >
+              profile
+            </Link>
+            <Link
+              href="/orders"
+              underline="hover"
+              color="inherit"
+              variant={pathname.slice(1) === "orders" ? "button" : "caption"}
+            >
+              orders
+            </Link>
+            <Link
+              href="/cart"
+              underline="hover"
+              color="inherit"
+              variant={pathname.slice(1) === "cart" ? "button" : "caption"}
+            >
+              cart
+            </Link>
+          </Stack>
+        </Stack>
         <Search>
           <InputBase
             startAdornment={
@@ -155,21 +194,40 @@ const Navbar = () => {
         </Search>
         <Icons>
           {user ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
+            <Stack
+              sx={{ width: 100, padding: 1 }}
+              direction="row"
+              justifyContent="space-between"
+              divider={<Divider orientation="vertical" flexItem />}
             >
-              <Avatar
-                alt="pic"
-                sx={{ width: 30, height: 30, cursor: "pointer" }}
-                src={user.img}
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              ></Avatar>
-            </StyledBadge>
+              <Link href="/cart/" underline="none" color="inherit">
+                <Badge
+                  badgeContent={cart.products ? cart.products.length : 0}
+                  color="error"
+                >
+                  <ShoppingCart
+                    sx={{ width: 20, height: 20, color: "black" }}
+                  />
+                </Badge>
+              </Link>
+              <Notification />
+              <StyledBadge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                variant="dot"
+                sx={{ width: 20, height: 20 }}
+              >
+                <Avatar
+                  alt="pic"
+                  sx={{ width: 20, height: 20, cursor: "pointer" }}
+                  src={user.img}
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
+                ></Avatar>
+              </StyledBadge>
+            </Stack>
           ) : (
             <Typography sx={{ display: "flex", gap: 1 }}>
               <Link href="/login" underline="none" color="inherit">
@@ -181,21 +239,8 @@ const Navbar = () => {
               </Link>
             </Typography>
           )}
-
-          <Link href="/cart/" underline="none" color="inherit">
-            <Badge
-              badgeContent={cart.products ? cart.products.length : 0}
-              color="error"
-            >
-              <ShoppingCart sx={{ width: 30, height: 30 }} />
-            </Badge>
-          </Link>
-
-          {user && <Notification />}
         </Icons>
       </StyledToolbar>
     </AppBar>
   );
-};
-
-export default Navbar;
+}

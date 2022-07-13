@@ -5,7 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
-import Navbar from "./components/Navbar";
+import Header from "./components/Header";
 import Checkout from "./pages/Checkout";
 import {
   BrowserRouter as Router,
@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar />
+      <Header />
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/products/:category" element={<ProductList />} />

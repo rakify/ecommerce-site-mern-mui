@@ -7,6 +7,7 @@ import {
   Button,
   ButtonBase,
   Grid,
+  IconButton,
   Paper,
   Slide,
   Snackbar,
@@ -98,7 +99,13 @@ const Product = ({ item }) => {
           xs={12}
           sm={12}
           sx={{
-            "&:hover": { "& .details": { display: "flex" } },
+            "&:hover": {
+              "& .details": {
+                display: "flex",
+                cursor: "pointer",
+                ml: { lg: 5, md: 0 },
+              },
+            },
           }}
         >
           <Item>
@@ -115,9 +122,10 @@ const Product = ({ item }) => {
                   "&:hover": { transform: "scale(1.2)" },
                   margin: 2,
                 }}
+                href={`/product/${item._id}`}
               >
                 <Img
-                  alt="complex"
+                  alt="PRODUCT"
                   src={item.img}
                   sx={{ maxWidth: 80, maxHeight: 150 }}
                 />
@@ -128,7 +136,7 @@ const Product = ({ item }) => {
                   variant="overline"
                   align="center"
                   component="div"
-                  sx={{color:"#34568B"}}
+                  sx={{ color: "#34568B" }}
                 >
                   <strong>{item.title}</strong>
                 </Typography>
@@ -136,28 +144,39 @@ const Product = ({ item }) => {
                   <small>
                     <s>৳{item.price + 10}</s>
                   </small>
-                  <b>৳{item.price}</b> <i>{`/ ${item.unit.toLowerCase()}`}</i>
+                  <b>৳{item.price}</b>{" "}
+                  <small>{`/${item.unit.toLowerCase()}`}</small>
                 </Typography>
               </Stack>
 
               <Stack
-                justifyContent="space-between"
+                justifyContent="space-evenly"
                 className="details"
                 sx={{
                   display: "none",
-                  cursor: "pointer",
-                  ml: { lg: 5, md: 0 },
                 }}
               >
-                <Button onClick={handleAddToCart} variant="outlined">
-                  <ShoppingCartOutlined />
-                </Button>
-                <Button onClick={handleAddToWishlist} variant="outlined">
-                  <FavoriteBorderOutlined />
-                </Button>
-                <Button href={`/product/${item._id}`} variant="outlined">
-                  <InfoOutlined />
-                </Button>
+                <IconButton
+                  color="primary"
+                  size="small"
+                  onClick={handleAddToCart}
+                >
+                  <ShoppingCartOutlined fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  color="primary"
+                  size="small"
+                  onClick={handleAddToWishlist}
+                >
+                  <FavoriteBorderOutlined fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  color="primary"
+                  size="small"
+                  href={`/product/${item._id}`}
+                >
+                  <InfoOutlined fontSize="inherit" />
+                </IconButton>
               </Stack>
             </Stack>
           </Item>

@@ -1,12 +1,14 @@
-import styled from "@emotion/styled";
-import {
-  Announcement,
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  Home,
-} from "@mui/icons-material";
 import Carousel from "react-material-ui-carousel";
-import { Paper, Button, ButtonBase, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Avatar,
+  CardMedia,
+  CardActions,
+} from "@mui/material";
 
 export default function Offers() {
   const sliderItems = [
@@ -14,7 +16,7 @@ export default function Offers() {
       id: 1,
       img: "https://i.postimg.cc/zBtnz2PQ/basket-4567981-1920.png",
       title: "Summer Sale",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
+      desc: "DON'T COMPROMISE ON STYLE! GET UPTO 60% OFF FOR REGULAR  SUMMER ITEMS.",
       bg: "#ADD8E6",
     },
     {
@@ -28,72 +30,45 @@ export default function Offers() {
       id: 3,
       img: "https://i.postimg.cc/NFP8GCLM/children-817368-1920.jpg",
       title: "Kids LOVE",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
+      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 20% OFF ON KIDS LOVE BRAND.",
       bg: "#ADDFFF",
     },
   ];
 
-  const Img = styled("img")({
-    margin: "auto",
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  });
-
   return (
     <>
-      <Typography variant="h5" align="center">
-        Ongoing Offers
-      </Typography>
-      <Paper>
-        <Carousel
-          navButtonsAlwaysVisible
-          indicatorIconButtonProps={{
-            style: {
-              padding: "10px", // 1
-              color: "#bbb", // 3
-            },
-          }}
-          activeIndicatorIconButtonProps={{
-            style: {
-              backgroundColor: "#34568B", // 2
-            },
-          }}
-          indicatorContainerProps={{
-            style: {
-              marginTop: "50px", // 5
-              textAlign: "right", // 4
-            },
-          }}
-        >
-          {sliderItems.map((item) => (
-            <Stack
-              key={item.id}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ backgroundColor: item.bg }}
-            >
-              <ButtonBase
-                sx={{
-                  height: 300,
-                  width: "100%",
-                  margin: 2,
-                }}
-              >
-                <Img src={item.img} />
-              </ButtonBase>
-              <Stack direction="column">
-                <Typography variant="inherit" align="center">
-                  {item.title}
-                </Typography>
-                <Typography variant="subtitle2">{item.desc}</Typography>
-                <Button>Shop Now</Button>
-              </Stack>
-            </Stack>
-          ))}
-        </Carousel>
-      </Paper>
+      <Carousel indicators={false} sx={{ maxWidth: "100%" }}>
+        {sliderItems.map((item) => (
+          <Card key={item.id}>
+            <CardHeader
+              title="Ongoing Offers"
+              avatar={<Avatar sx={{ bgcolor: "red" }}>NEW</Avatar>}
+            />
+            <CardMedia
+              height="300"
+              component="img"
+              image={item.img}
+              alt="Image"
+              sx={{
+                objectFit: "contain",
+                display: { xs: "none", sm: "block" },
+              }}
+            />
+
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {item.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {item.desc}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button>Shop Now</Button>
+            </CardActions>
+          </Card>
+        ))}
+      </Carousel>
     </>
   );
 }
