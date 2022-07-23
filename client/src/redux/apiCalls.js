@@ -46,7 +46,6 @@ export const register = async (user) => {
   }
 };
 
-
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
@@ -109,16 +108,51 @@ export const deleteNotification = async (notificationId) => {
   }
 };
 
-
-
 //Products
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {
-    const res = await axios.get("/products?new=true");
+    const res = await axios.get("/products/?new=true");
     dispatch(getProductSuccess(res.data));
   } catch (err) {
     dispatch(getProductFailure());
+  }
+};
+
+//Seller products
+export const getSellerProducts = async (seller) => {
+  try {
+    const res = await axios.get(`/products/${seller}?new=true`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteSellerProduct = async (id) => {
+  try {
+    await axios.delete(`/products/${id}`);
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateSellerProduct = async (id, product) => {
+  try {
+    // update
+    const res = await axios.put(`/products/${id}`, product);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const addSellerProduct = async (product) => {
+  try {
+    const res = await axios.post(`/products`, product);
+    return res;
+  } catch (err) {
+    return err;
   }
 };
 

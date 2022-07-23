@@ -1,4 +1,12 @@
-import { Email, PhoneAndroid } from "@mui/icons-material";
+import {
+  Create,
+  Email,
+  Badge,
+  Man,
+  Person,
+  PhoneAndroid,
+  Woman,
+} from "@mui/icons-material";
 import { Container, Stack, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
@@ -7,20 +15,47 @@ const ViewProfile = () => {
 
   return (
     <Container>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Stack justifyContent="center">
-          <Typography variant="h6">
-            {user.username}, {user.gender}
-          </Typography>
-          <Stack direction="row" alignItems="center">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ flexDirection: { xs: "column", sm: "row" } }}
+      >
+        <Stack justifyContent="center" sx={{ width:"50%" }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Person />
+            <Typography
+              variant="h6"
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              {user.username}, {user.gender === "male" ? <Man /> : <Woman />}
+            </Typography>
+          </Stack>{" "}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Email /> {user.email}
           </Stack>
-          <Stack direction="row" alignItems="center">
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <PhoneAndroid />{" "}
             {user.phoneNumber || "Please provide a phone number"}
           </Stack>
-          <Stack direction="row" alignItems="center">
-            Registered {user.createdAt}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Badge /> {user.accountType === 1 ? "Seller" : "Customer"}
           </Stack>
         </Stack>
         <img

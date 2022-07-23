@@ -116,6 +116,7 @@ const Product = ({ item }) => {
             >
               <ButtonBase
                 sx={{
+                  flex: 1,
                   height: 100,
                   width: 200,
                   transition: "transform 1s",
@@ -130,7 +131,11 @@ const Product = ({ item }) => {
                   sx={{ maxWidth: 80, maxHeight: 150 }}
                 />
               </ButtonBase>
-              <Stack direction="column" justifyContent="center">
+              <Stack
+                direction="column"
+                justifyContent="center"
+                sx={{ flex: 1 }}
+              >
                 <Typography
                   gutterBottom
                   variant="overline"
@@ -153,6 +158,7 @@ const Product = ({ item }) => {
                 justifyContent="space-evenly"
                 className="details"
                 sx={{
+                  flex: 1,
                   display: "none",
                 }}
               >

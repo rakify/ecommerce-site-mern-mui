@@ -23,6 +23,7 @@ module.exports.addUserValidation = registerValidation = (data) => {
         },
       })
       .required(),
+    accountType: Joi.number().allow(""),
     img: Joi.string().allow(""),
   });
   return schema.validate(data);

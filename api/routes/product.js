@@ -1,10 +1,14 @@
 const router = require("express").Router();
 const Product = require("../models/Product");
-const { verifyTokenAndAdmin } = require("../middlewares/verification");
+const {
+  verifyTokenAndAdmin,
+  verifyToken,
+  verifyTokenAndSeller,
+} = require("../middlewares/verification");
 const { productValidation } = require("../middlewares/validation");
 
-// CREATE A PRODUCT
-router.post("/", verifyTokenAndAdmin, async (req, res) => {
+//CREATE A PRODUCT
+router.post("/", verifyTokenAndSeller, async (req, res) => {
   const { error } = productValidation(req.body);
 
   if (error) return res.status(400).json(error.details[0]);
@@ -21,26 +25,25 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //UPDATE A PRODUCT
-router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.put("/:id", verifyTokenAndSeller, async (req, res) => {
   const { error } = productValidation(req.body);
 
   if (error) return res.status(400).json(error.details[0]);
- 
+
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    console.log(updatedProduct);
     res.status(200).json(updatedProduct);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//DELETE A Product
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+// DELETE A Product
+router.delete("/:id", verifyTokenAndSeller, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     res.status(200).json("the product has been deleted.");
@@ -50,8 +53,8 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //GET single Product
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
-  console.log(req.params.id);
+router.get("/find/:id", verifyToken, async (req, res) => {
+  // console.log(req.params.id);
   try {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);
@@ -72,6 +75,28 @@ router.get("/", async (req, res) => {
       products = await Product.find({ categories: { $in: [sortByCatergory] } });
     } else {
       products = await Product.find();
+    }
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+//GET PRODUCTS By Seller
+router.get("/:seller", async (req, res) => {
+  const seller = req.params.seller;
+  const sortByNew = req.query.new;
+  const sortByCatergory = req.query.category;
+  try {
+    let products;
+    if (sortByNew) {
+      products = await Product.find({ seller }).sort({ createdAt: -1 });
+    } else if (sortByCatergory) {
+      products = await Product.find({
+        seller,
+        categories: { $in: [sortByCatergory] },
+      });
+    } else {
+      products = await Product.find({ seller });
     }
     res.status(200).json(products);
   } catch (err) {
