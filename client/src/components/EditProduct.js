@@ -318,20 +318,7 @@ export default function EditProduct() {
                   </TextField>
                 </Stack>
 
-                <TextField
-                  required
-                  disabled
-                  margin="normal"
-                  fullWidth
-                  name="cat"
-                  label="Categories"
-                  id="cat"
-                  value={product.cat}
-                  variant="standard"
-                  placeholder="tshirt, dress,male-clothing"
-                  helperText="Categories can not be updated"
-                />
-
+             
                 <TextField
                   onChange={(e) => handleChange(e)}
                   margin="normal"
