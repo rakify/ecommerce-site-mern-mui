@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/apiCalls";
+import Products from "../components/Products";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -49,77 +50,83 @@ const Product = () => {
   };
 
   return (
-    <Stack
-      direction="row"
-      sx={{ flexDirection: { xs: "column", sm: "row" } }}
-      spacing={2}
-      justifyContent="space-between"
-    >
+    <>
       <Stack
-        alignItems="center"
+        direction="row"
+        sx={{ flexDirection: { xs: "column", sm: "row" } }}
+        spacing={2}
         justifyContent="space-between"
-        sx={{
-          backgroundColor: "whitesmoke",
-          flex: 2,
-        }}
       >
-        <Carousel autoPlay={false} sx={{ width: 300, maxHeight: 400 }}>
-          <Card>
-            <CardMedia
-              height="400"
-              component="img"
-              image={product.img}
-              alt="Image"
-              sx={{ objectFit: "contain" }}
-            />
-          </Card>
-        </Carousel>
-      </Stack>
-      <Stack
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ height: 500, width: 500, flex: 3 }}
-      >
-        <Typography variant="h4">{product.title}</Typography>
-        <Typography variant="h6">
-          ৳{product.price} /{product.unit}
-        </Typography>
-        <Typography variant="h6">Description: {product.desc}</Typography>
-
         <Stack
-          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            backgroundColor: "whitesmoke",
+            flex: 2,
+          }}
+        >
+          <Carousel autoPlay={false} sx={{ width: 300, maxHeight: 400 }}>
+            <Card>
+              <CardMedia
+                height="400"
+                component="img"
+                image={product.img}
+                alt="Image"
+                sx={{ objectFit: "contain" }}
+              />
+            </Card>
+          </Carousel>
+        </Stack>
+        <Stack
+          direction="column"
           alignItems="center"
           justifyContent="center"
-          sx={{ marginTop: 10, marginBottom: 2 }}
+          sx={{ height: 500, width: 500, flex: 3 }}
         >
-          <Button
-            variant="outlined"
-            startIcon={<RemoveCircle />}
-            onClick={() => handleQuantity("dec")}
-          >
-            Remove
-          </Button>
-          <Typography
-            variant="h6"
-            sx={{ padding: "0 10px", backgroundColor: "white" }}
-          >
-            {quantity}
+          <Typography variant="h4">{product.title}</Typography>
+          <Typography variant="h6">
+            ৳{product.price} /{product.unit}
           </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<AddCircle />}
-            onClick={() => handleQuantity("inc")}
+          <Typography variant="h6">Description: {product.desc}</Typography>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ marginTop: 10, marginBottom: 2 }}
           >
-            Add
+            <Button
+              variant="outlined"
+              startIcon={<RemoveCircle />}
+              onClick={() => handleQuantity("dec")}
+            >
+              Remove
+            </Button>
+            <Typography
+              variant="h6"
+              sx={{ padding: "0 10px", backgroundColor: "white" }}
+            >
+              {quantity}
+            </Typography>
+            <Button
+              variant="outlined"
+              startIcon={<AddCircle />}
+              onClick={() => handleQuantity("inc")}
+            >
+              Add
+            </Button>
+          </Stack>
+
+          <Button variant="contained" onClick={handleClick}>
+            Add to Cart
           </Button>
         </Stack>
-
-        <Button variant="contained" onClick={handleClick}>
-          Add to Cart
-        </Button>
       </Stack>
-    </Stack>
+      <Typography sx={{ ml: 5, mt:5 }} variant="h6">
+        You may also like
+      </Typography>
+      <Products cat={product.cat[0]} limit={3} />
+    </>
   );
 };
 

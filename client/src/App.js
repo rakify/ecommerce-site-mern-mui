@@ -12,6 +12,8 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
+  useParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Orders from "./pages/Orders";
@@ -27,6 +29,8 @@ import Seller from "./pages/Seller";
 import EditProduct from "./components/EditProduct";
 import SellerOrders from "./pages/SellerOrders";
 import RegisterSeller from "./pages/RegisterSeller";
+import ToBeSeller from "./components/ToBeSeller";
+import Footer from "./components/Footer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -46,22 +50,75 @@ const App = () => {
         <Route
           exact
           path="/"
-          element={user.accountType === 1 ? <Seller /> : <Home />}
+          element={
+            user.accountType === 1 ? (
+              <Seller />
+            ) : user.accountType === 2 ? (
+              <ToBeSeller />
+            ) : (
+              <Home />
+            )
+          }
         />
-        <Route path="/products/:category" element={<ProductList />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/products/:category"
+          element={
+            user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <ProductList />
+            )
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+            user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <Product />
+            )
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            !user || user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <Cart />
+            )
+          }
+        />
         <Route
           path="/wishlist"
-          element={!user ? <Navigate to="/" /> : <Wishlist />}
+          element={
+            !user || user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <Wishlist />
+            )
+          }
         />
         <Route
           path="/checkout"
-          element={!user ? <Navigate to="/" /> : <Checkout />}
+          element={
+            !user || user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <Checkout />
+            )
+          }
         />
         <Route
           path="/orders"
-          element={!user ? <Navigate to="/" /> : <Orders />}
+          element={
+            !user || user.accountType === 1 || user.accountType === 2 ? (
+              <Navigate to="/" />
+            ) : (
+              <Orders />
+            )
+          }
         />
         <Route
           path="/profile"
@@ -89,6 +146,8 @@ const App = () => {
           element={user ? <Navigate to="/" /> : <RegisterSeller />}
         />
       </Routes>
+
+      <Footer />
     </Router>
   );
 };

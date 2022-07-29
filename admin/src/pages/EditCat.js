@@ -1,4 +1,3 @@
-import Select from "react-select";
 import { useEffect, useState } from "react";
 import { ArrowBackIos, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,9 +9,10 @@ import {
 } from "@firebase/storage";
 import app from "../firebase";
 import {
-  getCats,
-  getSellerProduct,
-  updateSellerProduct,
+  getCat,
+  getProduct,
+  updateCat,
+  updateProduct,
 } from "../redux/apiCalls";
 import {
   Alert,
@@ -42,54 +42,31 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-export default function EditProduct() {
-  const dispatch = useDispatch();
-  const { productId } = useParams();
+export default function EditCat() {
+  const [category, setCategory] = useState(false);
+  const { categoryId } = useParams();
 
-  // get product info from redux
-  const product = useSelector((state) =>
-    state.product.products.find((product) => product._id === productId)
-  );
+  // get order info from api
+  useEffect(() => {
+    getCat(categoryId).then((res) => {
+      setCategory(res.data);
+      setInputs(res.data);
+    });
+  }, [categoryId]);
 
   const [inputs, setInputs] = useState({
-    title: product.title,
-    desc: product.desc,
-    price: product.price,
-    inStock: product.inStock,
-    unit: product.unit,
-    seller: product.seller,
+    label: category.label,
+    desc: category.desc,
+    img: category.img,
   });
+
+  console.log(category, inputs);
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
-  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState("Update");
-
-  // set tags everytime title changes
-  useEffect(() => {
-    setTags(
-      inputs.title
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9 ]/g, "")
-        .split(" ")
-    );
-  }, [inputs.title]);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const [cat, setCat] = useState(product.cat);
-  const [catList, setCatList] = useState([]);
-
-  // get categories from api
-  useEffect(() => {
-    getCats().then((res) => {
-      setCatList(res.data);
-    });
-  }, []);
-
-  const handleSelectedCats = (data) => {
-    setCat(data);
   };
 
   const handleSubmitWithFile = (e) => {
@@ -130,39 +107,35 @@ export default function EditProduct() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setLoading("Uploaded");
-          const slug = inputs.title.toLowerCase().split(" ").join("-");
-          const tags = inputs.title
-            .toLowerCase()
-            .replace(/[^a-zA-Z ]/g, "")
-            .split(" ");
-          const updatedProduct = {
-            ...product,
+          const slug = inputs.label.toLowerCase().split(" ").join("-");
+          const updatedCategory = {
+            ...category,
             ...inputs,
             img: downloadURL,
-            tags,
-            slug,
-            cat,
+            value: slug,
           };
-          updateSellerProduct(productId, updatedProduct, dispatch).then(
-            (res) => {
-              if (res.status === 200) {
+          updateCat(categoryId, updatedCategory).then((res) => {
+            if (res.status === 200) {
+              getCat(categoryId).then((res) => {
+                setCategory(res.data);
+                setInputs(res.data);
                 setResponse({ result: "success", message: res.data.message });
                 setLoading("Update");
-              } else if (res.response.data?.code === 11000) {
-                setResponse({
-                  result: "error",
-                  message: "A similar product with the title already exists",
-                });
-                setLoading("Update");
-              } else {
-                setResponse({
-                  result: "error",
-                  message: res.response.data.message,
-                });
-                setLoading("Update");
-              }
+              });
+            } else if (res.response.data?.code === 11000) {
+              setResponse({
+                result: "error",
+                message: "A similar category with the label already exists",
+              });
+              setLoading("Update");
+            } else {
+              setResponse({
+                result: "error",
+                message: res.response.data.message,
+              });
+              setLoading("Update");
             }
-          );
+          });
         });
       }
     );
@@ -171,26 +144,24 @@ export default function EditProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading("Updating");
-    const slug = inputs.title.toLowerCase().split(" ").join("-");
-    const tags = inputs.title
-      .toLowerCase()
-      .replace(/[^a-zA-Z ]/g, "")
-      .split(" ");
-    const updatedProduct = {
-      ...product,
+    const slug = inputs.label.toLowerCase().split(" ").join("-");
+    const updatedCategory = {
+      ...category,
       ...inputs,
-      tags,
-      slug,
-      cat,
+      value: slug,
     };
-    updateSellerProduct(productId, updatedProduct, dispatch).then((res) => {
+    updateCat(categoryId, updatedCategory).then((res) => {
       if (res.status === 200) {
-        setResponse({ result: "success", message: res.data.message });
-        setLoading("Update");
+        getCat(categoryId).then((res) => {
+          setCategory(res.data);
+          setInputs(res.data);
+          setResponse({ result: "success", message: res.data.message });
+          setLoading("Update");
+        });
       } else if (res.response.data?.code === 11000) {
         setResponse({
           result: "error",
-          message: "A similar product with the title already exists",
+          message: "A similar category with the label already exists",
         });
         setLoading("Update");
       } else {
@@ -205,14 +176,14 @@ export default function EditProduct() {
 
   return (
     <>
-      <Link href="/" color="inherit" underline="none">
+      <Link href="/categories" color="inherit" underline="none">
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
       </Link>
-      {product ? (
+      {category ? (
         <>
-          <Typography variant="h6">Update Info For {product.title}</Typography>
+          <Typography variant="h6">Update Info For {category.label}</Typography>
           <Container>
             <Box
               component="form"
@@ -236,33 +207,28 @@ export default function EditProduct() {
                 sx={{ flex: 1 }}
               >
                 <img
-                  src={product.img}
+                  src={
+                    category.img
+                      ? category.img
+                      : "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?w=740&t=st=1659084544~exp=1659085144~hmac=a3824a2d031223455bf32fd92c96c6bb01cee188ad48fb61c8611e702c8b75bb"
+                  }
                   alt=""
                   style={{ borderRadious: 1, height: 300, width: 300 }}
                 />
                 <Typography variant="body1" color="secondary">
-                  {product.title}
+                  {category.title}
                 </Typography>
               </Stack>
               <Stack direction="column" sx={{ flex: 3 }}>
-                <Select
-                  options={catList}
-                  placeholder="Select Category(cat) *"
-                  isMulti
-                  value={cat}
-                  name="cat"
-                  onChange={handleSelectedCats}
-                />
-
                 <TextField
                   onChange={(e) => handleChange(e)}
                   margin="normal"
                   required
                   fullWidth
-                  id="title"
-                  label="Title"
-                  name="title"
-                  value={inputs.title || ""}
+                  id="label"
+                  label="Label"
+                  name="label"
+                  value={inputs.label || ""}
                   autoFocus
                   variant="standard"
                   inputProps={{ style: { textTransform: "capitalize" } }}
@@ -278,85 +244,6 @@ export default function EditProduct() {
                   value={inputs.desc || ""}
                   variant="standard"
                 />
-
-                <Stack direction="row" sx={{ gap: 2 }}>
-                  <TextField
-                    sx={{ flex: 3 }}
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    required
-                    name="price"
-                    label="Price"
-                    id="price"
-                    type="number"
-                    error={inputs.price < 1}
-                    helperText={inputs.price < 1 && "Minimun price is 1"}
-                    value={inputs.price || ""}
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                    variant="standard"
-                  />
-                  <TextField
-                    sx={{ flex: 1 }}
-                    select
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    required
-                    name="unit"
-                    label="Unit"
-                    id="unit"
-                    value={inputs.unit || "Kg"}
-                    error={!inputs.unit}
-                    helperText={!inputs.unit && "Please select unit"}
-                    variant="standard"
-                  >
-                    <MenuItem value="Kg">Kg</MenuItem>
-                    <MenuItem value="Liter">Liter</MenuItem>
-                    <MenuItem value="Piece">Piece</MenuItem>
-                    <MenuItem value="Dozen">Dozen</MenuItem>
-                    <MenuItem value="Pair">Pair</MenuItem>
-                    <MenuItem value="Box">Box</MenuItem>
-                  </TextField>
-                </Stack>
-
-                <TextField
-                  required
-                  disabled
-                  margin="normal"
-                  fullWidth
-                  name="cat"
-                  label="Categories"
-                  id="cat"
-                  value={product.cat}
-                  variant="standard"
-                  placeholder="tshirt, dress,male-clothing"
-                  helperText="Categories can not be updated"
-                />
-
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  fullWidth
-                  required
-                  name="inStock"
-                  label="Stock"
-                  id="inStock"
-                  value={inputs.inStock}
-                  variant="standard"
-                  error={inputs.inStock < 1}
-                  helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                />
-
-                <TextField
-                  margin="normal"
-                  disabled
-                  fullWidth
-                  label="Tags"
-                  value={tags}
-                  autoFocus
-                  variant="standard"
-                />
-
                 {file && (
                   <Avatar
                     src={file && URL.createObjectURL(file)}

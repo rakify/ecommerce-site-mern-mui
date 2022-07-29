@@ -13,6 +13,7 @@ import {
   Snackbar,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router";
@@ -28,14 +29,18 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+const Item = styled(Grid)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#ffffff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
   display: "flex",
+  flexDirection: "row",
   justifyContent: "space-around",
+  width: 400,
+  height: 300,
+  margin: 3,
 }));
 
 function SlideTransition(props) {
@@ -96,29 +101,27 @@ const Product = ({ item }) => {
       <Grid container>
         <Grid
           item
-          xs={12}
-          sm={12}
           sx={{
             "&:hover": {
               "& .details": {
                 display: "flex",
+                alignItems: "center",
                 cursor: "pointer",
-                ml: { lg: 5, md: 0 },
+                bgcolor: "#CBF1F5",
+                flex: 1,
+                height: "50%",
+                ml: { lg: 1, md: 0 },
               },
             },
           }}
         >
           <Item>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ "&:hover": { backgroundColor: "whitesmoke" } }}
-            >
+            <Stack sx={{ flex: 3 }} alignItems="center" justifyContent="center">
               <ButtonBase
                 sx={{
                   flex: 1,
-                  height: 100,
-                  width: 200,
+                  height: 200,
+                  width: 300,
                   transition: "transform 1s",
                   "&:hover": { transform: "scale(1.2)" },
                   margin: 2,
@@ -128,7 +131,7 @@ const Product = ({ item }) => {
                 <Img
                   alt="PRODUCT"
                   src={item.img}
-                  sx={{ maxWidth: 80, maxHeight: 150 }}
+                  sx={{ maxWidth: 200, maxHeight: 150 }}
                 />
               </ButtonBase>
               <Stack
@@ -150,40 +153,44 @@ const Product = ({ item }) => {
                     <s>৳{item.price + 10}</s>
                   </small>
                   <b>৳{item.price}</b>{" "}
-                  <small>{`/${item.unit.toLowerCase()}`}</small>
                 </Typography>
               </Stack>
-
-              <Stack
-                justifyContent="space-evenly"
-                className="details"
-                sx={{
-                  flex: 1,
-                  display: "none",
-                }}
+            </Stack>
+            <Stack
+              justifyContent="space-evenly"
+              className="details"
+              sx={{
+                flex: 1,
+                display: "none",
+              }}
+            >
+              <IconButton
+                color="primary"
+                size="small"
+                onClick={handleAddToCart}
               >
-                <IconButton
-                  color="primary"
-                  size="small"
-                  onClick={handleAddToCart}
-                >
+                <Tooltip title="Add to Cart" placement="right" arrow>
                   <ShoppingCartOutlined fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  size="small"
-                  onClick={handleAddToWishlist}
-                >
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                color="primary"
+                size="small"
+                onClick={handleAddToWishlist}
+              >
+                <Tooltip title="Add to Wishlist" placement="right" arrow>
                   <FavoriteBorderOutlined fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  size="small"
-                  href={`/product/${item._id}`}
-                >
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                color="primary"
+                size="small"
+                href={`/product/${item._id}`}
+              >
+                <Tooltip title="View Details" placement="right" arrow>
                   <InfoOutlined fontSize="inherit" />
-                </IconButton>
-              </Stack>
+                </Tooltip>
+              </IconButton>
             </Stack>
           </Item>
         </Grid>

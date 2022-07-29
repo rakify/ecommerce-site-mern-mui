@@ -1,5 +1,4 @@
 import {
-  Create,
   Email,
   Badge,
   Man,
@@ -14,57 +13,34 @@ const ViewProfile = () => {
   const user = useSelector((state) => state.user.currentUser);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ flexDirection: { xs: "column", sm: "row" } }}
-      >
-        <Stack justifyContent="center" sx={{ width:"50%" }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Person />
-            <Typography
-              variant="h6"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              {user.username}, {user.gender === "male" ? <Man /> : <Woman />}
-            </Typography>
-          </Stack>{" "}
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Email /> {user.email}
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <PhoneAndroid />{" "}
-            {user.phoneNumber || "Please provide a phone number"}
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Badge /> {user.accountType === 1 ? "Seller" : "Customer"}
-          </Stack>
+    <Stack direction="row" justifyContent="space-around">
+      <Stack direction="column">
+        <Typography variant="h6" color="primary">
+          Contact Information
+        </Typography>
+        <Stack direction="row">
+          <Typography>Username:</Typography>
+          <Typography>{user.username}</Typography>
         </Stack>
-        <img
-          src={user.img}
-          alt=""
-          style={{ borderRadious: 1, height: 300, width: 300 }}
-        />
+        <Stack direction="row">Email: {user.email}</Stack>
+        <Stack direction="row">
+          Phone Number: {user.phoneNumber || "Please provide a phone number"}
+        </Stack>
       </Stack>
-    </Container>
+      <Stack direction="column">
+        <Typography variant="h6" color="primary">
+          More Information
+        </Typography>
+
+        <Stack direction="row">
+          <Typography>Gender:</Typography>
+          <Typography>{user.gender}</Typography>
+        </Stack>
+        <Stack direction="row">
+          Account Type: {user.accountType === 1 ? "Seller" : "Customer"}
+        </Stack>
+      </Stack>
+    </Stack>
   );
 };
 

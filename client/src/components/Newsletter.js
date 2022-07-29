@@ -1,21 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Stack, Typography } from "@mui/material";
-import { SendOutlined } from "@mui/icons-material";
-
-const InputContainer = styled("div")({
-  width: "50%",
-  height: "40px",
-  backgroundColor: "white",
-  display: "flex",
-  justifyContent: "space-between",
-  border: "1px solid lightgreen",
-  width: { md: "80%" },
-});
-const Input = styled("input")({
-  border: "none",
-  flex: 9,
-  paddingLeft: "20px",
-});
+import { Button, Stack, TextField, Typography } from "@mui/material";
 
 const Newsletter = () => {
   return (
@@ -23,27 +7,33 @@ const Newsletter = () => {
       direction="column"
       justifyContent="center"
       alignItems="center"
-      sx={{ height: "60vh", backgroundColor: "#fcf5f5" }}
+      sx={{ height: "20vh", bgcolor:"#CBF1F5" }}
     >
-      <Typography variant="h1" sx={{ fontSize: "70px", marginBottom: "20px" }}>
-        Newsletter
+      <Typography variant="h6" sx={{ marginBottom: "20px" }}>
+        Sign Up For 20% Off Your First Order
       </Typography>
       <Typography
         sx={{
-          fontSize: "24px",
           fontWeight: 300,
           mb: "20px",
           textAlign: { md: "center" },
         }}
       >
-        Get updates for offers, promo codes directly in your inbox.
+        Hear Updates (Get updates for offers, promo codes directly in your
+        inbox.)
       </Typography>
-      <InputContainer>
-        <Input placeholder="Your email" />
-        <Button variant="contained" endIcon={<SendOutlined />}>
-          Send
-        </Button>
-      </InputContainer>
+      <Stack direction="row" alignItems="center" justifyContent="center">
+        <TextField
+          variant="standard"
+          InputProps={{
+            disableUnderline: true,
+          }}
+          fullWidth
+          label="Your email"
+          size="smalll"
+        />
+        <Button variant="contained">Subscribe</Button>
+      </Stack>
     </Stack>
   );
 };

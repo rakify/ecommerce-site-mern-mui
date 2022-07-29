@@ -33,7 +33,9 @@ export default function ViewSeller() {
 
   const handleDelete = (id) => {
     setDeleteProductId(false);
-    deleteSellerProduct(id);
+    deleteSellerProduct(id).then(() =>
+      getSellerProducts(user.username).then((res) => setProducts(res.data))
+    );
   };
 
   const handleCloseDialog = () => {

@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Reviews,
   AddBox,
+  Category,
 } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
@@ -39,6 +40,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import OrderList from "../components/OrderList";
 import Notification from "../components/Notification";
+import CatList from "../components/CatList";
+import AddCat from "./AddCat";
 
 const drawerWidth = 200;
 
@@ -162,6 +165,13 @@ export default function Dashboard() {
                 </Button>
               </Link>
             )}
+            {nowShowing === "Categories" && (
+              <Link href="/category" color="inherit" underline="hover">
+                <Button variant="contained" startIcon={<AddBox />}>
+                  Add New
+                </Button>
+              </Link>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -215,6 +225,17 @@ export default function Dashboard() {
               </ListItemIcon>
               <ListItemText primary="Orders" />
             </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate("/categories")}
+              selected={nowShowing === "Categories"}
+            >
+              <ListItemIcon>
+                <Category />
+              </ListItemIcon>
+              <ListItemText primary="Categories" />
+            </ListItemButton>
+
             <ListItemButton
               onClick={() => navigate("/reviews")}
               selected={nowShowing === "Reviews"}
@@ -304,6 +325,8 @@ export default function Dashboard() {
           <ProductList />
         ) : nowShowing === "Orders" ? (
           <OrderList />
+        ) : nowShowing === "Categories" ? (
+          <CatList />
         ) : (
           <Container>
             <Typography sx={{ mt: 10 }} variant="h6">

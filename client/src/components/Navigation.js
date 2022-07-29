@@ -3,7 +3,8 @@ import { Paper, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import Products from "./Products";
-import Categories from "./Categories";
+import CategoryList from "./CategoryList";
+import ShopList from "./ShopList";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,7 +47,7 @@ export default function Navigation() {
   };
 
   return (
-    <Paper variant="outlined" sx={{ backgroundColor: "##d0eafb" }}>
+    <Paper variant="outlined" sx={{}}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -60,10 +61,10 @@ export default function Navigation() {
         <Products />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Categories />
+        <CategoryList />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Coming Soon
+        <ShopList />
       </TabPanel>
     </Paper>
   );

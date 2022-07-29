@@ -3,24 +3,27 @@ const Category = require("../models/Category");
 const { verifyTokenAndAdmin } = require("../middlewares/verification");
 
 // CREATE A Category
-router.post(
-  "/",
-  verifyTokenAndAdmin, async (req, res) => {
-    const newCategory = new Category(req.body);
-    try {
-      const savedCategory = await newCategory.save();
-      res.status(200).json(savedCategory);
-    } catch (err) {
-      res.status(500).json(err);
-    }
+router.post("/", verifyTokenAndAdmin, async (req, res) => {
+  const newCategory = new Category(req.body);
+  try {
+    const savedCategory = await newCategory.save();
+    res
+      .status(201)
+      .json({
+        message: "New category added successfully.",
+        data: savedCategory,
+      });
+  } catch (err) {
+    res.status(500).json(err);
   }
-);
+});
 
 //UPDATE A Category
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     const updatedCategory = await Category.findByIdAndUpdate(
-      req.params.id, req.body,
+      req.params.id,
+      req.body,
       { new: true }
     );
     res.status(200).json(updatedCategory);
@@ -29,11 +32,11 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//DELETE A POST
+//DELETE A Category
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
-      res.status(200).json("the Category has been deleted.");
+    res.status(200).json("the Category has been deleted.");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -51,15 +54,11 @@ router.get("/find/:id", async (req, res) => {
 
 //GET ALL Categories
 router.get("/", async (req, res) => {
-  const sortByNew = req.query.new;
-  const sortByCatergory = req.query.category
+  const sortBy = req.query.sortBy;
   try {
     let categories;
-    if(sortByNew){
-      categories = await Category.find().sort({createdAt:-1});
-    }
-    else if(sortByCatergory){
-      categories = await Category.find({categories:{$in: [sortByCatergory]}});
+    if (sortBy) {
+      categories = await Category.find().sort({ createdAt: -1 });
     } else {
       categories = await Category.find();
     }

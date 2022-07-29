@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "../components/Footer";
+import { Shop, Store } from "@mui/icons-material";
 
 const theme = createTheme();
 
@@ -107,20 +108,20 @@ export default function RegisterSeller() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 1,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <Store />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{mb:5}}>
             Become a Seller
           </Typography>
           <Box
@@ -136,10 +137,10 @@ export default function RegisterSeller() {
                   required
                   fullWidth
                   id="username"
-                  label="Shop Name"
+                  label="username"
                   autoFocus
                   onChange={handleChange}
-                  helperText="* shop name can not be changed later."
+                  helperText="* username will be used as your shop name, it can not be changed later."
                 />
               </Grid>
               <Grid item xs={12}>
@@ -150,6 +151,17 @@ export default function RegisterSeller() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  autoComplete="phoneNumber"
                   onChange={handleChange}
                 />
               </Grid>

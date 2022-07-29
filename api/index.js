@@ -10,6 +10,7 @@ const cartRoute = require("./routes/cart");
 const wishlistRoute = require("./routes/wishlist");
 const orderRoute = require("./routes/order");
 const notificationRoute = require("./routes/notification");
+const categoryRoute = require("./routes/category");
 
 //connect to db
 mongoose
@@ -49,6 +50,7 @@ app.use("/api/carts", cartRoute);
 app.use("/api/wishlist", wishlistRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/notifications", notificationRoute);
+app.use("/api/categories", categoryRoute);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

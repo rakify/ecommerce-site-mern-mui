@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Select from "react-select";
 import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,7 +9,7 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { addProduct, addUser } from "../redux/apiCalls";
+import { addProduct, addUser, getCats } from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
@@ -45,7 +46,6 @@ export default function AddProduct() {
     seller: "",
   });
   const [file, setFile] = useState(null);
-  const [cat, setCat] = useState([]);
   const [response, setResponse] = useState(false);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState("Add");
@@ -61,9 +61,22 @@ export default function AddProduct() {
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const handleCat = (e) => {
-    setCat(e.target.value.toLowerCase().split(","));
+
+
+  const [cat, setCat] = useState([]);
+  const [catList, setCatList] = useState([]);
+
+  // get categories from api
+  useEffect(() => {
+    getCats().then((res) => {
+      setCatList(res.data);
+    });
+  }, []);
+
+  const handleSelectedCats = (data) => {
+    setCat(data);
   };
+
 
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
@@ -175,6 +188,14 @@ export default function AddProduct() {
           sx={{ mt: 1 }}
           noValidate
         >
+          <Select
+            options={catList}
+            placeholder="Select Category(cat) *"
+            isMulti
+            name="cat"
+            onChange={handleSelectedCats}
+          />
+
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
@@ -228,7 +249,8 @@ export default function AddProduct() {
               <MenuItem value="Piece">Piece</MenuItem>
             </TextField>
           </Stack>
-          <TextField
+
+          {/* <TextField
             onChange={(e) => handleCat(e)}
             margin="normal"
             fullWidth
@@ -238,7 +260,7 @@ export default function AddProduct() {
             variant="standard"
             placeholder="tshirt, dress,male-clothing"
             helperText="Add categories separated by comma"
-          />
+          /> */}
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"

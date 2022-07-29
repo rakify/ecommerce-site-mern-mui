@@ -212,3 +212,52 @@ export const updateOrder = async (id, order) => {
     return err;
   }
 };
+
+//Categories
+
+export const addCat = async (category) => {
+  try {
+    const res = await axios.post(`/categories`, category);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+
+export const getCat = async (id) => {
+  try {
+    const res = await axios.get(`/categories/find/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getCats = async () => {
+  try {
+    const res = await axios.get(`/categories?sortBy=createdAt`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const deleteCat = async (id) => {
+  try {
+    const res = await axios.delete(`/categories/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateCat = async (id, cat) => {
+  try {
+    // update
+    const res = await axios.put(`/categories/${id}`, cat);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};

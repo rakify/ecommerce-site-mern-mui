@@ -7,6 +7,7 @@ import {
   Button,
   Stack,
   Badge,
+  Tooltip,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "@emotion/styled";
@@ -64,13 +65,16 @@ export default function Notification() {
         onClick={handleClick}
         sx={{ width: 20, height: 20, color: "black" }}
       >
-        <Badge
-          badgeContent={notifications.length}
-          color="success"
-          variant="dot"
-        >
-          <Notifications fontSize="small" />
-        </Badge>
+        {" "}
+        <Tooltip title="Notifications">
+          <Badge
+            badgeContent={notifications.length}
+            color="success"
+            variant="dot"
+          >
+            <Notifications fontSize="small" />
+          </Badge>
+        </Tooltip>
       </IconButton>
       <Menu
         id="basic-menu"

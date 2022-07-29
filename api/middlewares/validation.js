@@ -25,6 +25,15 @@ module.exports.addUserValidation = registerValidation = (data) => {
       .required(),
     accountType: Joi.number().allow(""),
     img: Joi.string().allow(""),
+    phoneNumber: Joi.string()
+      .trim()
+      .length(11)
+      .pattern(/^\d+$/) //d for only digits
+      .allow("")
+      .messages({
+        "string.length": "Phone number must contain 11 digits",
+        "string.pattern.base": "Phone number must contain only digits",
+      }),
   });
   return schema.validate(data);
 };
@@ -111,7 +120,7 @@ module.exports.productValidation = productValidation = (data) => {
     title: Joi.string().min(3).max(300).trim().required(),
     slug: Joi.string().trim().required(),
     desc: Joi.string().max(1000).required(),
-    cat: Joi.array().required(),
+    cat: Joi.array().min(1).required(),
     price: Joi.number().integer().min(1).required(),
     img: Joi.string().allow(""),
     tags: Joi.array().allow(""),

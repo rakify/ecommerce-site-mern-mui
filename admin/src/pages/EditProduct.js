@@ -1,3 +1,4 @@
+import Select from "react-select";
 import { useEffect, useState } from "react";
 import { ArrowBackIos, PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +9,7 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { getProduct, updateProduct } from "../redux/apiCalls";
+import { getCats, getProduct, updateProduct } from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
@@ -55,7 +56,6 @@ export default function EditProduct() {
     seller: product.seller,
   });
   const [file, setFile] = useState(null);
-  const [cat, setCat] = useState(product.cat);
   const [response, setResponse] = useState(false);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState("Update");
@@ -73,8 +73,20 @@ export default function EditProduct() {
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const handleCat = (e) => {
-    setCat(e.target.value.toLowerCase().split(","));
+  
+  
+  const [cat, setCat] = useState(product.cat);
+  const [catList, setCatList] = useState([]);
+  
+  // get categories from api
+  useEffect(() => {
+    getCats().then((res) => {
+      setCatList(res.data);
+    });
+  }, []);
+
+  const handleSelectedCats = (data) => {
+    setCat(data);
   };
 
   const handleSubmitWithFile = (e) => {
@@ -227,7 +239,17 @@ export default function EditProduct() {
                   {product.title}
                 </Typography>
               </Stack>
+
               <Stack direction="column" sx={{ flex: 3 }}>
+                <Select
+                  options={catList}
+                  placeholder="Select Category(cat) *"
+                  isMulti
+                  value={cat}
+                  name="cat"
+                  onChange={handleSelectedCats}
+                />
+
                 <TextField
                   onChange={(e) => handleChange(e)}
                   margin="normal"
@@ -266,7 +288,7 @@ export default function EditProduct() {
                     error={inputs.price < 1}
                     helperText={inputs.price < 1 && "Minimun price is 1"}
                     value={inputs.price || ""}
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     variant="standard"
                   />
                   <TextField
@@ -293,20 +315,6 @@ export default function EditProduct() {
                 </Stack>
 
                 <TextField
-                  required
-                  onChange={(e) => handleCat(e)}
-                  margin="normal"
-                  fullWidth
-                  name="cat"
-                  label="Categories"
-                  id="cat"
-                  value={cat || ""}
-                  variant="standard"
-                  placeholder="tshirt, dress,male-clothing"
-                  helperText="Add categories separated by comma"
-                />
-
-                <TextField
                   onChange={(e) => handleChange(e)}
                   margin="normal"
                   fullWidth
@@ -318,7 +326,7 @@ export default function EditProduct() {
                   variant="standard"
                   error={inputs.inStock < 1}
                   helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 />
 
                 <TextField

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const CategorySchema = new mongoose.Schema(
   {
-    title: {
+    label: {
       type: String,
       required: true,
       unique: true,
@@ -16,9 +16,9 @@ const CategorySchema = new mongoose.Schema(
     },
     img: {
       type: String,
-      required: true,
+      default: "",
     },
-    slug: {
+    value: {
       type: String,
       required: true,
       trim: true,

@@ -47,24 +47,6 @@ export default function EditProfile() {
     phoneNumber: user.phoneNumber,
   });
 
-  const [inputs2, setInputs2] = useState({
-    //Shipping Info
-    sFullName: user.shippingInfo.fullName,
-    sGender: user.shippingInfo.gender,
-    sPhoneNumber: user.shippingInfo.phoneNumber,
-    sDivision: user.shippingInfo.division,
-    sDistrict: user.shippingInfo.district,
-    sUpazila: user.shippingInfo.upazila,
-    sStreet: user.shippingInfo.street,
-    //Billing Info
-    bFullName: user.billingInfo.fullName,
-    bGender: user.billingInfo.gender,
-    bPhoneNumber: user.billingInfo.phoneNumber,
-    bDivision: user.billingInfo.division,
-    bDistrict: user.billingInfo.district,
-    bUpazila: user.billingInfo.upazila,
-    bStreet: user.billingInfo.street,
-  });
   const [response, setResponse] = useState(false);
   const [changeAccountType, setChangeAccountType] = useState(false);
   const [loading, setLoading] = useState("Update");
@@ -73,10 +55,6 @@ export default function EditProfile() {
   // This handles the change in main user profile
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-  // this handles the changes in user saved address
-  const handleChange2 = (e) => {
-    setInputs2((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   //  this handle change account type request
@@ -152,30 +130,9 @@ export default function EditProfile() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const shippingInfo = {
-            fullName: inputs2.sFullName,
-            phoneNumber: inputs2.sPhoneNumber,
-            gender: inputs2.sGender,
-            division: inputs2.sDivision,
-            district: inputs2.sDistrict,
-            upazila: inputs2.sUpazila,
-            street: inputs2.sStreet,
-          };
-          const billingInfo = {
-            fullName: inputs2.bFullName,
-            phoneNumber: inputs2.bPhoneNumber,
-            gender: inputs2.bGender,
-            division: inputs2.bDivision,
-            district: inputs2.bDistrict,
-            upazila: inputs2.bUpazila,
-            street: inputs2.bStreet,
-          };
-
           const updatedUser = {
             ...user,
             ...inputs,
-            shippingInfo,
-            billingInfo,
             img: downloadURL,
           };
           updateUser(user._id, updatedUser, dispatch).then((res) => {
@@ -203,30 +160,9 @@ export default function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const shippingInfo = {
-      fullName: inputs2.sFullName,
-      phoneNumber: inputs2.sPhoneNumber,
-      gender: inputs2.sGender,
-      division: inputs2.sDivision,
-      district: inputs2.sDistrict,
-      upazila: inputs2.sUpazila,
-      street: inputs2.sStreet,
-    };
-    const billingInfo = {
-      fullName: inputs2.bFullName,
-      phoneNumber: inputs2.bPhoneNumber,
-      gender: inputs2.bGender,
-      division: inputs2.bDivision,
-      district: inputs2.bDistrict,
-      upazila: inputs2.bUpazila,
-      street: inputs2.bStreet,
-    };
-
     const updatedUser = {
       ...user,
       ...inputs,
-      shippingInfo,
-      billingInfo,
     };
     updateUser(user._id, updatedUser, dispatch).then((res) => {
       if (res.status === 200) {
@@ -250,348 +186,171 @@ export default function EditProfile() {
 
   return (
     <>
-      <Card>
-        <Box
-          component="form"
-          onSubmit={file ? handleSubmitWithFile : handleSubmit}
-          sx={{
-            mt: 1,
-            display: "flex",
-            flexDirection: {
-              xs: "column",
-              md: "row",
-            },
-            justifyContent: "space-between",
-            gap: 5,
-          }}
-          noValidate
+      <Box
+        component="form"
+        onSubmit={file ? handleSubmitWithFile : handleSubmit}
+        noValidate
+      >
+        <Stack
+          direction="column"
+          justifyContent="space-around"
         >
-          <Stack direction="column" sx={{ flex: 3 }}>
-            <Stack
-              direction="row"
-              justifyContent="space-evenly"
-              sx={{
-                flexDirection: {
-                  xs: "column",
-                  sm: "row",
-                },
-              }}
+            <Typography variant="h6" color="primary">
+              Edit Profile
+            </Typography>
+            <TextField
+              onChange={(e) => handleChange(e)}
+              disabled={user.accountType === 1}
+              margin="normal"
+              required
+              value={inputs.username}
+              label={user.accountType === 1 ? "Shop Name" : "Username"}
+              name="username"
+              autoFocus
+              variant="standard"
+              helperText={
+                user.accountType === 1 &&
+                "Once you become seller you can not change your username anymore."
+              }
+            />
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              type="password"
+              id="password"
+              value={inputs.password}
+              label="Password"
+              name="password"
+              variant="standard"
+            />
+
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              required
+              name="email"
+              label="Email"
+              id="email"
+              type="email"
+              value={inputs.email}
+              variant="standard"
+            />
+
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              name="firstName"
+              label="First Name"
+              id="firstName"
+              value={inputs.firstName || ""}
+              variant="standard"
+            />
+
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              name="lastName"
+              label="Last Name"
+              id="lastName"
+              value={inputs.lastName || ""}
+              variant="standard"
+            />
+
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              name="phoneNumber"
+              label="Phone Number"
+              id="phoneNumber"
+              value={inputs.phoneNumber || ""}
+              variant="standard"
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            />
+
+            <TextField
+              select
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              fullWidth
+              name="gender"
+              label="Gender"
+              id="gender"
+              value={inputs.gender || "male"}
+              variant="standard"
             >
-              <Stack direction="column">
-                <Typography variant="h6" color="primary">
-                  Account Details
-                </Typography>
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  disabled={user.accountType === 1}
-                  margin="normal"
-                  required
-                  value={inputs.username}
-                  label={user.accountType===1?"Shop Name":"Username"}
-                  name="username"
-                  autoFocus
-                  variant="standard"
-                  helperText={
-                    user.accountType === 1 &&
-                    "Once you become seller you can not change your username anymore."
-                  }
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  type="password"
-                  id="password"
-                  value={inputs.password}
-                  label="Password"
-                  name="password"
-                  variant="standard"
-                />
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </TextField>
+            <TextField
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              fullWidth
+              name="accountType"
+              label="Account Type"
+              id="accountType"
+              value={
+                inputs.accountType === 0
+                  ? "Buyer"
+                  : inputs.accountType === 1
+                  ? "Seller"
+                  : "Waiting for approval"
+              }
+              variant="standard"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <Button
+              onClick={() => setChangeAccountType(true)}
+              disabled={inputs.accountType === 2}
+            >
+              {inputs.accountType === 0 ? "Become Seller" : "Become Customer"}
+            </Button>
 
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  name="email"
-                  label="Email"
-                  id="email"
-                  type="email"
-                  value={inputs.email}
-                  variant="standard"
-                />
+            {file && (
+              <Avatar
+                src={file && URL.createObjectURL(file)}
+                alt=""
+                style={{
+                  width: 260,
+                  height: 220,
+                  marginTop: 20,
+                  marginLeft: "10vw",
+                }}
+              />
+            )}
 
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  name="firstName"
-                  label="First Name"
-                  id="firstName"
-                  value={inputs.firstName || ""}
-                  variant="standard"
-                />
-
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  name="lastName"
-                  label="Last Name"
-                  id="lastName"
-                  value={inputs.lastName || ""}
-                  variant="standard"
-                />
-
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  name="phoneNumber"
-                  label="Phone Number"
-                  id="phoneNumber"
-                  value={inputs.phoneNumber || ""}
-                  variant="standard"
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                />
-
-                <TextField
-                  select
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  fullWidth
-                  name="gender"
-                  label="Gender"
-                  id="gender"
-                  value={inputs.gender || "male"}
-                  variant="standard"
-                >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                </TextField>
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  fullWidth
-                  name="accountType"
-                  label="Account Type"
-                  id="accountType"
-                  value={
-                    inputs.accountType === 0
-                      ? "Buyer"
-                      : inputs.accountType === 1
-                      ? "Seller"
-                      : "Waiting for approval"
-                  }
-                  variant="standard"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-                <Button
-                  onClick={() => setChangeAccountType(true)}
-                  disabled={inputs.accountType === 2}
-                >
-                  {inputs.accountType === 0 ? "Become Seller" : "Become Customer"}
-                </Button>
-
-                {file && (
-                  <Avatar
-                    src={file && URL.createObjectURL(file)}
-                    alt=""
-                    style={{
-                      width: 260,
-                      height: 220,
-                      marginTop: 20,
-                      marginLeft: "10vw",
-                    }}
-                  />
-                )}
-
-                <label htmlFor="file">
-                  <input
-                    accept=".png, .jpg, .jpeg"
-                    id="file"
-                    name="file"
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={(e) => setFile(e.target.files[0])}
-                  />
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                    <PhotoCamera /> Upload Picture
-                  </IconButton>
-                </label>
-              </Stack>
-
-              {user.accountType !== 1 && (
-                <>
-                  {/* Shipping */}
-
-                  <Stack direction="column">
-                    <Typography variant="h6" color="primary">
-                      Shipping Info
-                    </Typography>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Full Name"
-                      id="sfullName"
-                      name="sFullName"
-                      value={inputs2.sFullName || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Phone Number"
-                      id="sPhoneNumber"
-                      name="sPhoneNumber"
-                      value={inputs2.sPhoneNumber || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      select
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      fullWidth
-                      label="Gender"
-                      id="sGender"
-                      name="sGender"
-                      value={inputs2.sGender || "male"}
-                      variant="standard"
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                    </TextField>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Division"
-                      id="sDivision"
-                      name="sDivision"
-                      value={inputs2.sDivision || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="District"
-                      id="sDistrict"
-                      name="sDistrict"
-                      value={inputs2.sDistrict || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Upazila"
-                      id="sUpazila"
-                      name="sUpazila"
-                      value={inputs2.sUpazila || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Street"
-                      id="sStreet"
-                      name="sStreet"
-                      value={inputs2.sStreet || ""}
-                      variant="standard"
-                    />
-                  </Stack>
-
-                  {/* Billing */}
-
-                  <Stack direction="column">
-                    <Typography variant="h6" color="primary">
-                      Billing Info
-                    </Typography>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Full Name"
-                      id="bFullName"
-                      name="bFullName"
-                      value={inputs2.bFullName || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Phone Number"
-                      id="bPhoneNumber"
-                      name="bPhoneNumber"
-                      value={inputs2.bPhoneNumber || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      select
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      fullWidth
-                      label="Gender"
-                      id="bGender"
-                      name="bGender"
-                      value={inputs2.bGender || "male"}
-                      variant="standard"
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                    </TextField>
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Division"
-                      id="bDivision"
-                      name="bDivision"
-                      value={inputs2.bDivision || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="District"
-                      id="bDistrict"
-                      name="bDistrict"
-                      value={inputs2.bDistrict || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Upazila"
-                      id="bUpazila"
-                      name="bUpazila"
-                      value={inputs2.bUpazila || ""}
-                      variant="standard"
-                    />
-                    <TextField
-                      onChange={(e) => handleChange2(e)}
-                      margin="normal"
-                      label="Street"
-                      id="bStreet"
-                      name="bStreet"
-                      value={inputs2.bStreet || ""}
-                      variant="standard"
-                    />
-                  </Stack>
-                </>
-              )}
-            </Stack>
-            <Stack>
-              <Button
-                type="submit"
-                disabled={loading !== "Update"}
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+            <label htmlFor="file">
+              <input
+                accept=".png, .jpg, .jpeg"
+                id="file"
+                name="file"
+                type="file"
+                style={{ display: "none" }}
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
               >
-                {loading}
-              </Button>
-            </Stack>
+                <PhotoCamera /> Upload Picture
+              </IconButton>
+            </label>
           </Stack>
-        </Box>
-      </Card>
+
+          <Stack>
+            <Button
+              type="submit"
+              disabled={loading !== "Update"}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              {loading}
+            </Button>
+          </Stack>
+      </Box>
 
       {/* display dialog box when user wants to change account type */}
       <Dialog
@@ -602,7 +361,10 @@ export default function EditProfile() {
       >
         <DialogTitle id="alert-dialog-title">
           Are you sure you want to{" "}
-          {inputs.accountType === 0 ? "become seller" : "close your shop & become customer"}?
+          {inputs.accountType === 0
+            ? "become seller"
+            : "close your shop & become customer"}
+          ?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

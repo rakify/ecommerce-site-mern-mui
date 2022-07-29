@@ -11,11 +11,10 @@ const Select = styled("select")(({ theme }) => ({
 }));
 const Option = styled("option")(({ theme }) => ({}));
 
-const Products = ({ cat }) => {
+const Products = ({ cat, limit }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sort, setSort] = useState("newest");
-
   useEffect(() => {
     setFilteredProducts(
       products.filter((item) => {
@@ -46,31 +45,18 @@ const Products = ({ cat }) => {
         direction="row"
         justifyContent="space-between"
         alignItems="flex-start"
+        sx={{bgcolor:"whitesmoke"}}
       >
         <Box flex={7} p={2}>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <Stack direction="row" alignItems="center">
-              <Typography>Sort: </Typography>
-              <Select onChange={(e) => setSort(e.target.value)}>
-                <Option value="newest">Newest</Option>
-                <Option value="asc">Price (asc)</Option>
-                <Option value="desc">Price(desc)</Option>
-              </Select>
-            </Stack>
-          </Stack>
-          <Grid container columns={10}>
+          <Grid container columns={10} sx={{}}>
             {" "}
             {/* 10 columns thus each with size 2 = 5 items in a column */}
             {cat
-              ? filteredProducts.map((item) => (
-                  <Product item={item} key={item._id} />
-                ))
+              ? filteredProducts
+                  .slice(0, limit)
+                  .map((item) => <Product item={item} key={item._id} />)
               : products
-                  .slice(0, 30)
+                  .slice(0, limit)
                   .map((item) => <Product item={item} key={item._id} />)}
           </Grid>
         </Box>

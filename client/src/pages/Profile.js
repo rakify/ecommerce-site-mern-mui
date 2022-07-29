@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { Paper, Tab, Tabs, Typography } from "@mui/material";
+import { Avatar, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import EditProfile from "../components/EditProfile";
 import ViewProfile from "../components/ViewProfile";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AddressBook from "../components/AddressBook";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,23 +49,58 @@ const Profile = () => {
 
   return (
     <>
-      <Paper variant="outlined" sx={{ backgroundColor: "##d0eafb" }}>
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        sx={{ pt: 2, bgcolor: "#66BFBF" }}
+      >
+        <Avatar
+          src={user.img}
+          alt=""
+          sx={{
+            height: 220,
+            width: 250,
+            objectFit: "contain",
+            border: "1px solid black",
+          }}
+        />
+        <Typography variant="subtitle1">{user.username}</Typography>
+      </Stack>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <Tabs
-          centered
+          orientation="vertical"
+          variant="scrollable"
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          sx={{ borderRight: 2, borderColor: "divider", flex: 1 }}
         >
           <Tab label={user.username} {...a11yProps(0)} />
           <Tab label="Edit Profile" {...a11yProps(1)} />
+          {user.accountType === 0 && (
+            <Tab label="Address Book" {...a11yProps(2)} />
+          )}
         </Tabs>
-        <TabPanel value={value} index={0}>
-          <ViewProfile />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <EditProfile />
-        </TabPanel>
-      </Paper>
+        <Stack sx={{ flex: 5 }}>
+          <TabPanel value={value} index={0}>
+            <ViewProfile />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <EditProfile />
+          </TabPanel>
+          {user.profile === 0 && (
+            <TabPanel value={value} index={2}>
+              <AddressBook />
+            </TabPanel>
+          )}
+        </Stack>
+      </Box>
     </>
   );
 };

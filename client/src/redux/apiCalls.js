@@ -234,3 +234,14 @@ export const getOrders = async (id) => {
     return err;
   }
 };
+
+
+//Categories
+export const getCats = async () => {
+  try {
+    const res = await axios.get(`/categories?sortBy=createdAt`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};

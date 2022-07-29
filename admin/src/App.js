@@ -8,6 +8,8 @@ import EditUser from "./pages/EditUser";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
 import EditOrder from "./pages/EditOrder";
+import AddCat from "./pages/AddCat";
+import EditCat from "./pages/EditCat";
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -21,6 +23,8 @@ function App() {
         <Route path="/user/:userId" element={user ? <EditUser /> : <Login />} />
         <Route exact path="/product" element={user ? <AddProduct /> : <Login />} />
         <Route path="/product/:productId" element={user ? <EditProduct /> : <Login />} />
+        <Route path="/category/" element={user ? <AddCat /> : <Login />} />
+        <Route path="/category/:categoryId" element={user ? <EditCat /> : <Login />} />
         <Route path="/order/:orderId" element={user ? <EditOrder /> : <Login />} />
         <Route exact path="/:screen" element={user ? <Dashboard /> : <Login />} />
 
