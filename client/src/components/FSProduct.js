@@ -9,7 +9,11 @@ const Img = styled("img")({
 });
 const FSProduct = ({ item }) => {
   return (
-    <Stack sx={{ flex: 3, padding:2 }} alignItems="center" justifyContent="center">
+    <Stack
+      sx={{ flex: 3, padding: { sm: 0, md: 2 } }}
+      alignItems="center"
+      justifyContent="center"
+    >
       <ButtonBase
         sx={{
           flex: 1,

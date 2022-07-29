@@ -18,11 +18,14 @@ const FlashSell = ({ cat, limit }) => {
   return (
     <Container maxWidth="xl">
       <Stack
-        direction="row"
+        direction="column"
         justifyContent="space-between"
-        sx={{ gap: 10, flexDirection: { sm: "column", md: "row" } }}
+        sx={{
+          gap: { sm: 0, md: 10 },
+          flexDirection: { sm: "column", md: "row" },
+        }}
       >
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">New arrivals</Typography>
           <Stack direction="row">
             {products.slice(0, 3).map((item) => (
@@ -30,7 +33,7 @@ const FlashSell = ({ cat, limit }) => {
             ))}
           </Stack>
         </Stack>
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">Top rankings</Typography>
           <Stack direction="row">
             {products.slice(7, 10).map((item) => (
@@ -38,7 +41,7 @@ const FlashSell = ({ cat, limit }) => {
             ))}
           </Stack>{" "}
         </Stack>
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">
             Personal Protective Equipment
           </Typography>
@@ -51,11 +54,16 @@ const FlashSell = ({ cat, limit }) => {
       </Stack>
 
       <Stack
-        direction="row"
+        direction="column"
         justifyContent="space-between"
-        sx={{ gap: 10, mt: 5, flexDirection: { sm: "column", md: "row" } }}
+        sx={{
+          gap: { sm: 0, md: 10 },
+          mt: 5,
+          flex: 3,
+          flexDirection: { sm: "column", md: "row" },
+        }}
       >
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">Free shipping</Typography>
           <Stack direction="row">
             {products.slice(11, 14).map((item) => (
@@ -63,7 +71,7 @@ const FlashSell = ({ cat, limit }) => {
             ))}
           </Stack>
         </Stack>
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">Most searched</Typography>
           <Stack direction="row">
             {products.slice(0, 3).map((item) => (
@@ -71,7 +79,7 @@ const FlashSell = ({ cat, limit }) => {
             ))}
           </Stack>{" "}
         </Stack>
-        <Stack direction="column" sx={{ bgcolor: "whitesmoke" }}>
+        <Stack direction="column" sx={{ bgcolor: "whitesmoke", flex: 1 }}>
           <Typography variant="button">Weekend wonder</Typography>
           <Stack direction="row">
             {products.slice(5, 8).map((item) => (

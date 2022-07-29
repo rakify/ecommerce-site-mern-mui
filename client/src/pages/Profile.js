@@ -83,9 +83,7 @@ const Profile = () => {
         >
           <Tab label={user.username} {...a11yProps(0)} />
           <Tab label="Edit Profile" {...a11yProps(1)} />
-          {user.accountType === 0 && (
-            <Tab label="Address Book" {...a11yProps(2)} />
-          )}
+          <Tab label="Address Book" {...a11yProps(2)} />
         </Tabs>
         <Stack sx={{ flex: 5 }}>
           <TabPanel value={value} index={0}>
@@ -94,11 +92,9 @@ const Profile = () => {
           <TabPanel value={value} index={1}>
             <EditProfile />
           </TabPanel>
-          {user.profile === 0 && (
-            <TabPanel value={value} index={2}>
-              <AddressBook />
-            </TabPanel>
-          )}
+          <TabPanel value={value} index={2}>
+            <AddressBook />
+          </TabPanel>
         </Stack>
       </Box>
     </>
