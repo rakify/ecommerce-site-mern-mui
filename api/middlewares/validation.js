@@ -121,11 +121,18 @@ module.exports.productValidation = productValidation = (data) => {
     slug: Joi.string().trim().required(),
     desc: Joi.string().max(1000).required(),
     cat: Joi.array().min(1).required(),
-    price: Joi.number().integer().min(1).required(),
+    marketPrice: Joi.number().integer().min(1).required(),
+    price: Joi.number().integer().max(Joi.ref('marketPrice')).required(),
     img: Joi.string().allow(""),
     tags: Joi.array().allow(""),
-    unit: Joi.string().required(),
-    inStock: Joi.number().min(0).required(),
+    unit: Joi.string().allow(""),
+    inStock: Joi.number().allow(""),
+    size: Joi.string().allow(""),
+    color: Joi.string().allow(""),
+    brand: Joi.string().allow(""),
+    weight: Joi.string().allow(""),
+    hasMerchantReturnPolicy: Joi.boolean().required(),
+    model: Joi.string().allow(""),
   });
   return schema.validate(data);
 };

@@ -109,6 +109,7 @@ export const deleteNotification = async (notificationId) => {
 };
 
 //Products
+//(public)
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {
@@ -118,8 +119,36 @@ export const getProducts = async (dispatch) => {
     dispatch(getProductFailure());
   }
 };
+export const getProductsAsCategory = async (cat) => {
+  try {
+    const res = await axios.get(`/products/?category=${cat}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+//when seller logged in
+export const getProductsAsSeller = async (seller, dispatch) => {
+  dispatch(getProductStart());
+  try {
+    const res = await axios.get(`/products/${seller}?new=true`);
+    dispatch(getProductSuccess(res.data));
+  } catch (err) {
+    dispatch(getProductFailure());
+  }
+};
 
-//Seller products
+export const getProductById = async (productId) => {
+  try {
+    const res = await axios.get(`/products/find/${productId}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+//Seller
+//get seller products (public)
 export const getSellerProducts = async (seller) => {
   try {
     const res = await axios.get(`/products/${seller}?new=true`);
@@ -234,7 +263,6 @@ export const getOrders = async (id) => {
     return err;
   }
 };
-
 
 //Categories
 export const getCats = async () => {

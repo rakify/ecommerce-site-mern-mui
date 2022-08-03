@@ -40,12 +40,12 @@ export default function AddCat() {
   const [inputs, setInputs] = useState({
     label: "",
     desc: "",
+    value: "",
   });
+
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
   const [loading, setLoading] = useState("Add");
-
-  //console.log(response)
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -89,11 +89,9 @@ export default function AddCat() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setLoading("Uploaded");
-          const slug = inputs.label.toLowerCase().split(" ").join("-");
           const updatedCategory = {
             ...inputs,
             img: downloadURL,
-            value: slug,
           };
           addCat(updatedCategory).then((res) => {
             if (res.status === 201) {
@@ -121,10 +119,8 @@ export default function AddCat() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading("Adding");
-    const slug = inputs.label.toLowerCase().split(" ").join("-");
     const updatedCategory = {
       ...inputs,
-      value: slug,
     };
     addCat(updatedCategory).then((res) => {
       if (res.status === 201) {
@@ -170,6 +166,16 @@ export default function AddCat() {
             label="Label"
             name="label"
             autoFocus
+            variant="standard"
+          />
+          <TextField
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            required
+            fullWidth
+            id="value"
+            label="Value (slug)"
+            name="value"
             variant="standard"
           />
           <TextField

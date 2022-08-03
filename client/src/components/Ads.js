@@ -1,9 +1,10 @@
-import { Avatar, Card, CardHeader, CardMedia } from "@mui/material";
+import { Avatar, Card, CardHeader, CardMedia, Typography } from "@mui/material";
 import React from "react";
 
 const Ads = () => {
   return (
-    <Card sx={{ maxWidth: 300, maxHeight: 450 }}>
+    <Card sx={{ minWidth: 300, minHeight: 450 }}>
+      <Typography>Your ad here</Typography>
       {/* <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "gray" }} aria-label="recipe">
@@ -11,12 +12,12 @@ const Ads = () => {
           </Avatar>
         }
       /> */}
-      <CardMedia
+      {/* <CardMedia
         component="img"
         image="https://www.coca-cola.com.bd/content/dam/brands/bd/coca-cola/image/updates/77422/web-card-min.jpg"
         alt="Image"
         sx={{ objectFit: "contain" }}
-      />
+      /> */}
     </Card>
   );
 };

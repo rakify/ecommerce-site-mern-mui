@@ -7,12 +7,10 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
   const newCategory = new Category(req.body);
   try {
     const savedCategory = await newCategory.save();
-    res
-      .status(201)
-      .json({
-        message: "New category added successfully.",
-        data: savedCategory,
-      });
+    res.status(201).json({
+      message: "New category added successfully.",
+      data: savedCategory,
+    });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -58,15 +56,15 @@ router.get("/", async (req, res) => {
   try {
     let categories;
     if (sortBy) {
-      categories = await Category.find().sort({ createdAt: -1 });
+      categories = await Category.find().select(["-createdAt","-updatedAt"]);
     } else {
       categories = await Category.find();
     }
-
     res.status(200).json(categories);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 
 module.exports = router;

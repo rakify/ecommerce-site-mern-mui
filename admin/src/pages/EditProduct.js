@@ -18,6 +18,7 @@ import {
   IconButton,
   Link,
   MenuItem,
+  Checkbox,
   Slide,
   Snackbar,
   Stack,
@@ -50,10 +51,12 @@ export default function EditProduct() {
   const [inputs, setInputs] = useState({
     title: product.title,
     desc: product.desc,
+    marketPrice: product.marketPrice,
     price: product.price,
     inStock: product.inStock,
     unit: product.unit,
     seller: product.seller,
+    hasMerchantReturnPolicy: product.hasMerchantReturnPolicy,
   });
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
@@ -73,11 +76,10 @@ export default function EditProduct() {
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  
-  
+
   const [cat, setCat] = useState(product.cat);
   const [catList, setCatList] = useState([]);
-  
+
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {
@@ -239,15 +241,27 @@ export default function EditProduct() {
                   {product.title}
                 </Typography>
               </Stack>
-
               <Stack direction="column" sx={{ flex: 3 }}>
                 <Select
+                  closeMenuOnSelect={false}
                   options={catList}
                   placeholder="Select Category(cat) *"
                   isMulti
                   value={cat}
                   name="cat"
                   onChange={handleSelectedCats}
+                />
+                <TextField
+                  onChange={(e) => handleChange(e)}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="seller"
+                  label="Seller"
+                  name="seller"
+                  value={inputs.seller || ""}
+                  autoFocus
+                  inputProps={{ style: { textTransform: "capitalize" } }}
                 />
 
                 <TextField
@@ -259,8 +273,6 @@ export default function EditProduct() {
                   label="Title"
                   name="title"
                   value={inputs.title || ""}
-                  autoFocus
-                  variant="standard"
                   inputProps={{ style: { textTransform: "capitalize" } }}
                 />
                 <TextField
@@ -269,29 +281,55 @@ export default function EditProduct() {
                   required
                   fullWidth
                   id="desc"
-                  label="Description"
+                  label="Description (desc)"
                   name="desc"
-                  value={inputs.desc || ""}
-                  variant="standard"
+                  variant="outlined"
+                  multiline
+                  value={inputs.desc}
+                  minRows={5}
                 />
-
-                <Stack direction="row" sx={{ gap: 2 }}>
+                <Stack
+                  direction="row"
+                  sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
+                >
                   <TextField
-                    sx={{ flex: 3 }}
+                    value={inputs.marketPrice}
+                    size="small"
+                    sx={{ flex: 2 }}
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    required
+                    name="marketPrice"
+                    label="Market Price"
+                    id="marketPrice"
+                    type="number"
+                    error={inputs.marketPrice < 1}
+                    helperText={inputs.marketPrice < 1 && "Minimun price is 1"}
+                    variant="outlined"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
+
+                  <TextField
+                    value={inputs.price}
+                    size="small"
+                    sx={{ flex: 2 }}
                     onChange={(e) => handleChange(e)}
                     margin="normal"
                     required
                     name="price"
-                    label="Price"
+                    label="Discounted Price"
                     id="price"
                     type="number"
-                    error={inputs.price < 1}
-                    helperText={inputs.price < 1 && "Minimun price is 1"}
-                    value={inputs.price || ""}
+                    error={inputs.marketPrice < inputs.price}
+                    helperText={
+                      inputs.marketPrice < inputs.price &&
+                      "Discounted price can not be greater than market price"
+                    }
+                    variant="outlined"
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                    variant="standard"
                   />
                   <TextField
+                    size="small"
                     sx={{ flex: 1 }}
                     select
                     onChange={(e) => handleChange(e)}
@@ -300,10 +338,7 @@ export default function EditProduct() {
                     name="unit"
                     label="Unit"
                     id="unit"
-                    value={inputs.unit || "Kg"}
-                    error={!inputs.unit}
-                    helperText={!inputs.unit && "Please select unit"}
-                    variant="standard"
+                    value={inputs.unit}
                   >
                     <MenuItem value="Kg">Kg</MenuItem>
                     <MenuItem value="Liter">Liter</MenuItem>
@@ -312,32 +347,38 @@ export default function EditProduct() {
                     <MenuItem value="Pair">Pair</MenuItem>
                     <MenuItem value="Box">Box</MenuItem>
                   </TextField>
+
+                  <TextField
+                    sx={{ flex: 1 }}
+                    size="small"
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    fullWidth
+                    required
+                    name="inStock"
+                    label="Stock"
+                    id="inStock"
+                    value={inputs.inStock}
+                    error={inputs.inStock < 1}
+                    helperText={inputs.inStock < 0 && "Minimun stock is 0"}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
                 </Stack>
 
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  fullWidth
-                  required
-                  name="inStock"
-                  label="Stock"
-                  id="inStock"
-                  value={inputs.inStock}
-                  variant="standard"
-                  error={inputs.inStock < 1}
-                  helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                />
-
-                <TextField
-                  margin="normal"
-                  disabled
-                  fullWidth
-                  label="Tags"
-                  value={tags}
-                  autoFocus
-                  variant="standard"
-                />
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography>Accept return?</Typography>
+                  <Checkbox
+                    checked={inputs.hasMerchantReturnPolicy}
+                    name="hasMerchantReturnPolicy"
+                    onChange={(e) =>
+                      setInputs((prev) => ({
+                        ...prev,
+                        [e.target.name]: e.target.checked,
+                      }))
+                    }
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Stack>
 
                 {file && (
                   <Avatar
@@ -351,20 +392,6 @@ export default function EditProduct() {
                     }}
                   />
                 )}
-
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="seller"
-                  label="seller"
-                  name="seller"
-                  value={inputs.seller || ""}
-                  autoFocus
-                  variant="standard"
-                  inputProps={{ style: { textTransform: "capitalize" } }}
-                />
 
                 <label htmlFor="file">
                   <input

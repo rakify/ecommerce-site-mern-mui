@@ -54,28 +54,39 @@ router.delete("/:id", verifyTokenAndSeller, async (req, res) => {
 
 //GET single Product
 router.get("/find/:id", verifyToken, async (req, res) => {
-  // console.log(req.params.id);
+  console.log(req.params.id);
   try {
     const product = await Product.findById(req.params.id);
+    console.log(product);
     res.status(200).json(product);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
-//GET ALL PRODUCTS
+//GET ALL PRODUCTS or by category or if requested by seller return him only his products
 router.get("/", async (req, res) => {
   const sortByNew = req.query.new;
   const sortByCatergory = req.query.category;
+  //console.log(sortByCatergory)
   try {
     let products;
     if (sortByNew) {
       products = await Product.find().sort({ createdAt: -1 });
     } else if (sortByCatergory) {
-      products = await Product.find({ categories: { $in: [sortByCatergory] } });
+      products = await Product.find({
+        cat: {
+          $elemMatch: {
+            value: sortByCatergory,
+          },
+        },
+      }).sort({
+        createdAt: -1,
+      });
     } else {
       products = await Product.find();
     }
+    console.log(products.length);
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json(err);

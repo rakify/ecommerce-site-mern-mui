@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ChevronRight } from "@mui/icons-material";
 import {
+  Avatar,
   Button,
   ButtonBase,
   Divider,
@@ -12,6 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import SubCatList from "./SubCatList";
+import { getCats } from "../redux/apiCalls";
+import React, { useEffect, useState } from "react";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -27,6 +30,15 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 
 const CategoryList = () => {
+  const [catList, setCatList] = useState([]);
+  console.log(catList);
+  // get categories from api
+  useEffect(() => {
+    getCats().then((res) => {
+      setCatList(res.data.slice(0, 8));
+    });
+  }, []);
+
   return (
     <>
       <Typography sx={{ pl: 5, fontSize: 20 }}>Categories</Typography>
@@ -39,129 +51,36 @@ const CategoryList = () => {
           cursor: "grab",
         }}
       >
-        <HtmlTooltip title={<SubCatList />} placement="right-end" arrow>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Male Fashion</Typography>
-            <ChevronRight />
-          </Stack>
-        </HtmlTooltip>
-        <HtmlTooltip title={<SubCatList />} placement="right-end" arrow>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Female Fashion</Typography>
-            <ChevronRight />
-          </Stack>
-        </HtmlTooltip>
-        <HtmlTooltip title={<SubCatList />} placement="right-end" arrow>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Consumer Electronics</Typography>
-            <ChevronRight />
-          </Stack>
-        </HtmlTooltip>
-        <HtmlTooltip title={<SubCatList />} placement="right-end" arrow>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Beauty Cares</Typography>
-            <ChevronRight />
-          </Stack>
-        </HtmlTooltip>
-        <HtmlTooltip title={<SubCatList />} placement="right-end" arrow>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Baby Products</Typography>
-            <ChevronRight />
-          </Stack>
-        </HtmlTooltip>
-
-        {/* <Stack>
-          <Typography variant="subtitle1">Male</Typography>
-          <Link underline="none" href="/products/tshirt">
-            Tshirts
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tops
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Bottoms
-          </Link>
-        </Stack>
-        <Stack>
-          <Typography variant="subtitle1">Female</Typography>
-          <Link underline="none" href="/products/tshirt">
-            Tshirts
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tops
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Bottoms
-          </Link>
-        </Stack>
-        <Stack>
-          <Typography variant="subtitle1">Grocery</Typography>
-          <Link underline="none" href="/products/fruit">
-            Fruits & Vegetables
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tshirts
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tops
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Bottoms
-          </Link>
-        </Stack>
-        <Stack>
-          <Typography variant="subtitle1">Electronics</Typography>
-          <Link underline="none" href="/products/electronic">
-            Mobile
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tshirts
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tops
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Bottoms
-          </Link>
-        </Stack>
-        <Stack>
-          <Typography variant="subtitle1">Beverages</Typography>
-          <Link underline="none" href={"#"}>
-            Pepsi
-          </Link>
-          <Link underline="none" href="/products/electronic">
-            Electronics
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tshirts
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Tops
-          </Link>
-          <Link underline="none" href="/products/tshirt">
-            Bottoms
-          </Link>
-        </Stack> */}
+        {catList.map((cat) => (
+          <React.Fragment key={cat._id}>
+            <Link
+              underline="hover"
+              href={"/products/"+cat.value}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                }}
+              >
+                <Avatar
+                  src={cat.img}
+                  sx={{ width: 25, height: 25 }}
+                  alt="img"
+                />
+                {cat.label}
+              </Typography>
+              <ChevronRight />
+            </Link>
+          </React.Fragment>
+        ))}
       </Stack>
     </>
   );

@@ -3,6 +3,7 @@ import { Box, Grid, Stack, styled, Typography } from "@mui/material";
 import Product from "./Product";
 import { useSelector } from "react-redux";
 import { FeedSharp } from "@mui/icons-material";
+import { getProductsAsCategory } from "../redux/apiCalls";
 
 const Select = styled("select")(({ theme }) => ({
   padding: "5px",
@@ -16,12 +17,10 @@ const Products = ({ cat, limit }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sort, setSort] = useState("newest");
   useEffect(() => {
-    setFilteredProducts(
-      products.filter((item) => {
-        return item.cat.indexOf(cat) >= 0;
-      })
-    );
-  }, [cat, products]);
+    getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
+  }, [cat]);
+
+  console.log(filteredProducts)
 
   useEffect(() => {
     if (sort === "newest") {
@@ -45,7 +44,7 @@ const Products = ({ cat, limit }) => {
         direction="row"
         justifyContent="space-between"
         alignItems="flex-start"
-        sx={{bgcolor:"whitesmoke"}}
+        sx={{ bgcolor: "whitesmoke" }}
       >
         <Box flex={7} p={2}>
           <Grid container columns={10} sx={{}}>

@@ -63,17 +63,16 @@ export default function Notification() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        sx={{ width: 20, height: 20, color: "black" }}
       >
         {" "}
         <Tooltip title="Notifications">
-          <Badge
-            badgeContent={notifications.length}
-            color="success"
-            variant="dot"
-          >
-            <Notifications fontSize="small" />
-          </Badge>
+            <Badge
+              badgeContent={notifications.length}
+              color="success"
+              variant="dot"
+            >
+              <Notifications fontSize="small" color="primary" />
+            </Badge>
         </Tooltip>
       </IconButton>
       <Menu

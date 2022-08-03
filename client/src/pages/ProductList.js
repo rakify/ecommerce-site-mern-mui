@@ -42,6 +42,7 @@ const ProductList = () => {
     });
   };
 
+  console.log(cat)
   return (
     <Container>
       <Title>{cat.toUpperCase()}</Title>

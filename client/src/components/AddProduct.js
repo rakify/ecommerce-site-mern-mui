@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
+import { PhotoCamera } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStorage,
@@ -14,6 +14,7 @@ import {
   Alert,
   Avatar,
   Button,
+  Checkbox,
   Container,
   IconButton,
   Link,
@@ -27,12 +28,6 @@ import {
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -42,9 +37,10 @@ export default function AddProduct() {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     title: "",
-    unit: "Kg",
-    inStock: 0,
+    unit: "",
+    inStock: "",
     seller: user.username,
+    hasMerchantReturnPolicy: false,
   });
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
@@ -65,7 +61,7 @@ export default function AddProduct() {
 
   const [cat, setCat] = useState([]);
   const [catList, setCatList] = useState([]);
-
+  console.log(cat);
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {
@@ -84,16 +80,8 @@ export default function AddProduct() {
     const storage = getStorage(app);
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
     uploadTask.on(
-      "state_changed",
       (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
@@ -107,12 +95,9 @@ export default function AddProduct() {
           default:
         }
       },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
+      (error) => {},
       () => {
         // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setLoading("Uploaded");
           const slug = inputs.title.toLowerCase().split(" ").join("-");
@@ -182,14 +167,6 @@ export default function AddProduct() {
           sx={{ mt: 1 }}
           noValidate
         >
-          <Select
-            options={catList}
-            placeholder="Select Category(cat) *"
-            isMulti
-            name="cat"
-            onChange={handleSelectedCats}
-          />
-
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
@@ -199,7 +176,7 @@ export default function AddProduct() {
             label="Title"
             name="title"
             autoFocus
-            variant="standard"
+            variant="outlined"
           />
           <TextField
             onChange={(e) => handleChange(e)}
@@ -209,24 +186,50 @@ export default function AddProduct() {
             id="desc"
             label="Description (desc)"
             name="desc"
-            variant="standard"
+            variant="outlined"
+            multiline
+            minRows={5}
           />
-          <Stack direction="row" sx={{ gap: 2 }}>
+          <Stack
+            direction="row"
+            sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
+          >
             <TextField
-              sx={{ flex: 3 }}
+              size="small"
+              sx={{ flex: 2 }}
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              required
+              name="marketPrice"
+              label="Market Price"
+              id="marketPrice"
+              type="number"
+              error={inputs.marketPrice < 1}
+              helperText={inputs.marketPrice < 1 && "Minimun price is 1"}
+              variant="outlined"
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            />
+
+            <TextField
+              size="small"
+              sx={{ flex: 2 }}
               onChange={(e) => handleChange(e)}
               margin="normal"
               required
               name="price"
-              label="Price"
+              label="Discounted Price"
               id="price"
               type="number"
-              error={inputs.price < 1}
-              helperText={inputs.price < 1 && "Minimun price is 1"}
-              variant="standard"
+              error={inputs.marketPrice < inputs.price}
+              helperText={
+                inputs.marketPrice < inputs.price &&
+                "Discounted price can not be greater than market price"
+              }
+              variant="outlined"
               inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
             <TextField
+              size="small"
               sx={{ flex: 1 }}
               select
               onChange={(e) => handleChange(e)}
@@ -235,37 +238,59 @@ export default function AddProduct() {
               name="unit"
               label="Unit"
               id="unit"
-              value={inputs.unit || "kg"}
-              variant="standard"
+              value={inputs.unit || ""}
+              variant="outlined"
             >
+              <MenuItem value="">None</MenuItem>
               <MenuItem value="Kg">Kg</MenuItem>
               <MenuItem value="Liter">Liter</MenuItem>
               <MenuItem value="Piece">Piece</MenuItem>
+              <MenuItem value="Dozen">Dozen</MenuItem>
+              <MenuItem value="Pair">Pair</MenuItem>
+              <MenuItem value="Box">Box</MenuItem>
             </TextField>
+            <TextField
+              size="small"
+              sx={{ flex: 1 }}
+              onChange={(e) => handleChange(e)}
+              margin="normal"
+              fullWidth
+              required
+              name="inStock"
+              label="Stock (inStock)"
+              id="inStock"
+              value={inputs.inStock}
+              variant="outlined"
+              error={inputs.inStock < 0}
+              helperText={inputs.inStock < 0 && "Minimun stock is 0"}
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            />
           </Stack>
-          <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            fullWidth
-            required
-            name="inStock"
-            label="Stock (inStock)"
-            id="inStock"
-            value={inputs.inStock}
-            variant="standard"
-            error={inputs.inStock < 1}
-            helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          />
-          <TextField
-            margin="normal"
-            disabled
-            fullWidth
-            label="Tags"
-            value={tags}
-            autoFocus
-            variant="standard"
-          />
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Typography>Categories: </Typography>
+            <Select
+              closeMenuOnSelect={false}
+              options={catList}
+              placeholder="Select Categories *"
+              isMulti
+              name="cat"
+              onChange={handleSelectedCats}
+            />
+          </Stack>
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Typography>Accept return?</Typography>
+            <Checkbox
+              checked={inputs.hasMerchantReturnPolicy}
+              name="hasMerchantReturnPolicy"
+              onChange={(e) =>
+                setInputs((prev) => ({
+                  ...prev,
+                  [e.target.name]: e.target.checked,
+                }))
+              }
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          </Stack>
 
           {file && (
             <Avatar
@@ -279,7 +304,6 @@ export default function AddProduct() {
               }}
             />
           )}
-
           <label htmlFor="file">
             <input
               accept=".png, .jpg, .jpeg"

@@ -120,64 +120,57 @@ export default function Register() {
             component="form"
             noValidate
             onSubmit={(e) => (file ? handleSubmitWithFile(e) : handleSubmit(e))}
+            sx={{ mt: 1 }}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="given-name"
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="repeat_password"
-                  label="Repeat Password"
-                  type="password"
-                  id="repeat_password"
-                  autoComplete="password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input
-                  type="file"
-                  id="file"
-                  accept="image/*"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </Grid>
-            </Grid>
+            <TextField
+              autoComplete="given-name"
+              name="username"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              autoFocus
+              onChange={handleChange}
+              variant="standard"
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              onChange={handleChange}
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              onChange={handleChange}
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              name="repeat_password"
+              label="Repeat Password"
+              type="password"
+              id="repeat_password"
+              autoComplete="password"
+              onChange={handleChange}
+            />
+            <Input
+              type="file"
+              id="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
             <Button
               type="submit"
               fullWidth
@@ -186,17 +179,24 @@ export default function Register() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="space-between">
               <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Sign in
+                Own Business?
+                <Link href="/sell-online" variant="body2" sx={{ ml: 1 }}>
+                  Register as Seller Instead
+                </Link>
+              </Grid>
+              <Grid item>
+                Already have an account?{" "}
+                <Link href="/login" variant="body2" sx={{ ml: 1 }}>
+                  Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
 
-{/* Display register error message */}
+        {/* Display register error message */}
         <Snackbar
           open={response}
           autoHideDuration={4000}

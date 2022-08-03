@@ -121,90 +121,81 @@ export default function RegisterSeller() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <Store />
           </Avatar>
-          <Typography component="h1" variant="h5" sx={{mb:5}}>
-            Become a Seller
+          <Typography component="h1" variant="h5" sx={{ mb: 5 }}>
+            Seller Registration
           </Typography>
           <Box
             component="form"
             noValidate
             onSubmit={(e) => (file ? handleSubmitWithFile(e) : handleSubmit(e))}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="given-name"
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="username"
-                  autoFocus
-                  onChange={handleChange}
-                  helperText="* username will be used as your shop name, it can not be changed later."
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Phone Number"
-                  name="phoneNumber"
-                  autoComplete="phoneNumber"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="repeat_password"
-                  label="Repeat Password"
-                  type="password"
-                  id="repeat_password"
-                  autoComplete="password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input
-                  type="file"
-                  id="file"
-                  accept="image/*"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </Grid>
-            </Grid>
+            <TextField
+              variant="standard"
+              autoComplete="given-name"
+              name="username"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              autoFocus
+              onChange={handleChange}
+              helperText="* username will be used as your shop name, it can not be changed later."
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              onChange={handleChange}
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              id="phoneNumber"
+              label="Phone Number"
+              name="phoneNumber"
+              autoComplete="phoneNumber"
+              onChange={handleChange}
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              onChange={handleChange}
+            />
+            <TextField
+              variant="standard"
+              required
+              fullWidth
+              name="repeat_password"
+              label="Repeat Password"
+              type="password"
+              id="repeat_password"
+              autoComplete="password"
+              onChange={handleChange}
+            />
+            <Input
+              type="file"
+              id="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Sign Up as Seller
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

@@ -1,14 +1,8 @@
 import Carousel from "react-material-ui-carousel";
 import {
-  Button,
-  Typography,
-  Card,
   CardContent,
-  CardHeader,
-  Avatar,
   CardMedia,
-  CardActions,
-  Stack,
+  Paper,
 } from "@mui/material";
 
 export default function Offers() {
@@ -52,7 +46,7 @@ export default function Offers() {
     <>
       <Carousel indicators={true} sx={{}}>
         {sliderItems.map((item) => (
-          <Card key={item.id}>
+          <Paper key={item.id} elevation={1}>
             {/* <CardHeader
               title="Ongoing Offers"
               avatar={<Avatar sx={{ bgcolor: "red" }}>NEW</Avatar>}
@@ -89,7 +83,7 @@ export default function Offers() {
                 </CardActions> */}
               {/* </Stack> */}
             </CardContent>
-          </Card>
+          </Paper>
         ))}
       </Carousel>
     </>

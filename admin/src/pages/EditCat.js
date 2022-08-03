@@ -58,6 +58,7 @@ export default function EditCat() {
     label: category.label,
     desc: category.desc,
     img: category.img,
+    value: category.value,
   });
 
   console.log(category, inputs);
@@ -107,12 +108,10 @@ export default function EditCat() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setLoading("Uploaded");
-          const slug = inputs.label.toLowerCase().split(" ").join("-");
           const updatedCategory = {
             ...category,
             ...inputs,
             img: downloadURL,
-            value: slug,
           };
           updateCat(categoryId, updatedCategory).then((res) => {
             if (res.status === 200) {
@@ -144,11 +143,9 @@ export default function EditCat() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading("Updating");
-    const slug = inputs.label.toLowerCase().split(" ").join("-");
     const updatedCategory = {
       ...category,
       ...inputs,
-      value: slug,
     };
     updateCat(categoryId, updatedCategory).then((res) => {
       if (res.status === 200) {
@@ -232,6 +229,18 @@ export default function EditCat() {
                   autoFocus
                   variant="standard"
                   inputProps={{ style: { textTransform: "capitalize" } }}
+                />
+                <TextField
+                  onChange={(e) => handleChange(e)}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="value"
+                  label="Value (slug)"
+                  name="value"
+                  value={inputs.value || ""}
+                  autoFocus
+                  variant="standard"
                 />
                 <TextField
                   onChange={(e) => handleChange(e)}

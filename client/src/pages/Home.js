@@ -1,9 +1,7 @@
 import Newsletter from "../components/Newsletter";
-import Footer from "../components/Footer";
-import Navigation from "../components/Navigation";
 import FrontMenu from "../components/FrontMenu";
 import Products from "../components/Products";
-import { Container, Divider, Link, Stack, Typography } from "@mui/material";
+import { Divider, Link, Stack, Typography } from "@mui/material";
 import FlashSell from "../components/FlashSale";
 
 const Home = () => {

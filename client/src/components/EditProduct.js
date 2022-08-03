@@ -11,6 +11,7 @@ import {
 import app from "../firebase";
 import {
   getCats,
+  getProductById,
   getSellerProduct,
   updateSellerProduct,
 } from "../redux/apiCalls";
@@ -18,6 +19,7 @@ import {
   Alert,
   Avatar,
   Button,
+  Checkbox,
   Container,
   IconButton,
   Link,
@@ -45,7 +47,6 @@ function SlideTransition(props) {
 export default function EditProduct() {
   const dispatch = useDispatch();
   const { productId } = useParams();
-
   // get product info from redux
   const product = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
@@ -54,10 +55,12 @@ export default function EditProduct() {
   const [inputs, setInputs] = useState({
     title: product.title,
     desc: product.desc,
+    marketPrice: product.marketPrice,
     price: product.price,
     inStock: product.inStock,
     unit: product.unit,
     seller: product.seller,
+    hasMerchantReturnPolicy: product.hasMerchantReturnPolicy,
   });
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
@@ -183,6 +186,7 @@ export default function EditProduct() {
       slug,
       cat,
     };
+    console.log(updatedProduct)
     updateSellerProduct(productId, updatedProduct, dispatch).then((res) => {
       if (res.status === 200) {
         setResponse({ result: "success", message: res.data.message });
@@ -273,29 +277,55 @@ export default function EditProduct() {
                   required
                   fullWidth
                   id="desc"
-                  label="Description"
+                  label="Description (desc)"
                   name="desc"
-                  value={inputs.desc || ""}
-                  variant="standard"
+                  variant="outlined"
+                  multiline
+                  value={inputs.desc}
+                  minRows={5}
                 />
-
-                <Stack direction="row" sx={{ gap: 2 }}>
+                <Stack
+                  direction="row"
+                  sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
+                >
                   <TextField
-                    sx={{ flex: 3 }}
+                    value={inputs.marketPrice}
+                    size="small"
+                    sx={{ flex: 2 }}
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    required
+                    name="marketPrice"
+                    label="Market Price"
+                    id="marketPrice"
+                    type="number"
+                    error={inputs.marketPrice < 1}
+                    helperText={inputs.marketPrice < 1 && "Minimun price is 1"}
+                    variant="outlined"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
+
+                  <TextField
+                    value={inputs.price}
+                    size="small"
+                    sx={{ flex: 2 }}
                     onChange={(e) => handleChange(e)}
                     margin="normal"
                     required
                     name="price"
-                    label="Price"
+                    label="Discounted Price"
                     id="price"
                     type="number"
-                    error={inputs.price < 1}
-                    helperText={inputs.price < 1 && "Minimun price is 1"}
-                    value={inputs.price || ""}
+                    error={inputs.marketPrice < inputs.price}
+                    helperText={
+                      inputs.marketPrice < inputs.price &&
+                      "Discounted price can not be greater than market price"
+                    }
+                    variant="outlined"
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                    variant="standard"
                   />
                   <TextField
+                    size="small"
                     sx={{ flex: 1 }}
                     select
                     onChange={(e) => handleChange(e)}
@@ -304,10 +334,7 @@ export default function EditProduct() {
                     name="unit"
                     label="Unit"
                     id="unit"
-                    value={inputs.unit || "Kg"}
-                    error={!inputs.unit}
-                    helperText={!inputs.unit && "Please select unit"}
-                    variant="standard"
+                    value={inputs.unit}
                   >
                     <MenuItem value="Kg">Kg</MenuItem>
                     <MenuItem value="Liter">Liter</MenuItem>
@@ -316,33 +343,38 @@ export default function EditProduct() {
                     <MenuItem value="Pair">Pair</MenuItem>
                     <MenuItem value="Box">Box</MenuItem>
                   </TextField>
+
+                  <TextField
+                    sx={{ flex: 1 }}
+                    size="small"
+                    onChange={(e) => handleChange(e)}
+                    margin="normal"
+                    fullWidth
+                    required
+                    name="inStock"
+                    label="Stock"
+                    id="inStock"
+                    value={inputs.inStock}
+                    error={inputs.inStock < 1}
+                    helperText={inputs.inStock < 0 && "Minimun stock is 0"}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
                 </Stack>
 
-             
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  fullWidth
-                  required
-                  name="inStock"
-                  label="Stock"
-                  id="inStock"
-                  value={inputs.inStock}
-                  variant="standard"
-                  error={inputs.inStock < 1}
-                  helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                />
-
-                <TextField
-                  margin="normal"
-                  disabled
-                  fullWidth
-                  label="Tags"
-                  value={tags}
-                  autoFocus
-                  variant="standard"
-                />
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography>Accept return?</Typography>
+                  <Checkbox
+                    checked={inputs.hasMerchantReturnPolicy}
+                    name="hasMerchantReturnPolicy"
+                    onChange={(e) =>
+                      setInputs((prev) => ({
+                        ...prev,
+                        [e.target.name]: e.target.checked,
+                      }))
+                    }
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Stack>
 
                 {file && (
                   <Avatar
