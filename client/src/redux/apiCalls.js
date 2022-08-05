@@ -119,22 +119,22 @@ export const getProducts = async (dispatch) => {
     dispatch(getProductFailure());
   }
 };
+//get seller products (public)
+export const getSellerProducts = async (seller) => {
+  try {
+    const res = await axios.get(`/products/${seller}?new=true`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 export const getProductsAsCategory = async (cat) => {
   try {
     const res = await axios.get(`/products/?category=${cat}`);
     return res.data;
   } catch (err) {
     return err;
-  }
-};
-//when seller logged in
-export const getProductsAsSeller = async (seller, dispatch) => {
-  dispatch(getProductStart());
-  try {
-    const res = await axios.get(`/products/${seller}?new=true`);
-    dispatch(getProductSuccess(res.data));
-  } catch (err) {
-    dispatch(getProductFailure());
   }
 };
 
@@ -148,13 +148,14 @@ export const getProductById = async (productId) => {
 };
 
 //Seller
-//get seller products (public)
-export const getSellerProducts = async (seller) => {
+//when seller logged in
+export const getProductsAsSeller = async (seller, dispatch) => {
+  dispatch(getProductStart());
   try {
     const res = await axios.get(`/products/${seller}?new=true`);
-    return res;
+    dispatch(getProductSuccess(res.data));
   } catch (err) {
-    return err;
+    dispatch(getProductFailure());
   }
 };
 
@@ -184,6 +185,17 @@ export const addSellerProduct = async (product) => {
     return err;
   }
 };
+
+//get seller info (public)
+export const getSellerDetails = async (username) => {
+  try {
+    const res = await axios.get(`/users/username/${username}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 
 //Cart
 export const getCartProducts = async (id, dispatch) => {

@@ -144,9 +144,12 @@ const Product = ({ item }) => {
                   variant="overline"
                   align="center"
                   component="div"
-                  sx={{ color: "#34568B" }}
+                  sx={{
+                    color: "#34568B",
+                    fontSize:12,
+                  }}
                 >
-                  <strong>{item.title}</strong>
+                  {item.title.replace(/^(.{50}[^\s]*).*/, "$1")}
                 </Typography>
                 <Typography variant="subtitle1" component="div">
                   <small>

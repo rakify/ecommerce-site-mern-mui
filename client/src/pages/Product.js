@@ -11,14 +11,27 @@ import {
   Stack,
   Link,
   Container,
+  TextField,
+  Divider,
+  Snackbar,
+  Slide,
 } from "@mui/material";
 
-import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import {
+  AddCircle,
+  GppGood,
+  RemoveCircle,
+  SecurityUpdateGood,
+} from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/apiCalls";
+import { addToCart, addToWishlist } from "../redux/apiCalls";
 import Products from "../components/Products";
+
+function SlideTransition(props) {
+  return <Slide {...props} direction="left" />;
+}
 
 const Product = () => {
   const navigate = useNavigate();
@@ -27,9 +40,14 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
+  const [addedToCartMsg, setAddedToCartMsg] = useState(false);
+  const [addedToWishlistMsg, setAddedToWishlistMsg] = useState(false);
+
   const product = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
   );
+
+  const desc = product.desc.split("\n");
 
   const id = useSelector((state) => state.user.currentUser?._id);
 
@@ -41,14 +59,19 @@ const Product = () => {
     price: product.price,
   };
 
-  const handleQuantity = (type) => {
-    if (type === "dec") quantity > 1 && setQuantity(quantity - 1);
-    else setQuantity(quantity + 1);
-  };
-
-  const handleClick = () => {
+  const handleAddToCart = () => {
     !id && navigate("/login");
-    id && addToCart(id, productInfo, dispatch);
+    id &&
+      addToCart(id, productInfo, dispatch).then(() => {
+        setAddedToCartMsg(true);
+      });
+  };
+  const handleAddToWishlist = () => {
+    !id && navigate("/login");
+    id &&
+      addToWishlist(id, productInfo).then(() => {
+        setAddedToWishlistMsg(true);
+      });
   };
 
   return (
@@ -94,13 +117,57 @@ const Product = () => {
             <Typography variant="subtitle2">
               only {product.inStock} left In stock
             </Typography>
-            <Stack direction="row" alignItems="center" gap={1}>
-              <Typography variant="h6">Seller: </Typography>
-              {product.seller}
-            </Stack>
-            <Stack direction="row" alignItems="center" gap={1}>
-              <Typography variant="h6">Accept Return:</Typography>{" "}
-              {product.hasMerchantReturnPolicy ? "Yes" : "NO"}
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{ marginTop: 5, marginBottom: 2, gap: 5 }}
+            >
+              <TextField
+                type="number"
+                error={
+                  quantity < 1 ||
+                  quantity > product.inStock ||
+                  quantity % 1 !== 0
+                }
+                id="quantity"
+                label="Quantity"
+                value={quantity}
+                size="small"
+                variant="outlined"
+                helperText={
+                  (quantity < 1 ||
+                    quantity > product.inStock ||
+                    quantity % 1 !== 0) &&
+                  "Quantity must be greater than 0 & below stock"
+                }
+                onChange={(e) => setQuantity(e.target.valueAsNumber)}
+                sx={{ width: 100 }}
+              />
+              <Stack gap={1}>
+                <Button
+                  variant="contained"
+                  disabled={
+                    quantity < 1 ||
+                    quantity > product.inStock ||
+                    quantity % 1 !== 0
+                  }
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  disabled={
+                    quantity < 1 ||
+                    quantity > product.inStock ||
+                    quantity % 1 !== 0
+                  }
+                  onClick={handleAddToWishlist}
+                >
+                  Add to Wishlist
+                </Button>
+              </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" gap={1}>
               <Typography variant="h6">Categories:</Typography>
@@ -114,41 +181,57 @@ const Product = () => {
                 </Link>
               ))}
             </Stack>
-
             <Typography variant="h6">Description:</Typography>
-            <Typography variant="body1">{product.desc}</Typography>
-
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ marginTop: 5, marginBottom: 2 }}
-            >
-              <Button
-                variant="outlined"
-                startIcon={<RemoveCircle />}
-                onClick={() => handleQuantity("dec")}
-              >
-                Remove
-              </Button>
-              <Typography
-                variant="h6"
-                sx={{ padding: "0 10px", backgroundColor: "white" }}
-              >
-                {quantity}
+            <Typography variant="body1">
+              {desc.map((item) => (
+                <li>{item}</li>
+              ))}
+            </Typography>
+            <li>
+              Returns:{" "}
+              {product.hasMerchantReturnPolicy
+                ? "3 day returns | Buyer pays for return shipping"
+                : "NO"}
+            </li>
+          </Stack>
+          <Stack flex={1} gap={4}>
+            <Stack>
+              <Typography variant="h4">Seller Information</Typography>
+              <Divider />
+              <Typography variant="h6" sx={{ mt: 1 }}>
+                {product.seller}
+                <Typography variant="caption">
+                  {" "}
+                  (95% positive feedback)
+                </Typography>
+                <Link
+                  href={`/shop/${product.seller}`}
+                  underline="hover"
+                  sx={{ ml: 1 }}
+                >
+                  [Visit Store]
+                </Link>
               </Typography>
-              <Button
-                variant="outlined"
-                startIcon={<AddCircle />}
-                onClick={() => handleQuantity("inc")}
-              >
-                Add
-              </Button>
             </Stack>
-
-            <Button variant="contained" onClick={handleClick}>
-              Add to Cart
-            </Button>
+            <Stack>
+              <Typography variant="h5">
+                <GppGood />
+                Top rated seller
+              </Typography>
+              <Typography>
+                Trusted seller, fast shipping and easy returns. You can shop
+                with confidence.
+              </Typography>
+            </Stack>
+            <Stack>
+              <Typography variant="h5">
+                <SecurityUpdateGood />
+                Money Back Gurantee
+              </Typography>
+              <Typography>
+                Get the product you ordered or get full refund.
+              </Typography>
+            </Stack>
           </Stack>
         </Stack>
       </Container>
@@ -156,6 +239,24 @@ const Product = () => {
         You may also like
       </Typography>
       <Products cat={product.cat[0].value} limit={3} />
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(addedToCartMsg)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={2000}
+        onClose={() => setAddedToCartMsg(false)}
+        message="Added To Cart"
+      />
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={addedToWishlistMsg}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={2000}
+        onClose={() => setAddedToWishlistMsg(false)}
+        message="Added To Wishlist"
+      />
     </>
   );
 };

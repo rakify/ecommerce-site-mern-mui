@@ -32,6 +32,8 @@ import SellerOrders from "./pages/SellerOrders";
 import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
 import Footer from "./components/Footer";
+import Store from "./pages/Shop";
+import Shop from "./pages/Shop";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -130,6 +132,12 @@ const App = () => {
         <Route
           path="/register"
           element={user ? <Navigate to="/" /> : <Register />}
+        />
+        <Route
+          path="/shop/:shopId"
+          element={
+            user.accountType !== 1 ? <Shop /> : <Navigate to="/" />
+          }
         />
         <Route
           path="/seller/product/:productId"

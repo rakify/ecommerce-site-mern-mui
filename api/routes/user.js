@@ -5,7 +5,6 @@ const User = require("../models/User");
 const {
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-  verifyToken,
 } = require("../middlewares/verification");
 const cryptojs = require("crypto-js");
 const { updateUserValidation } = require("../middlewares/validation");
@@ -56,7 +55,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET A USER
-router.get("/find/:id", verifyToken, async (req, res) => {
+router.get("/find/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -65,6 +64,22 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     res.status(200).json(others);
   } catch (err) {
     return res.status(500).json(err);
+  }
+});
+
+//GET A USER by Username
+router.get("/username/:username", async (req, res) => {
+  console.log(req.params.username);
+  try {
+    const user = await User.findOne({ username: req.params.username }).select(
+      "-password"
+    );
+
+    console.log(user);
+
+    res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json({ msg: err });
   }
 });
 
