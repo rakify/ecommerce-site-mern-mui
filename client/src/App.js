@@ -12,8 +12,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
-  useParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Orders from "./pages/Orders";
@@ -22,7 +20,6 @@ import {
   getCartProducts,
   getProducts,
   getProductsAsSeller,
-  getSellerProducts,
   getUser,
 } from "./redux/apiCalls";
 import { useEffect } from "react";
@@ -32,7 +29,6 @@ import SellerOrders from "./pages/SellerOrders";
 import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
 import Footer from "./components/Footer";
-import Store from "./pages/Shop";
 import Shop from "./pages/Shop";
 
 const App = () => {
@@ -42,9 +38,9 @@ const App = () => {
   //When theres user get cart and user info and any time check for latest products
   useEffect(() => {
     (user == 0 || user.accountType !== 1) && getProducts(dispatch);
-    user.accountType === 1 && getProductsAsSeller(user.username, dispatch);
+    user && user.accountType === 1 && getProductsAsSeller(user.username, dispatch);
     user && getUser(user._id, dispatch);
-    user.accountType !== 1 && getCartProducts(user._id, dispatch);
+    user && user.accountType !== 1 && getCartProducts(user._id, dispatch);
   }, [dispatch]);
 
   return (
@@ -135,9 +131,7 @@ const App = () => {
         />
         <Route
           path="/shop/:shopId"
-          element={
-            user.accountType !== 1 ? <Shop /> : <Navigate to="/" />
-          }
+          element={user.accountType !== 1 ? <Shop /> : <Navigate to="/" />}
         />
         <Route
           path="/seller/product/:productId"

@@ -17,7 +17,7 @@ const Shop = () => {
   }, []);
 
   return (
-    <Container
+    <Container maxWidth="xl"
       sx={{
         display: "flex",
         justifyContent: "space-between",

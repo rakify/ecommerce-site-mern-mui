@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { Link } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -32,15 +33,22 @@ const Img = styled("img")({
 const Item = styled(Grid)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#ffffff",
   ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
   color: theme.palette.text.secondary,
   display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-around",
+  flexDirection: "column",
+  alignItems: "center",
+  textAlign: "center",
   width: 400,
   height: 300,
-  margin: 3,
+  margin: 5,
+}));
+
+const ProductTitle = styled(Typography)(({ theme }) => ({
+  width: "100%",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  fontWeight: 700,
 }));
 
 function SlideTransition(props) {
@@ -80,6 +88,114 @@ const Product = ({ item }) => {
 
   return (
     <Grid item lg={3} sm={5} xs={10}>
+      <Item
+        sx={{
+          "&:hover": {
+            "& .details": {
+              opacity: 1,
+              height: 30,
+            },
+          },
+        }}
+      >
+        <Stack
+          direction="column"
+          sx={{
+            flex: 2,
+            height: 150,
+            width: 200,
+            position: "relative",
+          }}
+        >
+          <Img alt="PRODUCT" src={item.img} />
+          <Stack
+            direction="row"
+            justifyContent="space-evenly"
+            className="details"
+            sx={{
+              opacity: 0,
+              width: "100%",
+              height: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              cursor: "pointer",
+              bgcolor: "white",
+              pt: 1,
+              position: "absolute",
+              bottom: 0,
+              color: "black",
+              webkitTransition: "all 0.5s linear",
+              mozTransition: "all 0.5s linear",
+              transition: "all 0.5s linear",
+            }}
+          >
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={handleAddToCart}
+              sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
+            >
+              <Tooltip title="Add to Cart" placement="top" arrow>
+                <ShoppingCartOutlined fontSize="inherit" />
+              </Tooltip>
+            </IconButton>
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={handleAddToWishlist}
+              sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
+            >
+              <Tooltip title="Add to Wishlist" placement="top" arrow>
+                <FavoriteBorderOutlined fontSize="inherit" />
+              </Tooltip>
+            </IconButton>
+            <IconButton
+              color="primary"
+              size="small"
+              href={`/product/${item._id}`}
+              sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
+            >
+              <Tooltip title="View Details" placement="top" arrow>
+                <InfoOutlined fontSize="inherit" />
+              </Tooltip>
+            </IconButton>
+          </Stack>
+        </Stack>
+
+        <Link
+          href={`/product/${item._id}`}
+          underline="none"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            flex: 1,
+            width: 300,
+          }}
+        >
+          <ProductTitle>{item.title}</ProductTitle>
+          <Typography sx={{ fontWeight: 600, color: "orangered" }}>
+            ৳{item.price}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{ fontWeight: 400 }}
+          >
+            <s>৳{item.marketPrice}</s>{" "}
+            <b style={{ fontWeight: 600 }}>
+              {Math.round(
+                ((item.marketPrice - item.price) / item.marketPrice) * 100
+              ) > 0 &&
+                Math.round(
+                  ((item.marketPrice - item.price) / item.marketPrice) * 100
+                ) + "%"}
+            </b>
+          </Typography>
+        </Link>
+      </Item>
+
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={Boolean(addedToCartMsg)}
@@ -97,107 +213,6 @@ const Product = ({ item }) => {
         onClose={() => setAddedToWishlistMsg(false)}
         message="Added To Wishlist"
       />
-
-      <Grid container>
-        <Grid
-          item
-          sx={{
-            "&:hover": {
-              "& .details": {
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                bgcolor: "#CBF1F5",
-                flex: 1,
-                height: "50%",
-                ml: { lg: 1, md: 0 },
-              },
-            },
-          }}
-        >
-          <Item>
-            <Stack sx={{ flex: 3 }} alignItems="center" justifyContent="center">
-              <ButtonBase
-                sx={{
-                  flex: 1,
-                  height: 200,
-                  width: 300,
-                  transition: "transform 1s",
-                  "&:hover": { transform: "scale(1.2)" },
-                  margin: 2,
-                }}
-                href={`/product/${item._id}`}
-              >
-                <Img
-                  alt="PRODUCT"
-                  src={item.img}
-                  sx={{ maxWidth: 200, maxHeight: 150 }}
-                />
-              </ButtonBase>
-              <Stack
-                direction="column"
-                justifyContent="center"
-                sx={{ flex: 1 }}
-              >
-                <Typography
-                  gutterBottom
-                  variant="overline"
-                  align="center"
-                  component="div"
-                  sx={{
-                    color: "#34568B",
-                    fontSize:12,
-                  }}
-                >
-                  {item.title.replace(/^(.{50}[^\s]*).*/, "$1")}
-                </Typography>
-                <Typography variant="subtitle1" component="div">
-                  <small>
-                    <s>৳{item.price + 10}</s>
-                  </small>
-                  <b>৳{item.price}</b>{" "}
-                </Typography>
-              </Stack>
-            </Stack>
-            <Stack
-              justifyContent="space-evenly"
-              className="details"
-              sx={{
-                flex: 1,
-                display: "none",
-              }}
-            >
-              <IconButton
-                color="primary"
-                size="small"
-                onClick={handleAddToCart}
-              >
-                <Tooltip title="Add to Cart" placement="right" arrow>
-                  <ShoppingCartOutlined fontSize="inherit" />
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                color="primary"
-                size="small"
-                onClick={handleAddToWishlist}
-              >
-                <Tooltip title="Add to Wishlist" placement="right" arrow>
-                  <FavoriteBorderOutlined fontSize="inherit" />
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                color="primary"
-                size="small"
-                href={`/product/${item._id}`}
-              >
-                <Tooltip title="View Details" placement="right" arrow>
-                  <InfoOutlined fontSize="inherit" />
-                </Tooltip>
-              </IconButton>
-            </Stack>
-          </Item>
-        </Grid>
-      </Grid>
     </Grid>
   );
 };
