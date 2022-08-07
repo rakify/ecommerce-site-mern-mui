@@ -37,7 +37,7 @@ const App = () => {
 
   //When theres user get cart and user info and any time check for latest products
   useEffect(() => {
-    (user == 0 || user.accountType !== 1) && getProducts(dispatch);
+    (!user || user.accountType !== 1) && getProducts(dispatch);
     user && user.accountType === 1 && getProductsAsSeller(user.username, dispatch);
     user && getUser(user._id, dispatch);
     user && user.accountType !== 1 && getCartProducts(user._id, dispatch);

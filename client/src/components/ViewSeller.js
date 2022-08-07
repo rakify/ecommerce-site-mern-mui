@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useState } from "react";
 import {
   Avatar,
+  Box,
   Button,
   Container,
   Dialog,
@@ -8,8 +9,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Fade,
   IconButton,
-  Link,
+  Modal,
   Slide,
   Stack,
   Typography,
@@ -17,25 +19,23 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
-import { deleteSellerProduct, getSellerProducts } from "../redux/apiCalls";
+import { deleteSellerProduct, getProductsAsSeller } from "../redux/apiCalls";
+import EditProduct from "./EditProduct";
 
 const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Fade ref={ref} {...props} />;
 });
 
 export default function ViewSeller() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    getSellerProducts(user.username).then((res) => setProducts(res.data));
-  }, []);
+  const products = useSelector((state) => state.product.products);
   const [deleteProductId, setDeleteProductId] = useState(false);
+  const [editProductId, setEditProductId] = useState(false);
 
   const handleDelete = (id) => {
     setDeleteProductId(false);
-    deleteSellerProduct(id).then(() =>
-      getSellerProducts(user.username).then((res) => setProducts(res.data))
-    );
+    deleteSellerProduct(id).then(getProductsAsSeller(user.username, dispatch));
   };
 
   const handleCloseDialog = () => {
@@ -47,15 +47,13 @@ export default function ViewSeller() {
       field: "_id",
       headerClassName: "super-app-theme--header",
       headerName: "Product ID",
-      width: 200,
-      editable: true,
+      width: 250,
     },
     {
       field: "title",
       headerName: "Product",
       headerClassName: "super-app-theme--header",
-      width: 300,
-      editable: true,
+      width: 350,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
@@ -70,39 +68,27 @@ export default function ViewSeller() {
       headerName: "Price",
       headerClassName: "super-app-theme--header",
       width: 150,
-      editable: true,
     },
     {
       field: "inStock",
       headerName: "Stock",
       headerClassName: "super-app-theme--header",
       width: 150,
-      editable: true,
-    },
-    {
-      field: "seller",
-      headerName: "Seller",
-      headerClassName: "super-app-theme--header",
-      width: 200,
-      editable: true,
     },
     {
       field: "action",
       headerName: "Action",
       headerClassName: "super-app-theme--header",
-      width: 150,
+      width: 220,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
-            <Link
-              href={"/seller/product/" + params.row._id}
-              underline="none"
-              color="inherit"
+            <IconButton
+              aria-label="edit"
+              onClick={() => setEditProductId(params.row._id)}
             >
-              <IconButton aria-label="edit">
-                <Edit />
-              </IconButton>
-            </Link>
+              <Edit />
+            </IconButton>
             <IconButton
               disabled={params.row.isAdmin === true}
               aria-label="delete"
@@ -126,16 +112,48 @@ export default function ViewSeller() {
           },
         }}
       >
+        {products.length === 0 && (
+          <Typography>Start adding product to see them appear here.</Typography>
+        )}
+
+        <DataGrid
+          rows={products}
+          getRowId={(row) => row._id}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+          density="comfortable"
+          sx={{ mt: 2, height: 500, width: "100%" }}
+        />
+
+        <Dialog
+          TransitionComponent={Transition}
+          transitionDuration={1000}
+          open={Boolean(editProductId)}
+          scroll="paper"
+          aria-labelledby="title"
+        >
+          <DialogActions>
+            <Button onClick={() => setEditProductId(false)}>Cancel</Button>
+          </DialogActions>
+          <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
+            Edit Product
+          </DialogTitle>
+          <DialogContent>
+            <EditProduct productId={editProductId} />
+          </DialogContent>
+        </Dialog>
+
         <Dialog
           open={Boolean(deleteProductId)}
           TransitionComponent={Transition}
           keepMounted
           onClose={handleCloseDialog}
-          aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle>{"Confirm Delete"}</DialogTitle>
+          <DialogTitle>Confirm Delete</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
+            <DialogContentText>
               If you proceed now product with ID {deleteProductId} will be
               erased. This action is irreversible.
             </DialogContentText>
@@ -147,17 +165,6 @@ export default function ViewSeller() {
             </Button>
           </DialogActions>
         </Dialog>
-
-        <DataGrid
-          rows={products}
-          getRowId={(row) => row._id}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[4]}
-          disableSelectionOnClick
-          density="comfortable"
-          sx={{ mt: 2, height: 500 }}
-        />
       </Container>
     </>
   );

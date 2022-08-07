@@ -9,7 +9,11 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { addSellerProduct, getCats } from "../redux/apiCalls";
+import {
+  addSellerProduct,
+  getCats,
+  getProductsAsSeller,
+} from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
@@ -17,6 +21,7 @@ import {
   Checkbox,
   Container,
   IconButton,
+  LinearProgress,
   Link,
   MenuItem,
   Slide,
@@ -25,7 +30,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 
 function SlideTransition(props) {
@@ -33,35 +37,27 @@ function SlideTransition(props) {
 }
 
 export default function AddProduct() {
-  const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser);
   const [inputs, setInputs] = useState({
     title: "",
     unit: "",
-    inStock: "",
+    inStock: 0,
+    marketPrice: "",
+    price: "",
     seller: user.username,
     hasMerchantReturnPolicy: false,
   });
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState("Add");
-  // set tags everytime title changes
-  useEffect(() => {
-    setTags(
-      inputs.title
-        .toLowerCase()
-        .replace(/[^a-zA-Z ]/g, "")
-        .split(" ")
-    );
-  }, [inputs.title]);
+  const [loading, setLoading] = useState("Add"); //submit button title
+
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const [cat, setCat] = useState([]);
   const [catList, setCatList] = useState([]);
-  console.log(cat);
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {
@@ -75,12 +71,13 @@ export default function AddProduct() {
 
   const handleSubmitWithFile = (e) => {
     e.preventDefault();
-    setLoading("Ading");
+    setLoading("Adding");
     const fileName = new Date().getTime() + file.name;
     const storage = getStorage(app);
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
+      "state_changed",
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -99,8 +96,11 @@ export default function AddProduct() {
       () => {
         // Handle successful uploads on complete
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setLoading("Uploaded");
           const slug = inputs.title.toLowerCase().split(" ").join("-");
+          const tags = inputs.title
+            .toLowerCase()
+            .replace(/[^a-zA-Z ]/g, "")
+            .split(" ");
           const updatedProduct = {
             ...inputs,
             img: downloadURL,
@@ -108,17 +108,26 @@ export default function AddProduct() {
             tags: tags,
             slug: slug,
           };
-          addSellerProduct(updatedProduct, dispatch).then((res) => {
+          addSellerProduct(updatedProduct).then((res) => {
             if (res.status === 201) {
-              setResponse(res.data);
+              //New product created
+              getProductsAsSeller(user.username, dispatch); //refresh productList
+              setResponse({ result: "success", message: res.data.message });
               setLoading("Add");
-            } else if (res.response.data?.code === 11000) {
+            } else if (res.status === 400) {
+              //data velidation failed
               setResponse({
-                message: "A similar product with the title already exists.",
+                field: res.data.field,
+                result: "error",
+                message: res.data.message,
               });
               setLoading("Add");
             } else {
-              setResponse(res.response.data);
+              // No internet or server issue
+              setResponse({
+                result: "error",
+                message: "Failed to connect to the server.",
+              });
               setLoading("Add");
             }
           });
@@ -131,26 +140,35 @@ export default function AddProduct() {
     e.preventDefault();
     setLoading("Adding");
     const slug = inputs.title.toLowerCase().split(" ").join("-");
+    const tags = inputs.title
+      .toLowerCase()
+      .replace(/[^a-zA-Z ]/g, "")
+      .split(" ");
     const updatedProduct = {
       ...inputs,
       cat: cat,
       tags: tags,
       slug: slug,
     };
-    addSellerProduct(updatedProduct, dispatch).then((res) => {
+    addSellerProduct(updatedProduct).then((res) => {
       if (res.status === 201) {
+        //New product created
+        getProductsAsSeller(user.username, dispatch); //refresh productList
         setResponse({ result: "success", message: res.data.message });
         setLoading("Add");
-      } else if (res.response.data?.code === 11000) {
+      } else if (res.status === 400) {
+        //data verification failed
         setResponse({
+          field: res.data.field,
           result: "error",
-          message: "A similar product with the title already exists",
+          message: res.data.message,
         });
         setLoading("Add");
       } else {
+        // No internet or server down
         setResponse({
           result: "error",
-          message: res.response.data.message,
+          message: "Please check your internet connection.",
         });
         setLoading("Add");
       }
@@ -159,186 +177,196 @@ export default function AddProduct() {
 
   return (
     <>
-      <Typography variant="h6">Add New Product</Typography>
-      <Container>
-        <Box
-          component="form"
-          onSubmit={file ? handleSubmitWithFile : handleSubmit}
-          sx={{ mt: 1 }}
-          noValidate
+      <Box
+        component="form"
+        onSubmit={file ? handleSubmitWithFile : handleSubmit}
+        noValidate
+        sx={{ maxHeight: 500, overflow: "auto", pt: 2, pr: 2 }}
+      >
+        <TextField
+          onChange={(e) => handleChange(e)}
+          margin="normal"
+          required
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+          autoFocus
+          variant="outlined"
+          error={response.field === "title"}
+          helperText={response.field === "title" && response.message}
+        />
+        <TextField
+          onChange={(e) => handleChange(e)}
+          margin="normal"
+          required
+          fullWidth
+          id="desc"
+          label="Description (desc)"
+          name="desc"
+          variant="outlined"
+          multiline
+          minRows={5}
+          error={response.field === "desc"}
+          helperText={response.field === "desc" && response.message}
+        />
+        <Stack
+          direction="row"
+          sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
         >
           <TextField
+            size="small"
+            sx={{ flex: 2 }}
             onChange={(e) => handleChange(e)}
             margin="normal"
             required
-            fullWidth
-            id="title"
-            label="Title"
-            name="title"
-            autoFocus
+            name="marketPrice"
+            label="Market Price"
+            id="marketPrice"
+            type="number"
+            error={response.field === "marketPrice"}
+            helperText={response.field === "marketPrice" && response.message}
             variant="outlined"
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+
+          <TextField
+            size="small"
+            sx={{ flex: 2 }}
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            required
+            name="price"
+            label="Discounted Price"
+            id="price"
+            type="number"
+            error={response.field === "price"}
+            helperText={response.field === "price" && response.message}
+            variant="outlined"
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
           <TextField
+            size="small"
+            sx={{ flex: 1 }}
+            select
             onChange={(e) => handleChange(e)}
             margin="normal"
             required
-            fullWidth
-            id="desc"
-            label="Description (desc)"
-            name="desc"
+            name="unit"
+            label="Unit"
+            id="unit"
+            value={inputs.unit || ""}
             variant="outlined"
-            multiline
-            minRows={5}
-          />
-          <Stack
-            direction="row"
-            sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
+            error={response.field === "unit"}
+            helperText={response.field === "unit" && response.message}
           >
-            <TextField
-              size="small"
-              sx={{ flex: 2 }}
-              onChange={(e) => handleChange(e)}
-              margin="normal"
-              required
-              name="marketPrice"
-              label="Market Price"
-              id="marketPrice"
-              type="number"
-              error={inputs.marketPrice < 1}
-              helperText={inputs.marketPrice < 1 && "Minimun price is 1"}
-              variant="outlined"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            />
-
-            <TextField
-              size="small"
-              sx={{ flex: 2 }}
-              onChange={(e) => handleChange(e)}
-              margin="normal"
-              required
-              name="price"
-              label="Discounted Price"
-              id="price"
-              type="number"
-              error={inputs.marketPrice < inputs.price}
-              helperText={
-                inputs.marketPrice < inputs.price &&
-                "Discounted price can not be greater than market price"
-              }
-              variant="outlined"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            />
-            <TextField
-              size="small"
-              sx={{ flex: 1 }}
-              select
-              onChange={(e) => handleChange(e)}
-              margin="normal"
-              required
-              name="unit"
-              label="Unit"
-              id="unit"
-              value={inputs.unit || ""}
-              variant="outlined"
-            >
-              <MenuItem value="">None</MenuItem>
-              <MenuItem value="Kg">Kg</MenuItem>
-              <MenuItem value="Liter">Liter</MenuItem>
-              <MenuItem value="Piece">Piece</MenuItem>
-              <MenuItem value="Dozen">Dozen</MenuItem>
-              <MenuItem value="Pair">Pair</MenuItem>
-              <MenuItem value="Box">Box</MenuItem>
-            </TextField>
-            <TextField
-              size="small"
-              sx={{ flex: 1 }}
-              onChange={(e) => handleChange(e)}
-              margin="normal"
-              fullWidth
-              required
-              name="inStock"
-              label="Stock (inStock)"
-              id="inStock"
-              value={inputs.inStock}
-              variant="outlined"
-              error={inputs.inStock < 0}
-              helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            />
-          </Stack>
-          <Stack direction="row" alignItems="center" gap={2}>
-            <Typography>Categories: </Typography>
-            <Select
-              closeMenuOnSelect={false}
-              options={catList}
-              placeholder="Select Categories *"
-              isMulti
-              name="cat"
-              onChange={handleSelectedCats}
-            />
-          </Stack>
-          <Stack direction="row" alignItems="center" gap={2}>
-            <Typography>Accept return?</Typography>
-            <Checkbox
-              checked={inputs.hasMerchantReturnPolicy}
-              name="hasMerchantReturnPolicy"
-              onChange={(e) =>
-                setInputs((prev) => ({
-                  ...prev,
-                  [e.target.name]: e.target.checked,
-                }))
-              }
-              inputProps={{ "aria-label": "controlled" }}
-            />
-          </Stack>
-
-          {file && (
-            <Avatar
-              src={file && URL.createObjectURL(file)}
-              alt=""
-              style={{
-                width: 260,
-                height: 220,
-                marginTop: 20,
-                marginLeft: "10vw",
-              }}
-            />
-          )}
-          <label htmlFor="file">
-            <input
-              accept=".png, .jpg, .jpeg"
-              id="file"
-              name="file"
-              type="file"
-              style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
-              <PhotoCamera /> Upload Picture
-            </IconButton>
-          </label>
-          <Button
-            type="submit"
-            disabled={loading !== "Add"}
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value="Kg">Kg</MenuItem>
+            <MenuItem value="Liter">Liter</MenuItem>
+            <MenuItem value="Piece">Piece</MenuItem>
+            <MenuItem value="Dozen">Dozen</MenuItem>
+            <MenuItem value="Pair">Pair</MenuItem>
+            <MenuItem value="Box">Box</MenuItem>
+          </TextField>
+          <TextField
+            size="small"
+            sx={{ flex: 1 }}
+            onChange={(e) => handleChange(e)}
+            margin="normal"
             fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            {loading}
-          </Button>
-        </Box>
-      </Container>
+            required
+            name="inStock"
+            label="Stock (inStock)"
+            id="inStock"
+            value={inputs.inStock}
+            variant="outlined"
+            error={response.field === "inStock"}
+            helperText={response.field === "inStock" && response.message}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+        </Stack>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <Typography>Categories: </Typography>
+          <Select
+            closeMenuOnSelect={false}
+            options={catList}
+            placeholder="Select Categories *"
+            isMulti
+            name="cat"
+            onChange={handleSelectedCats}
+            styles={{
+              control: (styles) => ({
+                ...styles,
+                borderColor:
+                  response.field === "cat" ? "red" : styles.borderColor,
+              }),
+            }}
+          />
+          <Typography sx={{ color: "red" }}>
+            {response.field === "cat" && response.message}
+          </Typography>
+        </Stack>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <Typography>Accept return?</Typography>
+          <Checkbox
+            checked={inputs.hasMerchantReturnPolicy}
+            name="hasMerchantReturnPolicy"
+            onChange={(e) =>
+              setInputs((prev) => ({
+                ...prev,
+                [e.target.name]: e.target.checked,
+              }))
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </Stack>
 
-      {/* Display error or success message */}
+        {file && (
+          <Avatar
+            src={file && URL.createObjectURL(file)}
+            alt=""
+            sx={{
+              width: { xs: 150, md: 360 },
+              height: { xs: 150, md: 320 },
+              margin: { xs: 2, md: 4 },
+              borderRadius: 0,
+            }}
+          />
+        )}
+        <label htmlFor="file">
+          <input
+            accept=".png, .jpg, .jpeg"
+            id="file"
+            name="file"
+            type="file"
+            style={{ display: "none" }}
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <IconButton
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+          >
+            <PhotoCamera /> Upload Picture
+          </IconButton>
+        </label>
+        <Button
+          type="submit"
+          disabled={loading !== "Add"}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {loading}
+        </Button>
+      </Box>
+
+      {/* Display success message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
+        open={Boolean(response.result === "success")}
         TransitionComponent={SlideTransition}
-        autoHideDuration={4000}
+        autoHideDuration={5000}
         onClose={() => setResponse(false)}
       >
         <Alert
@@ -346,7 +374,7 @@ export default function AddProduct() {
           severity={response.result}
           sx={{ width: "100%" }}
         >
-          {response.message || "Added Successfully"}
+          {response.message}
         </Alert>
       </Snackbar>
     </>

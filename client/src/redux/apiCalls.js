@@ -173,7 +173,7 @@ export const updateSellerProduct = async (id, product) => {
     const res = await axios.put(`/products/${id}`, product);
     return res;
   } catch (err) {
-    return err;
+    return err.response;
   }
 };
 
@@ -182,7 +182,7 @@ export const addSellerProduct = async (product) => {
     const res = await axios.post(`/products`, product);
     return res;
   } catch (err) {
-    return err;
+    return err.response;
   }
 };
 
@@ -195,7 +195,6 @@ export const getSellerDetails = async (username) => {
     return err;
   }
 };
-
 
 //Cart
 export const getCartProducts = async (id, dispatch) => {

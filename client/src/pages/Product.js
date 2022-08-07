@@ -190,8 +190,8 @@ const Product = () => {
             <li>
               Returns:{" "}
               {product.hasMerchantReturnPolicy
-                ? "3 day returns | Buyer pays for return shipping"
-                : "NO"}
+                ? "3 day returns | Buyer pays for return shipping."
+                : "This product can not be returned."}
             </li>
           </Stack>
           <Stack flex={1} gap={4}>

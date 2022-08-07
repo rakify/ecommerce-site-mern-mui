@@ -12,6 +12,7 @@ import app from "../firebase";
 import {
   getCats,
   getProductById,
+  getProductsAsSeller,
   getSellerProduct,
   updateSellerProduct,
 } from "../redux/apiCalls";
@@ -30,27 +31,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 import { useParams } from "react-router-dom";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-export default function EditProduct() {
+export default function EditProduct({ productId }) {
   const dispatch = useDispatch();
-  const { productId } = useParams();
   // get product info from redux
   const product = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
-  );
+  ) || [];
+
+  const user = useSelector((state) => state.user.currentUser);
 
   const [inputs, setInputs] = useState({
     title: product.title,
@@ -64,18 +59,7 @@ export default function EditProduct() {
   });
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState("Update");
-
-  // set tags everytime title changes
-  useEffect(() => {
-    setTags(
-      inputs.title
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9 ]/g, "")
-        .split(" ")
-    );
-  }, [inputs.title]);
+  const [loading, setLoading] = useState("Update"); // submit button title
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -83,7 +67,6 @@ export default function EditProduct() {
 
   const [cat, setCat] = useState(product.cat);
   const [catList, setCatList] = useState([]);
-
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {
@@ -132,7 +115,6 @@ export default function EditProduct() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setLoading("Uploaded");
           const slug = inputs.title.toLowerCase().split(" ").join("-");
           const tags = inputs.title
             .toLowerCase()
@@ -149,18 +131,23 @@ export default function EditProduct() {
           updateSellerProduct(productId, updatedProduct, dispatch).then(
             (res) => {
               if (res.status === 200) {
+                //all good. product updated with no error
+                getProductsAsSeller(user.username, dispatch); //refresh productList
                 setResponse({ result: "success", message: res.data.message });
                 setLoading("Update");
-              } else if (res.response.data?.code === 11000) {
+              } else if (res.status === 400) {
+                //data velidation failed
                 setResponse({
+                  field: res.data.field,
                   result: "error",
-                  message: "A similar product with the title already exists",
+                  message: res.data.message,
                 });
                 setLoading("Update");
               } else {
+                // No internet or server issue
                 setResponse({
                   result: "error",
-                  message: res.response.data.message,
+                  message: "Failed to connect to the server.",
                 });
                 setLoading("Update");
               }
@@ -186,21 +173,25 @@ export default function EditProduct() {
       slug,
       cat,
     };
-    console.log(updatedProduct)
     updateSellerProduct(productId, updatedProduct, dispatch).then((res) => {
       if (res.status === 200) {
+        //all good. product updated with no error
+        getProductsAsSeller(user.username, dispatch); //refresh productList
         setResponse({ result: "success", message: res.data.message });
         setLoading("Update");
-      } else if (res.response.data?.code === 11000) {
+      } else if (res.status === 400) {
+        //data velidation failed
         setResponse({
+          field: res.data.field,
           result: "error",
-          message: "A similar product with the title already exists",
+          message: res.data.message,
         });
         setLoading("Update");
       } else {
+        // No internet or server issue
         setResponse({
           result: "error",
-          message: res.response.data.message,
+          message: "Failed to connect to the server.",
         });
         setLoading("Update");
       }
@@ -209,227 +200,207 @@ export default function EditProduct() {
 
   return (
     <>
-      <Link href="/" color="inherit" underline="none">
+      {/* <Link href="/" color="inherit" underline="none">
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
       </Link>
-      {product ? (
-        <>
-          <Typography variant="h6">Update Info For {product.title}</Typography>
-          <Container>
-            <Box
-              component="form"
-              onSubmit={file ? handleSubmitWithFile : handleSubmit}
-              sx={{
-                mt: 1,
-                display: "flex",
-                flexDirection: {
-                  xs: "column",
-                  md: "row",
-                },
-                justifyContent: "space-between",
-                gap: 5,
-              }}
-              noValidate
-            >
-              <Stack
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                sx={{ flex: 1 }}
-              >
-                <img
-                  src={product.img}
-                  alt=""
-                  style={{ borderRadious: 1, height: 300, width: 300 }}
-                />
-                <Typography variant="body1" color="secondary">
-                  {product.title}
-                </Typography>
-              </Stack>
-              <Stack direction="column" sx={{ flex: 3 }}>
-                <Select
-                  options={catList}
-                  placeholder="Select Category(cat) *"
-                  isMulti
-                  value={cat}
-                  name="cat"
-                  onChange={handleSelectedCats}
-                />
+      <Typography variant="h6">Update Info For {product.title}</Typography> */}
+      <Box
+        component="form"
+        onSubmit={file ? handleSubmitWithFile : handleSubmit}
+        noValidate
+        sx={{ maxHeight: 500, overflow: "auto", pt: 2, pr: 2 }}
+      >
+        <TextField
+          onChange={(e) => handleChange(e)}
+          margin="normal"
+          required
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+          autoFocus
+          variant="outlined"
+          value={inputs.title}
+          error={response.field === "title"}
+          helperText={response.field === "title" && response.message}
+        />
+        <TextField
+          onChange={(e) => handleChange(e)}
+          margin="normal"
+          required
+          fullWidth
+          id="desc"
+          label="Description (desc)"
+          name="desc"
+          variant="outlined"
+          multiline
+          minRows={5}
+          value={inputs.desc}
+          error={response.field === "desc"}
+          helperText={response.field === "desc" && response.message}
+        />
+        <Stack
+          direction="row"
+          sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
+        >
+          <TextField
+            size="small"
+            sx={{ flex: 2 }}
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            required
+            name="marketPrice"
+            label="Market Price"
+            id="marketPrice"
+            type="number"
+            value={inputs.marketPrice}
+            error={response.field === "marketPrice"}
+            helperText={response.field === "marketPrice" && response.message}
+            variant="outlined"
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
 
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="title"
-                  label="Title"
-                  name="title"
-                  value={inputs.title || ""}
-                  autoFocus
-                  variant="standard"
-                  inputProps={{ style: { textTransform: "capitalize" } }}
-                />
-                <TextField
-                  onChange={(e) => handleChange(e)}
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="desc"
-                  label="Description (desc)"
-                  name="desc"
-                  variant="outlined"
-                  multiline
-                  value={inputs.desc}
-                  minRows={5}
-                />
-                <Stack
-                  direction="row"
-                  sx={{ gap: 2, flexDirection: { xs: "column", md: "row" } }}
-                >
-                  <TextField
-                    value={inputs.marketPrice}
-                    size="small"
-                    sx={{ flex: 2 }}
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    required
-                    name="marketPrice"
-                    label="Market Price"
-                    id="marketPrice"
-                    type="number"
-                    error={inputs.marketPrice < 1}
-                    helperText={inputs.marketPrice < 1 && "Minimun price is 1"}
-                    variant="outlined"
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
+          <TextField
+            size="small"
+            sx={{ flex: 2 }}
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            required
+            name="price"
+            label="Discounted Price"
+            id="price"
+            type="number"
+            value={inputs.price}
+            error={response.field === "price"}
+            helperText={response.field === "price" && response.message}
+            variant="outlined"
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+          <TextField
+            size="small"
+            sx={{ flex: 1 }}
+            select
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            required
+            name="unit"
+            label="Unit"
+            id="unit"
+            value={inputs.unit}
+            variant="outlined"
+            error={response.field === "unit"}
+            helperText={response.field === "unit" && response.message}
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value="Kg">Kg</MenuItem>
+            <MenuItem value="Liter">Liter</MenuItem>
+            <MenuItem value="Piece">Piece</MenuItem>
+            <MenuItem value="Dozen">Dozen</MenuItem>
+            <MenuItem value="Pair">Pair</MenuItem>
+            <MenuItem value="Box">Box</MenuItem>
+          </TextField>
+          <TextField
+            size="small"
+            sx={{ flex: 1 }}
+            onChange={(e) => handleChange(e)}
+            margin="normal"
+            fullWidth
+            required
+            name="inStock"
+            label="Stock (inStock)"
+            id="inStock"
+            value={inputs.inStock}
+            variant="outlined"
+            error={response.field === "inStock"}
+            helperText={response.field === "inStock" && response.message}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+        </Stack>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <Typography>Categories: </Typography>
+          <Select
+            closeMenuOnSelect={false}
+            options={catList}
+            placeholder="Select Categories *"
+            value={cat}
+            isMulti
+            name="cat"
+            onChange={handleSelectedCats}
+            styles={{
+              control: (styles) => ({
+                ...styles,
+                borderColor:
+                  response.field === "cat" ? "red" : styles.borderColor,
+              }),
+            }}
+          />
+          <Typography sx={{ color: "red" }}>
+            {response.field === "cat" && response.message}
+          </Typography>
+        </Stack>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <Typography>Accept return?</Typography>
+          <Checkbox
+            checked={inputs.hasMerchantReturnPolicy}
+            name="hasMerchantReturnPolicy"
+            onChange={(e) =>
+              setInputs((prev) => ({
+                ...prev,
+                [e.target.name]: e.target.checked,
+              }))
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </Stack>
 
-                  <TextField
-                    value={inputs.price}
-                    size="small"
-                    sx={{ flex: 2 }}
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    required
-                    name="price"
-                    label="Discounted Price"
-                    id="price"
-                    type="number"
-                    error={inputs.marketPrice < inputs.price}
-                    helperText={
-                      inputs.marketPrice < inputs.price &&
-                      "Discounted price can not be greater than market price"
-                    }
-                    variant="outlined"
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
-                  <TextField
-                    size="small"
-                    sx={{ flex: 1 }}
-                    select
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    required
-                    name="unit"
-                    label="Unit"
-                    id="unit"
-                    value={inputs.unit}
-                  >
-                    <MenuItem value="Kg">Kg</MenuItem>
-                    <MenuItem value="Liter">Liter</MenuItem>
-                    <MenuItem value="Piece">Piece</MenuItem>
-                    <MenuItem value="Dozen">Dozen</MenuItem>
-                    <MenuItem value="Pair">Pair</MenuItem>
-                    <MenuItem value="Box">Box</MenuItem>
-                  </TextField>
+        {file && (
+          <Avatar
+            src={file && URL.createObjectURL(file)}
+            alt=""
+            sx={{
+              width: { xs: 150, md: 360 },
+              height: { xs: 150, md: 320 },
+              margin: { xs: 2, md: 4 },
+              borderRadius: 0,
+            }}
+          />
+        )}
+        <label htmlFor="file">
+          <input
+            accept=".png, .jpg, .jpeg"
+            id="file"
+            name="file"
+            type="file"
+            style={{ display: "none" }}
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <IconButton
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+          >
+            <PhotoCamera /> Upload Picture
+          </IconButton>
+        </label>
+        <Button
+          type="submit"
+          disabled={loading !== "Update"}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {loading}
+        </Button>
+      </Box>
 
-                  <TextField
-                    sx={{ flex: 1 }}
-                    size="small"
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    fullWidth
-                    required
-                    name="inStock"
-                    label="Stock"
-                    id="inStock"
-                    value={inputs.inStock}
-                    error={inputs.inStock < 1}
-                    helperText={inputs.inStock < 0 && "Minimun stock is 0"}
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
-                </Stack>
-
-                <Stack direction="row" alignItems="center" gap={2}>
-                  <Typography>Accept return?</Typography>
-                  <Checkbox
-                    checked={inputs.hasMerchantReturnPolicy}
-                    name="hasMerchantReturnPolicy"
-                    onChange={(e) =>
-                      setInputs((prev) => ({
-                        ...prev,
-                        [e.target.name]: e.target.checked,
-                      }))
-                    }
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                </Stack>
-
-                {file && (
-                  <Avatar
-                    src={file && URL.createObjectURL(file)}
-                    alt=""
-                    style={{
-                      width: 260,
-                      height: 220,
-                      marginTop: 20,
-                      marginLeft: "10vw",
-                    }}
-                  />
-                )}
-
-                <label htmlFor="file">
-                  <input
-                    accept=".png, .jpg, .jpeg"
-                    id="file"
-                    name="file"
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={(e) => setFile(e.target.files[0])}
-                  />
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                    <PhotoCamera /> Upload Picture
-                  </IconButton>
-                </label>
-
-                <Button
-                  type="submit"
-                  disabled={loading !== "Update"}
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {loading}
-                </Button>
-              </Stack>
-            </Box>
-          </Container>
-        </>
-      ) : (
-        <Typography>404 Not Found</Typography>
-      )}
-
-      {/* Display error or success message */}
+      {/* Display success message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={Boolean(response)}
+        open={Boolean(response.result === "success")}
         TransitionComponent={SlideTransition}
-        autoHideDuration={4000}
+        autoHideDuration={5000}
         onClose={() => setResponse(false)}
       >
         <Alert
@@ -437,7 +408,7 @@ export default function EditProduct() {
           severity={response.result}
           sx={{ width: "100%" }}
         >
-          {response.message || "Updated Successfully"}
+          {response.message}
         </Alert>
       </Snackbar>
     </>

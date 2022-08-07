@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Product = require("../models/Product");
 const {
-  verifyTokenAndAdmin,
   verifyToken,
   verifyTokenAndSeller,
 } = require("../middlewares/verification");
@@ -10,8 +9,11 @@ const { productValidation } = require("../middlewares/validation");
 //CREATE A PRODUCT
 router.post("/", verifyTokenAndSeller, async (req, res) => {
   const { error } = productValidation(req.body);
-
-  if (error) return res.status(400).json(error.details[0]);
+  if (error)
+    return res.status(400).json({
+      field: error.details[0].path[0],
+      message: error.details[0].message,
+    });
 
   try {
     const newProduct = new Product(req.body);
@@ -20,7 +22,14 @@ router.post("/", verifyTokenAndSeller, async (req, res) => {
       .status(201)
       .json({ message: "New product added successfully.", data: savedProduct });
   } catch (err) {
-    res.status(500).json(err);
+    if (err.code && err.code == 11000) {
+      res.status(400).json({
+        field: Object.keys(err.keyValue)[0],
+        message: `A product with this ${Object.keys(
+          err.keyValue
+        )[0]} already exists.`,
+      });
+    } else res.status(500).json(err);
   }
 });
 
@@ -28,7 +37,11 @@ router.post("/", verifyTokenAndSeller, async (req, res) => {
 router.put("/:id", verifyTokenAndSeller, async (req, res) => {
   const { error } = productValidation(req.body);
 
-  if (error) return res.status(400).json(error.details[0]);
+  if (error)
+    return res.status(400).json({
+      field: error.details[0].path[0],
+      message: error.details[0].message,
+    });
 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -36,9 +49,16 @@ router.put("/:id", verifyTokenAndSeller, async (req, res) => {
       req.body,
       { new: true }
     );
-    res.status(200).json(updatedProduct);
+    res.status(200).json({ message: "Product updated successfully.", data: updatedProduct});
   } catch (err) {
-    res.status(500).json(err);
+    if (err.code && err.code == 11000) {
+      res.status(400).json({
+        field: Object.keys(err.keyValue)[0],
+        message: `A product with this ${Object.keys(
+          err.keyValue
+        )[0]} already exists.`,
+      });
+    } else res.status(500).json(err);
   }
 });
 

@@ -1,71 +1,93 @@
 import PropTypes from "prop-types";
-import { Container, Paper, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Slide,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useSelector } from "react-redux";
 import AddProduct from "../components/AddProduct";
-import EditProduct from "../components/EditProduct";
 import ViewSeller from "../components/ViewSeller";
+import { Add } from "@mui/icons-material";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
 const Seller = () => {
-  const [value, setValue] = useState(0);
+  const [addProductOpen, setAddProductOpen] = useState(false);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const user = useSelector((state) => state.user.currentUser);
+  const seller = useSelector((state) => state.user.currentUser);
 
   return (
     <>
-      <Box>
-        <Tabs
-          centered
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
+      <Box sx={{ position: "relative", textAlign: "left" }}>
+        <Avatar
+          src={seller?.img}
+          sx={{ borderRadius: 0, width: "100%", height: 200 }}
+        />
+        <Typography
+          variant="h3"
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            background:
+              "rgba(0, 0, 0, 0.5)" /* Black background with 0.5 opacity */,
+            color: "#f1f1f1" /* Grey text */,
+            width: "100%",
+          }}
         >
-          <Tab label={user.username} {...a11yProps(0)} />
-          <Tab label="Add Product" {...a11yProps(1)} />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <ViewSeller />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <AddProduct />
-        </TabPanel>
+          {seller?.username}
+        </Typography>
       </Box>
+      <Container
+        maxWidth="xl"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "column",
+        }}
+      >
+        <ViewSeller />
+
+        <Tooltip title="Add New Product">
+          <Fab
+            onClick={() => setAddProductOpen(true)}
+            color="primary"
+            aria-label="add"
+            sx={{ position: "fixed", bottom: 16, right: 16 }}
+          >
+            <Add />
+          </Fab>
+        </Tooltip>
+
+        <Dialog
+          TransitionComponent={Transition}
+          transitionDuration={1000}
+          open={addProductOpen}
+          scroll="paper"
+          aria-labelledby="title"
+        >
+          <DialogActions>
+            <Button onClick={() => setAddProductOpen(false)}>Cancel</Button>
+          </DialogActions>
+          <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
+            Add New Product
+          </DialogTitle>
+          <DialogContent>
+            <AddProduct />
+          </DialogContent>
+        </Dialog>
+      </Container>
     </>
   );
 };

@@ -47,7 +47,11 @@ const verifyTokenAndSeller = (req, res, next) => {
     if (req.user.isAdmin || req.user.isSeller === 1) {
       next();
     } else {
-      res.status(403).json("You are not allowed to do that!");
+      res
+        .status(403)
+        .json(
+          "You are not allowed to do that right now! If you are new seller, please login again and your problem will be fixed."
+        );
     }
   });
 };
@@ -56,5 +60,5 @@ module.exports = {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-  verifyTokenAndSeller
+  verifyTokenAndSeller,
 };

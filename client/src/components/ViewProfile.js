@@ -1,12 +1,4 @@
-import {
-  Email,
-  Badge,
-  Man,
-  Person,
-  PhoneAndroid,
-  Woman,
-} from "@mui/icons-material";
-import { Container, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const ViewProfile = () => {

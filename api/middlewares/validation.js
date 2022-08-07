@@ -1,4 +1,4 @@
-//This route validates all post requests if the data is correct using the help of joi
+//This route checks all post requests if the data received from frontend is correct using the help of joi
 
 const Joi = require("joi");
 
@@ -119,14 +119,14 @@ module.exports.productValidation = productValidation = (data) => {
     seller: Joi.string().required(),
     title: Joi.string().min(3).max(300).trim().required(),
     slug: Joi.string().trim().required(),
-    desc: Joi.string().max(1000).required(),
-    cat: Joi.array().min(1).required(),
+    desc: Joi.string().max(5000).required(),
     marketPrice: Joi.number().integer().min(1).required(),
-    price: Joi.number().integer().max(Joi.ref('marketPrice')).required(),
+    price: Joi.number().integer().max(Joi.ref("marketPrice")).required(),
+    unit: Joi.string().allow(""),
+    inStock: Joi.number().min(0).allow(""),
+    cat: Joi.array().min(1).required(),
     img: Joi.string().allow(""),
     tags: Joi.array().allow(""),
-    unit: Joi.string().allow(""),
-    inStock: Joi.number().allow(""),
     size: Joi.string().allow(""),
     color: Joi.string().allow(""),
     brand: Joi.string().allow(""),
@@ -134,5 +134,6 @@ module.exports.productValidation = productValidation = (data) => {
     hasMerchantReturnPolicy: Joi.boolean().required(),
     model: Joi.string().allow(""),
   });
+  
   return schema.validate(data);
 };

@@ -14,7 +14,7 @@ const Shop = () => {
   useEffect(() => {
     getSellerProducts(shopName).then((res) => setProducts(res));
     getSellerDetails(shopName).then((res) => setSeller(res));
-  }, []);
+  }, [shopName]);
 
   return (
     <Container maxWidth="xl"
@@ -34,7 +34,6 @@ const Shop = () => {
           sx={{
             position: "absolute",
             bottom: 0,
-            background: "rgb(0, 0, 0)" /* Fallback color */,
             background:
               "rgba(0, 0, 0, 0.5)" /* Black background with 0.5 opacity */,
             color: "#f1f1f1" /* Grey text */,
