@@ -1,38 +1,172 @@
-import { Stack, Typography } from "@mui/material";
+import styled from "@emotion/styled";
+import {
+  Apartment,
+  Badge,
+  Cottage,
+  Create,
+  Mail,
+  PermPhoneMsg,
+  Person,
+  Phone,
+  Portrait,
+  Wc,
+} from "@mui/icons-material";
+import {
+  Container,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 
 const ViewProfile = () => {
   const user = useSelector((state) => state.user.currentUser);
 
   return (
-    <Stack direction="row" justifyContent="space-around">
-      <Stack direction="column">
-        <Typography variant="h6" color="primary">
-          Contact Information
-        </Typography>
-        <Stack direction="row">
-          <Typography>Username:</Typography>
-          <Typography>{user.username}</Typography>
-        </Stack>
-        <Stack direction="row">Email: {user.email}</Stack>
-        <Stack direction="row">
-          Phone Number: {user.phoneNumber || "Please provide a phone number"}
-        </Stack>
-      </Stack>
-      <Stack direction="column">
-        <Typography variant="h6" color="primary">
-          More Information
-        </Typography>
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        sx={{
+          ml: { xs: 0, md: 10 },
+          ml: { xs: 0, md: 10 },
+          mr: { xs: 0, md: 10 },
+          mt: 10,
+          flex: 5,
+          gap: { xs: 0, md: 10 },
+          flexDirection: { xs: "column", md: "row" },
+        }}
+      >
+        <Stack flex={2}>
+          <Typography sx={{ mb: 2 }} variant="h6">
+            Contact Information
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <Mail />
+              </ListItemIcon>
+              <ListItemText primary={user.email} secondary="Email" />
+            </ListItem>
 
-        <Stack direction="row">
-          <Typography>Gender:</Typography>
-          <Typography>{user.gender}</Typography>
+            <ListItem>
+              <ListItemIcon>
+                <Phone />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.phoneNumber || "Please provide a phone number"}
+                secondary="Phone"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <PermPhoneMsg />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  user.secondaryPhoneNumber ||
+                  "Please provide a secondary phone number"
+                }
+                secondary="Secondary Phone"
+              />
+            </ListItem>
+          </List>
         </Stack>
-        <Stack direction="row">
-          Account Type: {user.accountType === 1 ? "Seller" : "Customer"}
+
+        <Stack flex={2}>
+          <Typography sx={{ mb: 2 }} variant="h6">
+            More Information
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.username}
+                secondary={user.accountType ? "Shop Name" : "Username"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Portrait />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.firstName + " " + user.lastName}
+                secondary="Full Name"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Apartment />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.currentCity || "Not provided"}
+                secondary="Current City"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Cottage />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.hometown || "Not provided"}
+                secondary="Hometown"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Wc />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  user.gender.charAt(0).toUpperCase() + user.gender.slice(1)
+                }
+                secondary="Gender"
+              />
+            </ListItem>
+          </List>
+        </Stack>
+        <Divider orientation="vertical" flexItem />
+        <Stack flex={1}>
+          <Typography sx={{ mb: 2 }} variant="h6">
+            Account Information
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText
+                primary={user.accountType === 1 ? "Seller" : "Customer"}
+                secondary="Account Type"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Create />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  new Date(user.createdAt).getDate() +
+                  " " +
+                  new Date(user.createdAt).toLocaleString("default", {
+                    month: "long",
+                  }) +
+                  " " +
+                  new Date(user.createdAt).getFullYear()
+                }
+                secondary="Registered"
+              />
+            </ListItem>
+          </List>
         </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 };
 

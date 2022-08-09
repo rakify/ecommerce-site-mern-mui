@@ -68,8 +68,20 @@ module.exports.updateUserValidation = userValidation = (data) => {
         "string.length": "Phone number must contain 11 digits",
         "string.pattern.base": "Phone number must contain only digits",
       }),
+    secondaryPhoneNumber: Joi.string()
+      .trim()
+      .length(11)
+      .pattern(/^\d+$/) //d for only digits
+      .allow("")
+      .messages({
+        "string.length": "Phone number must contain 11 digits",
+        "string.pattern.base": "Phone number must contain only digits",
+      }),
     gender: Joi.string().allow(""),
     img: Joi.string().allow(""),
+    coverImg: Joi.string().allow(""),
+    currentCity: Joi.string().min(3).max(300).allow(""),
+    hometown: Joi.string().min(3).max(300).allow(""),
     shippingInfo: {
       fullName: Joi.string().min(3).max(300).allow(""),
       phoneNumber: Joi.string()
@@ -134,6 +146,6 @@ module.exports.productValidation = productValidation = (data) => {
     hasMerchantReturnPolicy: Joi.boolean().required(),
     model: Joi.string().allow(""),
   });
-  
+
   return schema.validate(data);
 };

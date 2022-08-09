@@ -23,13 +23,12 @@ import {
   getUser,
 } from "./redux/apiCalls";
 import { useEffect } from "react";
-import Seller from "./pages/Seller";
-import EditProduct from "./components/EditProduct";
 import SellerOrders from "./pages/SellerOrders";
 import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
 import Footer from "./components/Footer";
 import Shop from "./pages/Shop";
+import SellerDashboard from "./pages/SellerDashboard";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,21 +37,23 @@ const App = () => {
   //When theres user get cart and user info and any time check for latest products
   useEffect(() => {
     (!user || user.accountType !== 1) && getProducts(dispatch);
-    user && user.accountType === 1 && getProductsAsSeller(user.username, dispatch);
+    user &&
+      user.accountType === 1 &&
+      getProductsAsSeller(user.username, dispatch);
     user && getUser(user._id, dispatch);
     user && user.accountType !== 1 && getCartProducts(user._id, dispatch);
   }, [dispatch]);
 
   return (
     <Router>
-      <Header />
+      {user.accountType !== 1 && <Header />}
       <Routes>
         <Route
           exact
           path="/"
           element={
             user.accountType === 1 ? (
-              <Seller />
+              <SellerDashboard />
             ) : user.accountType === 2 ? (
               <ToBeSeller />
             ) : (
@@ -60,6 +61,7 @@ const App = () => {
             )
           }
         />
+
         <Route
           path="/products/:category"
           element={
@@ -113,8 +115,10 @@ const App = () => {
         <Route
           path="/orders"
           element={
-            !user || user.accountType === 1 || user.accountType === 2 ? (
+            !user || user.accountType === 2 ? (
               <Navigate to="/" />
+            ) : user.accountType === 1 ? (
+              <SellerOrders />
             ) : (
               <Orders />
             )
@@ -122,7 +126,7 @@ const App = () => {
         />
         <Route
           path="/profile"
-          element={!user ? <Navigate to="/" /> : <Profile />}
+          element={user.accountType === 0 && <Profile />}
         />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route
@@ -134,20 +138,14 @@ const App = () => {
           element={user.accountType !== 1 ? <Shop /> : <Navigate to="/" />}
         />
         <Route
-          path="/seller/product/:productId"
-          element={
-            user.accountType === 1 ? <EditProduct /> : <Navigate to="/" />
-          }
-        />
-        <Route
-          path="/seller/orders/"
-          element={
-            user.accountType === 1 ? <SellerOrders /> : <Navigate to="/" />
-          }
-        />
-        <Route
           path="/sell-online"
           element={user ? <Navigate to="/" /> : <RegisterSeller />}
+        />
+
+        <Route
+          exact
+          path="/seller/:screen"
+          element={user.accountType === 1 && <SellerDashboard />}
         />
       </Routes>
 

@@ -68,10 +68,10 @@ export default function Notification() {
         <Tooltip title="Notifications">
             <Badge
               badgeContent={notifications.length}
-              color="success"
+              color="error"
               variant="dot"
             >
-              <Notifications fontSize="small" color="primary" />
+              <Notifications fontSize="small" />
             </Badge>
         </Tooltip>
       </IconButton>

@@ -41,9 +41,10 @@ function SlideTransition(props) {
 export default function EditProduct({ productId }) {
   const dispatch = useDispatch();
   // get product info from redux
-  const product = useSelector((state) =>
-    state.product.products.find((product) => product._id === productId)
-  ) || [];
+  const product =
+    useSelector((state) =>
+      state.product.products.find((product) => product._id === productId)
+    ) || [];
 
   const user = useSelector((state) => state.user.currentUser);
 
@@ -200,12 +201,16 @@ export default function EditProduct({ productId }) {
 
   return (
     <>
-      {/* <Link href="/" color="inherit" underline="none">
-        <Button variant="contained" startIcon={<ArrowBackIos />}>
-          Go Back
-        </Button>
-      </Link>
-      <Typography variant="h6">Update Info For {product.title}</Typography> */}
+      <Avatar
+        src={product.img}
+        alt=""
+        sx={{
+          width: { xs: 150, md: 360 },
+          height: { xs: 150, md: 320 },
+          margin: { xs: 2, md: 4 },
+          borderRadius: 0,
+        }}
+      />
       <Box
         component="form"
         onSubmit={file ? handleSubmitWithFile : handleSubmit}
@@ -394,7 +399,6 @@ export default function EditProduct({ productId }) {
           {loading}
         </Button>
       </Box>
-
       {/* Display success message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

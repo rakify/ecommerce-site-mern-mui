@@ -33,19 +33,17 @@ const StyledToolbar = styled(Toolbar)({
   display: "flex",
   justifyContent: "space-between",
 });
-const Logo = styled("div")(({ theme }) => ({
-}));
 const Search = styled("div")(({ theme }) => ({
   width: "40%",
   padding: "0 10px",
-  backgroundColor:"white",
+  backgroundColor: "white",
   borderRadius: theme.shape.borderRadius,
 }));
 const Icons = styled("Box")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  gap:20
+  gap: 20,
 }));
 const Title = styled(Box)({
   display: "inline-block",
@@ -117,14 +115,12 @@ export default function Header() {
     <>
       <AppBar position="sticky">
         <StyledToolbar sx={{ bgcolor: "#E3FDFD" }}>
-          <Logo>
-            <Link href="/" underline="none">
-              <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
-              <Title sx={{ display: { sm: "block", xs: "none" } }}>
-                Bettermart
-              </Title>
-            </Link>
-          </Logo>
+          <Link href="/" underline="none">
+            <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
+            <Title sx={{ display: { sm: "block", xs: "none" } }}>
+              Bettermart
+            </Title>
+          </Link>
 
           <Search>
             <InputBase

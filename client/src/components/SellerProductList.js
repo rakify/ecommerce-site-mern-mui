@@ -1,7 +1,8 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import {
+  IconButton,
+  Typography,
   Avatar,
-  Box,
   Button,
   Container,
   Dialog,
@@ -10,15 +11,12 @@ import {
   DialogContentText,
   DialogTitle,
   Fade,
-  IconButton,
-  Modal,
-  Slide,
   Stack,
-  Typography,
+  Fab,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { DeleteOutlined, Edit } from "@mui/icons-material";
+import { DeleteOutlined, Edit, Add } from "@mui/icons-material";
 import { deleteSellerProduct, getProductsAsSeller } from "../redux/apiCalls";
 import EditProduct from "./EditProduct";
 
@@ -26,13 +24,13 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />;
 });
 
-export default function ViewSeller() {
+export default function SellerProductList() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
   const products = useSelector((state) => state.product.products);
   const [deleteProductId, setDeleteProductId] = useState(false);
   const [editProductId, setEditProductId] = useState(false);
-
+  
   const handleDelete = (id) => {
     setDeleteProductId(false);
     deleteSellerProduct(id).then(getProductsAsSeller(user.username, dispatch));
@@ -104,68 +102,58 @@ export default function ViewSeller() {
 
   return (
     <>
-      <Typography variant="h6">Your Published Products</Typography>
-      <Container
-        sx={{
-          "& .super-app-theme--header": {
-            backgroundColor: "#c2cad0",
-          },
-        }}
+      {products.length === 0 && (
+        <Typography>Start adding product to see them appear here.</Typography>
+      )}
+
+      <DataGrid
+        rows={products}
+        getRowId={(row) => row._id}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[5]}
+        disableSelectionOnClick
+        density="comfortable"
+        sx={{ mt: 8, height: 500, width: "100%" }}
+      />
+
+     
+      <Dialog
+        TransitionComponent={Transition}
+        transitionDuration={1000}
+        open={Boolean(editProductId)}
+        scroll="paper"
+        aria-labelledby="title"
       >
-        {products.length === 0 && (
-          <Typography>Start adding product to see them appear here.</Typography>
-        )}
+        <DialogActions>
+          <Button onClick={() => setEditProductId(false)}>Cancel</Button>
+        </DialogActions>
+        <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
+          Edit Product
+        </DialogTitle>
+        <DialogContent>
+          <EditProduct productId={editProductId} />
+        </DialogContent>
+      </Dialog>
 
-        <DataGrid
-          rows={products}
-          getRowId={(row) => row._id}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-          disableSelectionOnClick
-          density="comfortable"
-          sx={{ mt: 2, height: 500, width: "100%" }}
-        />
-
-        <Dialog
-          TransitionComponent={Transition}
-          transitionDuration={1000}
-          open={Boolean(editProductId)}
-          scroll="paper"
-          aria-labelledby="title"
-        >
-          <DialogActions>
-            <Button onClick={() => setEditProductId(false)}>Cancel</Button>
-          </DialogActions>
-          <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
-            Edit Product
-          </DialogTitle>
-          <DialogContent>
-            <EditProduct productId={editProductId} />
-          </DialogContent>
-        </Dialog>
-
-        <Dialog
-          open={Boolean(deleteProductId)}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleCloseDialog}
-        >
-          <DialogTitle>Confirm Delete</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              If you proceed now product with ID {deleteProductId} will be
-              erased. This action is irreversible.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button onClick={() => handleDelete(deleteProductId)}>
-              Proceed
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Container>
+      <Dialog
+        open={Boolean(deleteProductId)}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            If you proceed now product with ID {deleteProductId} will be erased.
+            This action is irreversible.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={() => handleDelete(deleteProductId)}>Proceed</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

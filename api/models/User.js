@@ -46,6 +46,22 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    secondaryPhoneNumber: {
+      type: String,
+      default: "",
+    },
+    currentCity: {
+      type: String,
+      default: "",
+    },
+    hometown: {
+      type: String,
+      default: "",
+    },
+    coverImg:{
+      type:String,
+      default:"https://images.pexels.com/photos/6156378/pexels-photo-6156378.jpeg"
+    },
     img: {
       type: String,
       default:
