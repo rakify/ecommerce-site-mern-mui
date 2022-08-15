@@ -29,7 +29,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-const CategoryList = () => {
+const Navbar = () => {
   const [catList, setCatList] = useState([]);
   console.log(catList);
   // get categories from api
@@ -41,7 +41,7 @@ const CategoryList = () => {
 
   return (
     <>
-      <Typography sx={{ pl: 5, fontSize: 20 }}>Categories</Typography>
+      <Typography sx={{ pl: 5, fontSize: 15 }}>Categories</Typography>
       <Divider sx={{ m: 2 }} />
       <Stack
         justifyContent="space-between"
@@ -55,7 +55,7 @@ const CategoryList = () => {
           <React.Fragment key={cat._id}>
             <Link
               underline="hover"
-              href={"/products/"+cat.value}
+              href={"/products/" + cat.value}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -68,6 +68,7 @@ const CategoryList = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 2,
+                  fontSize: 10,
                 }}
               >
                 <Avatar
@@ -86,4 +87,4 @@ const CategoryList = () => {
   );
 };
 
-export default CategoryList;
+export default Navbar;

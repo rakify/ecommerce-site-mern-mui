@@ -1,23 +1,21 @@
 import Newsletter from "../components/Newsletter";
-import FrontMenu from "../components/FrontMenu";
 import Products from "../components/Products";
-import { Divider, Link, Stack, Typography } from "@mui/material";
-import FlashSell from "../components/FlashSale";
+import { Divider, Stack, Typography } from "@mui/material";
+import Offers from "../components/Offers";
 
 const Home = () => {
   return (
     <>
-      <FrontMenu />
-      <FlashSell />
+      <Offers />
+      {/* <FlashSell /> */}
 
-      <Typography variant="h5" sx={{ ml: 5, mt: 2 }}>
+      <Typography variant="h5" sx={{ mt: 2 }}>
         JUST FOR YOU
       </Typography>
       <Divider variant="middle" />
       <Products />
-      <Newsletter />
-
-      <Stack
+      {/* <Newsletter /> */}
+      {/* <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
@@ -68,7 +66,7 @@ const Home = () => {
             Newsletter
           </Link>
         </Stack>
-      </Stack>
+      </Stack> */}
     </>
   );
 };

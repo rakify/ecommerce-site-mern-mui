@@ -275,6 +275,15 @@ export const getOrders = async (id) => {
   }
 };
 
+export const getOrdersAsSeller = async () => {
+  try {
+    const res = await axios.get(`/orders/`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 //Categories
 export const getCats = async () => {
   try {

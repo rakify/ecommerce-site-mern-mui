@@ -4,6 +4,7 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
+  verifyTokenAndSeller,
 } = require("../middlewares/verification");
 
 //CREATE ORDER
@@ -68,16 +69,13 @@ router.get("/order/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-
 //GET ALL ORDERS
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
-  const query = req.query.sortBy;
-
+router.get("/", verifyTokenAndSeller, async (req, res) => {
+  console.log(req.user);
   try {
-    const orders =
-      query === "createdAt"
-        ? await Order.find().sort({ createdAt: -1 }).limit(30)
-        : await Order.find().limit(30);
+    const orders = await Order.find({ seller: req.user.username })
+      .sort({ createdAt: -1 })
+      .limit(50);
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);

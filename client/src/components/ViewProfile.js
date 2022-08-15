@@ -4,6 +4,7 @@ import {
   Badge,
   Cottage,
   Create,
+  Key,
   Mail,
   PermPhoneMsg,
   Person,
@@ -32,9 +33,9 @@ const ViewProfile = () => {
         direction="row"
         justifyContent="space-between"
         sx={{
-          ml: { xs: 0, md: 10 },
-          ml: { xs: 0, md: 10 },
-          mr: { xs: 0, md: 10 },
+          ml: { xs: 0, md: 3 },
+          ml: { xs: 0, md: 3 },
+          mr: { xs: 0, md: 3 },
           mt: 10,
           flex: 5,
           gap: { xs: 0, md: 10 },
@@ -84,7 +85,7 @@ const ViewProfile = () => {
           <List>
             <ListItem>
               <ListItemIcon>
-                <Person />
+                <Key />
               </ListItemIcon>
               <ListItemText
                 primary={user.username}
@@ -139,7 +140,7 @@ const ViewProfile = () => {
           <List>
             <ListItem>
               <ListItemIcon>
-                <Person />
+                <Badge />
               </ListItemIcon>
               <ListItemText
                 primary={user.accountType === 1 ? "Seller" : "Customer"}

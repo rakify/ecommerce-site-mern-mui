@@ -113,8 +113,11 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="sticky">
-        <StyledToolbar sx={{ bgcolor: "#E3FDFD" }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: 1400 }}
+      >
+        <StyledToolbar>
           <Link href="/" underline="none">
             <LocalFlorist sx={{ display: { sm: "none", xs: "block" } }} />
             <Title sx={{ display: { sm: "block", xs: "none" } }}>

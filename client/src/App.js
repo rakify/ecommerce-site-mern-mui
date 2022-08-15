@@ -22,17 +22,45 @@ import {
   getProductsAsSeller,
   getUser,
 } from "./redux/apiCalls";
-import { useEffect } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import SellerOrders from "./pages/SellerOrders";
 import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
 import Footer from "./components/Footer";
 import Shop from "./pages/Shop";
 import SellerDashboard from "./pages/SellerDashboard";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Drawer,
+  Fab,
+  Fade,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Inbox, Mail, ShoppingBag } from "@mui/icons-material";
+import Dashboard from "./pages/Dashboard";
 
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Fade direction="left" ref={ref} {...props} />;
+});
+const drawerWidth = 300;
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser) || 0;
+  const cart = useSelector((state) => state.cart);
+
+  const [cartOpen, setCartOpen] = useState(false);
 
   //When theres user get cart and user info and any time check for latest products
   useEffect(() => {
@@ -45,112 +73,182 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <Router>
-      {user.accountType !== 1 && <Header />}
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            user.accountType === 1 ? (
-              <SellerDashboard />
-            ) : user.accountType === 2 ? (
-              <ToBeSeller />
-            ) : (
-              <Home />
-            )
-          }
-        />
+    <>
+      <Router>
+        {/* {user.accountType !== 1 && <Header />} */}
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              user.accountType === 1 ? (
+                <SellerDashboard />
+              ) : user.accountType === 2 ? (
+                <ToBeSeller />
+              ) : (
+                <Dashboard />
+              )
+            }
+          />
 
-        <Route
-          path="/products/:category"
-          element={
-            user.accountType === 1 || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : (
-              <ProductList />
-            )
-          }
-        />
-        <Route
-          path="/product/:id"
-          element={
-            user.accountType === 1 || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : (
-              <Product />
-            )
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            !user || user.accountType === 1 || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : (
-              <Cart />
-            )
-          }
-        />
-        <Route
-          path="/wishlist"
-          element={
-            !user || user.accountType === 1 || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : (
-              <Wishlist />
-            )
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            !user || user.accountType === 1 || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : (
-              <Checkout />
-            )
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            !user || user.accountType === 2 ? (
-              <Navigate to="/" />
-            ) : user.accountType === 1 ? (
-              <SellerOrders />
-            ) : (
-              <Orders />
-            )
-          }
-        />
-        <Route
-          path="/profile"
-          element={user.accountType === 0 && <Profile />}
-        />
-        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-        <Route
-          path="/register"
-          element={user ? <Navigate to="/" /> : <Register />}
-        />
-        <Route
-          path="/shop/:shopId"
-          element={user.accountType !== 1 ? <Shop /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/sell-online"
-          element={user ? <Navigate to="/" /> : <RegisterSeller />}
-        />
+          <Route
+            path="/products/:category"
+            element={
+              user.accountType === 1 || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : (
+                <ProductList />
+              )
+            }
+          />
+          <Route
+            path="/product/:id"
+            element={
+              user.accountType === 1 || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : (
+                <Product />
+              )
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              !user || user.accountType === 1 || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : (
+                <Cart />
+              )
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              !user || user.accountType === 1 || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : (
+                <Wishlist />
+              )
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              !user || user.accountType === 1 || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : (
+                <Checkout />
+              )
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              !user || user.accountType === 2 ? (
+                <Navigate to="/" />
+              ) : user.accountType === 1 ? (
+                <SellerOrders />
+              ) : (
+                <Orders />
+              )
+            }
+          />
+          <Route
+            path="/profile"
+            element={user.accountType === 0 && <Profile />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/" /> : <Register />}
+          />
+          <Route
+            path="/shop/:shopId"
+            element={user.accountType !== 1 ? <Shop /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/sell-online"
+            element={user ? <Navigate to="/" /> : <RegisterSeller />}
+          />
 
-        <Route
-          exact
-          path="/seller/:screen"
-          element={user.accountType === 1 && <SellerDashboard />}
-        />
-      </Routes>
-
+          <Route
+            exact
+            path="/seller/:screen"
+            element={user.accountType === 1 && <SellerDashboard />}
+          />
+        </Routes>
+      </Router>
       <Footer />
-    </Router>
+
+      {!cartOpen && (
+        <Fab
+          color="primary"
+          aria-label="cart"
+          variant="extended"
+          sx={{ position: "fixed", bottom: "50%", right: 16 }}
+          onClick={() => setCartOpen(true)}
+        >
+          <Stack alignItems="center">
+            <ShoppingBag />
+            <Typography>{cart.products.length} Items</Typography>
+          </Stack>
+        </Fab>
+      )}
+
+      {cartOpen && (
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          variant="permanent"
+          anchor="right"
+        >
+          <Toolbar />
+          <Divider />
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="h6">Your Cart</Typography>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setCartOpen(!cartOpen)}
+            >
+              Close
+            </Button>
+          </Stack>
+          <Cart />
+        </Drawer>
+      )}
+
+      {/* <Dialog
+        TransitionComponent={Transition}
+        open={cartOpen}
+        scroll="paper"
+        aria-labelledby="title"
+      >
+        <DialogActions>
+          <Button onClick={() => setCartOpen(false)}>Cancel</Button>
+        </DialogActions>
+        <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
+          Cart
+        </DialogTitle>
+        <DialogContent>
+          <Cart />
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" component="a" href="/checkout">
+            CHECKOUT NOW
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+    </>
   );
 };
 

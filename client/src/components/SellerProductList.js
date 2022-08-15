@@ -30,7 +30,7 @@ export default function SellerProductList() {
   const products = useSelector((state) => state.product.products);
   const [deleteProductId, setDeleteProductId] = useState(false);
   const [editProductId, setEditProductId] = useState(false);
-  
+
   const handleDelete = (id) => {
     setDeleteProductId(false);
     deleteSellerProduct(id).then(getProductsAsSeller(user.username, dispatch));
@@ -102,6 +102,8 @@ export default function SellerProductList() {
 
   return (
     <>
+    <Container maxWidth="xl" sx={{ mt: 8, mb: 4 }}>
+            
       {products.length === 0 && (
         <Typography>Start adding product to see them appear here.</Typography>
       )}
@@ -114,10 +116,9 @@ export default function SellerProductList() {
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
         density="comfortable"
-        sx={{ mt: 8, height: 500, width: "100%" }}
+        sx={{ height: 500, width: "100%" }}
       />
 
-     
       <Dialog
         TransitionComponent={Transition}
         transitionDuration={1000}
@@ -154,6 +155,7 @@ export default function SellerProductList() {
           <Button onClick={() => handleDelete(deleteProductId)}>Proceed</Button>
         </DialogActions>
       </Dialog>
+      </Container>
     </>
   );
 }

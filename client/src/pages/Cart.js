@@ -23,6 +23,15 @@ import {
   Slide,
 } from "@mui/material";
 import React, { useState } from "react";
+import styled from "@emotion/styled";
+
+const ProductTitle = styled(Typography)(({ theme }) => ({
+  width: "100%",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  fontWeight: 700,
+}));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -33,24 +42,16 @@ const Cart = () => {
   const id = useSelector((state) => state.user.currentUser?._id);
   const cart = useSelector((state) => state.cart);
 
-  //Tab options
-  const [value, setValue] = useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
   //Empty Cart Prompt
   const [openEmptyCartDialog, setOpenEmptyCartDialog] = useState(false);
 
   const handleEmptyCart = () => {
     deleteCart(id, dispatch);
     setOpenEmptyCartDialog(false);
-    setValue(0);
   };
 
   const handleCloseDialog = () => {
     setOpenEmptyCartDialog(false);
-    setValue(0);
   };
 
   const handleQuantity = (type, productId, title, img, price) => {
@@ -91,37 +92,7 @@ const Cart = () => {
         </DialogActions>
       </Dialog>
 
-      <Typography variant="h6">Your Cart</Typography>
-      <Stack
-        direction="column"
-        justifyContent="space-between"
-        sx={{ margin: 2 }}
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="icon tabs example"
-          centered
-          sx={{ width: { xs: 300, sm: "100%" } }}
-        >
-          <Tab
-            icon={<ShoppingCartOutlined />}
-            label={
-              cart.products.length === 0
-                ? "Cart"
-                : `Cart (${cart.products.length})`
-            }
-          />
-          <Link href="/wishlist/" underline="none" color="inherit">
-            <Tab icon={<FavoriteBorderOutlined />} label="Wishlist" />
-          </Link>
-          <Tab
-            icon={<DeleteForeverOutlined />}
-            label="Empty Cart"
-            onClick={() => setOpenEmptyCartDialog(true)}
-          />
-        </Tabs>
-
+      <Stack direction="column" gap={1}>
         {cart.products.length === 0 && !cart.error && (
           <Typography sx={{ textAlign: "center", marginTop: 5 }}>
             YOUR CART IS CURRENTLY EMPTY!
@@ -129,139 +100,98 @@ const Cart = () => {
         )}
 
         {cart.products.length > 0 && !cart.error && (
-          <>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ display: { xs: "none", sm: "flex" } }}
-            >
-              <Link href="/" underline="none" color="inherit">
-                <Button variant="outlined">Continue Shopping</Button>
-              </Link>
-              <Link href="/checkout" underline="none" color="inherit">
-                <Button variant="outlined">Checkout Now</Button>
-              </Link>
-            </Stack>
-
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ flexDirection: { xs: "column", md: "row" } }}
-            >
-              <Stack flex="3" direction="column">
-                {cart.products.map((product) => (
-                  <React.Fragment key={product._id}>
-                    <Stack
-                      direction="row"
-                      sx={{
-                        borderBottom: "1px solid gray",
-                        gap: 3,
-                        flexDirection: { xs: "column", sm: "row" },
-                      }}
-                    >
-                      <Avatar
-                        src={product.img}
-                        sx={{
-                          width: 100,
-                          height: 70,
-                          borderRadius: 0,
-                          transition: "transform .5s",
-                          "&:hover": { transform: "scale(1.2)" },
-                          margin: 5,
-                        }}
-                      />
-
-                      <Stack
-                        direction="column"
-                        justifyContent="space-around"
-                        alignItems="center"
-                        sx={{ flexDirection: { xs: "row", sm: "column" } }}
-                      >
-                        <Button
-                          variant="text"
-                          onClick={() =>
-                            handleQuantity(
-                              "inc",
-                              product.productId,
-                              product.title,
-                              product.img,
-                              product.price
-                            )
-                          }
-                        >
-                          <ArrowUpwardOutlined sx={{ width: 15, height: 15 }} />
-                        </Button>
-                        <Typography color="primary">
-                          {product.quantity}
-                        </Typography>
-                        <Button
-                          variant="text"
-                          onClick={() =>
-                            handleQuantity(
-                              "dec",
-                              product.productId,
-                              product.title,
-                              product.img,
-                              product.price
-                            )
-                          }
-                        >
-                          <ArrowDownwardOutlined
-                            sx={{ width: 15, height: 15 }}
-                          />
-                        </Button>
-                      </Stack>
-
-                      <Stack>
-                        <Typography>
-                          Product:
-                          {product.title}
-                        </Typography>
-                        <Typography>
-                          ID:
-                          {product._id}
-                        </Typography>
-                        <Typography>Price: ৳ {product.price}</Typography>
-                        <Typography>
-                          Size:
-                          {product.size?.toUpperCase()}
-                        </Typography>
-                        <Typography>
-                          Quantity:
-                          {product.quantity}
-                        </Typography>
-                      </Stack>
-                      <Stack alignItems="center" justifyContent="center">
-                        <Typography>
-                          ৳ {product.price * product.quantity}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </React.Fragment>
-                ))}
-              </Stack>
-              <Stack flex="2" alignItems="center">
-                <Typography variant="h6">ORDER SUMMARY</Typography>
-
-                <Typography>Subtotal: ৳ {cart.total}</Typography>
-
-                <Typography>Estimated Shipping: ৳ 50</Typography>
-
-                <Typography>Shipping Discount: ৳ -50</Typography>
-
-                <Typography>Total: ৳ {cart.total}</Typography>
-
-                <Link
-                  href="/checkout"
-                  underline="none"
-                  color="inherit"
-                  sx={{ mt: 10 }}
+          <Stack
+            direction="column"
+            sx={{ maxHeight: "70vh", overflowY: "scroll", overflowX: "hide" }}
+          >
+            {cart.products.map((product) => (
+              <Stack
+                key={product._id}
+                direction="row"
+                sx={{
+                  borderBottom: "1px solid gray",
+                  flexDirection: { xs: "column", sm: "row" },
+                }}
+              >
+                <Stack
+                  direction="column"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ flexDirection: { xs: "row", sm: "column" } }}
                 >
-                  <Button variant="contained">CHECKOUT NOW</Button>
-                </Link>
+                  <Button
+                    variant="text"
+                    onClick={() =>
+                      handleQuantity(
+                        "inc",
+                        product.productId,
+                        product.title,
+                        product.img,
+                        product.price
+                      )
+                    }
+                  >
+                    <ArrowUpwardOutlined sx={{ width: 15, color: "gray" }} />
+                  </Button>
+                  <Typography color="primary">{product.quantity}</Typography>
+                  <Button
+                    variant="text"
+                    onClick={() =>
+                      handleQuantity(
+                        "dec",
+                        product.productId,
+                        product.title,
+                        product.img,
+                        product.price
+                      )
+                    }
+                  >
+                    <ArrowDownwardOutlined sx={{ width: 15, color: "gray" }} />
+                  </Button>
+                </Stack>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Avatar
+                    src={product.img}
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 0,
+                      mr: 1,
+                    }}
+                  />
+                  <Stack>
+                    <Typography sx={{ width: 100 }}>
+                      {product.title.slice(0, 50)}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "gray", fontSize: 10 }}
+                    >
+                      ৳ {product.price}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="subtitle2">
+                    ৳ {product.price * product.quantity}
+                  </Typography>
+                </Stack>
               </Stack>
-            </Stack>
-          </>
+            ))}
+          </Stack>
+        )}
+        {cart.products.length > 0 && (
+          <Button
+            variant="contained"
+            component="a"
+            href="/checkout"
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <Typography>CHECKOUT NOW</Typography>
+            <Typography> ৳{cart.total}</Typography>
+          </Button>
         )}
       </Stack>
     </>

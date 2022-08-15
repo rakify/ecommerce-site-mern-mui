@@ -121,7 +121,7 @@ export default function SellerDashboard() {
       : setNowShowing(url[8].toUpperCase() + url.slice(9));
   }, [url]);
 
-  console.log(nowShowing);
+  //console.log(nowShowing);
   //Control drawer open or close
   const toggleDrawer = () => {
     setOpen(!open);
@@ -258,7 +258,7 @@ export default function SellerDashboard() {
             }}
           >
             <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
                 <Grid item xs={12} md={8} lg={9}>
@@ -270,6 +270,7 @@ export default function SellerDashboard() {
                       height: 240,
                     }}
                   >
+                    A Chart describing orders followers growth will appear here
                     {/* <Chart /> */}
                   </Paper>
                 </Grid>
@@ -283,6 +284,7 @@ export default function SellerDashboard() {
                       height: 240,
                     }}
                   >
+                    Latest Sells will appear here
                     {/* <Deposits /> */}
                   </Paper>
                 </Grid>
@@ -292,6 +294,7 @@ export default function SellerDashboard() {
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
+                    Last 5 followers
                     {/* <Users /> */}
                   </Paper>
                 </Grid>
@@ -301,6 +304,7 @@ export default function SellerDashboard() {
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
+                    Last 10 orders
                     {/* <Orders /> */}
                   </Paper>
                 </Grid>
