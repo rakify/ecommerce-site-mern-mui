@@ -172,6 +172,7 @@ const App = () => {
             path="/shop/:shopName"
             element={user.accountType !== 1 && <Dashboard />}
           />
+          <Route path="/products/:screen" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
       </Router>
