@@ -1,12 +1,6 @@
-import Home from "./pages/Home";
-import ProductList from "./pages/ProductList";
-import Product from "./pages/Product";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-import Profile from "./pages/Profile";
-import Header from "./components/Header";
-import Checkout from "./pages/Checkout";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,38 +8,25 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Orders from "./pages/Orders";
-import Wishlist from "./pages/Wishlist";
 import {
   getCartProducts,
   getProducts,
   getProductsAsSeller,
   getUser,
 } from "./redux/apiCalls";
-import { forwardRef, useEffect, useState } from "react";
-import SellerOrders from "./pages/SellerOrders";
+import { useEffect, useState } from "react";
 import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
 import Footer from "./components/Footer";
-import Shop from "./pages/Shop";
 import SellerDashboard from "./pages/SellerDashboard";
 import {
   BottomNavigation,
   BottomNavigationAction,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   Drawer,
   Fab,
   Fade,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Paper,
   Stack,
   Toolbar,
@@ -54,9 +35,6 @@ import {
 import { Favorite, Inbox, Mail, ShoppingBag } from "@mui/icons-material";
 import Dashboard from "./pages/Dashboard";
 
-const Transition = forwardRef(function Transition(props, ref) {
-  return <Fade direction="left" ref={ref} {...props} />;
-});
 const drawerWidth = 300;
 const App = () => {
   const dispatch = useDispatch();
@@ -93,63 +71,6 @@ const App = () => {
               )
             }
           />
-
-          {/* <Route
-            path="/products/:category"
-            element={
-              user.accountType === 1 || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : (
-                <ProductList />
-              )
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              !user || user.accountType === 1 || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : (
-                <Cart />
-              )
-            }
-          />
-          <Route
-            path="/wishlist"
-            element={
-              !user || user.accountType === 1 || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : (
-                <Wishlist />
-              )
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              !user || user.accountType === 1 || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : (
-                <Checkout />
-              )
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              !user || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : user.accountType === 1 ? (
-                <SellerOrders />
-              ) : (
-                <Orders />
-              )
-            }
-          />
-          <Route
-            path="/profile"
-            element={user.accountType === 0 && <Profile />}
-          /> */}
           <Route
             path="/login"
             element={user ? <Navigate to="/" /> : <Login />}
@@ -178,7 +99,7 @@ const App = () => {
       </Router>
       <Footer />
 
-      {!cartOpen && (
+      {!cartOpen && user.accountType !== 1 && (
         <Fab
           color="primary"
           aria-label="cart"
@@ -201,7 +122,7 @@ const App = () => {
         </Fab>
       )}
 
-      {!cartOpen && (
+      {!cartOpen && user.accountType !== 1 && (
         <Paper
           sx={{
             display: { xs: "block", sm: "none" },
@@ -222,7 +143,7 @@ const App = () => {
         </Paper>
       )}
 
-      {cartOpen && (
+      {cartOpen && user.accountType !== 1 && (
         <Drawer
           sx={{
             width: drawerWidth,
@@ -250,28 +171,6 @@ const App = () => {
           <Cart />
         </Drawer>
       )}
-
-      {/* <Dialog
-        TransitionComponent={Transition}
-        open={cartOpen}
-        scroll="paper"
-        aria-labelledby="title"
-      >
-        <DialogActions>
-          <Button onClick={() => setCartOpen(false)}>Cancel</Button>
-        </DialogActions>
-        <DialogTitle id="title" variant="h6" sx={{ pb: 1 }}>
-          Cart
-        </DialogTitle>
-        <DialogContent>
-          <Cart />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" component="a" href="/checkout">
-            CHECKOUT NOW
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </>
   );
 };

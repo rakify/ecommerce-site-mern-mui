@@ -93,7 +93,12 @@ const Cart = () => {
       </Dialog>
 
       <Stack direction="column" gap={1}>
-        {cart.products.length === 0 && !cart.error && (
+        {!id && (
+          <Typography sx={{ textAlign: "center", marginTop: 5 }}>
+            You must login to access cart facility. Thank You
+          </Typography>
+        )}
+        {cart.products.length === 0 && !cart.error && id && (
           <Typography sx={{ textAlign: "center", marginTop: 5 }}>
             YOUR CART IS CURRENTLY EMPTY!
           </Typography>
