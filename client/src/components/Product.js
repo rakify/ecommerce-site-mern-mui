@@ -2,10 +2,18 @@ import {
   FavoriteBorderOutlined,
   ShoppingCartOutlined,
   InfoOutlined,
+  Close,
+  Cancel,
 } from "@mui/icons-material";
 import {
   Button,
   ButtonBase,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fade,
   Grid,
   IconButton,
   Paper,
@@ -20,8 +28,13 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { Link } from "@mui/material";
+import Product, { default as ProductPage } from "../pages/Product";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Fade direction="left" ref={ref} {...props} />;
+});
 
 const Img = styled("img")({
   margin: "auto",
@@ -55,10 +68,11 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const Product = ({ item }) => {
+const _Product = ({ item }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
+  const [openProduct, setOpenProduct] = useState(false);
   const [addedToCartMsg, setAddedToCartMsg] = useState(false);
   const [addedToWishlistMsg, setAddedToWishlistMsg] = useState(false);
 
@@ -153,7 +167,8 @@ const Product = ({ item }) => {
             <IconButton
               color="primary"
               size="small"
-              href={`/product/${item._id}`}
+              onClick={() => setOpenProduct(true)}
+              // href={`/product/${item._id}`}
               sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
             >
               <Tooltip title="View Details" placement="top" arrow>
@@ -163,9 +178,8 @@ const Product = ({ item }) => {
           </Stack>
         </Stack>
 
-        <Link
-          href={`/product/${item._id}`}
-          underline="none"
+        <Button
+          onClick={() => setOpenProduct(true)}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -193,8 +207,37 @@ const Product = ({ item }) => {
                 ) + "%"}
             </b>
           </Typography>
-        </Link>
+        </Button>
       </Item>
+
+      <Dialog
+        TransitionComponent={Transition}
+        open={openProduct}
+        onClose={() => setOpenProduct(false)}
+        scroll="body"
+        aria-labelledby="title"
+      >
+        <DialogTitle
+          id="title"
+          variant="h6"
+          sx={{ pb: 1, display: "flex", justifyContent: "space-between" }}
+        >
+          <Typography variant="h4">
+            {item.title}{" "}
+            <Typography variant="subtitle2">ID: {item._id}</Typography>
+          </Typography>{" "}
+          <Chip
+            icon={<Cancel />}
+            label="Cancel"
+            onClick={() => setOpenProduct(false)}
+            color="error"
+            size="small"
+          />
+        </DialogTitle>
+        <DialogContent>
+          <Product productId={item._id} />
+        </DialogContent>
+      </Dialog>
 
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -217,4 +260,4 @@ const Product = ({ item }) => {
   );
 };
 
-export default Product;
+export default _Product;

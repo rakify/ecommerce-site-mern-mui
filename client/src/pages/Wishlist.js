@@ -40,7 +40,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const Wishlist = () => {
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.currentUser?._id);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const [wishlistProducts, setWishlistProducts] = useState([]);
   //Display added to cart message
   const [addedToCartMsg, setAddedToCartMsg] = useState(false);
@@ -51,12 +51,12 @@ const Wishlist = () => {
     deleteWishlist(id);
     setWishlistProducts([]);
     setOpenEmptyWishlistDialog(false);
-    setValue(1);
+    setValue(0);
   };
 
   const handleCloseDialog = () => {
     setOpenEmptyWishlistDialog(false);
-    setValue(1);
+    setValue(0);
   };
 
   const handleChange = (event, newValue) => {
@@ -130,9 +130,6 @@ const Wishlist = () => {
           centered
           sx={{ width: { xs: 300, sm: "100%" } }}
         >
-          <Link href="/cart/" underline="none" color="inherit">
-            <Tab icon={<ShoppingCartOutlined />} label="Cart" />
-          </Link>
           <Tab
             icon={<FavoriteBorderOutlined />}
             label={

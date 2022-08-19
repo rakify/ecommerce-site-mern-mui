@@ -10,6 +10,7 @@ import {
   SpeedDialAction,
   SpeedDialIcon,
   Stack,
+  Typography,
 } from "@mui/material";
 import EditProfile from "../components/EditProfile";
 import ViewProfile from "../components/ViewProfile";
@@ -35,6 +36,7 @@ const Profile = () => {
 
   return (
     <>
+      <Typography variant="h6">Your Profile</Typography>
       <Stack
         direction="row"
         sx={{

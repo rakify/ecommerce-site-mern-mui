@@ -1,9 +1,5 @@
 import Carousel from "react-material-ui-carousel";
-import {
-  CardContent,
-  CardMedia,
-  Paper,
-} from "@mui/material";
+import { CardContent, CardMedia, Paper } from "@mui/material";
 
 export default function Offers() {
   const sliderItems = [
@@ -53,14 +49,15 @@ export default function Offers() {
             />{" "} */}
             <CardContent>
               <CardMedia
-                height="100%"
                 component="img"
                 image={item.img}
                 alt="Image"
                 sx={{
-                  cursor:"pointer",
-                  // objectFit: "contain",
-                  // objectPosition: "60% 100%",
+                  cursor: "pointer",
+                  objectFit: "contain",
+                  objectPosition: "60% 100%",
+                  width: "100%",
+                  height: 300,
                 }}
               />
               {/* <Stack

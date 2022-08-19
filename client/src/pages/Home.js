@@ -2,12 +2,13 @@ import Newsletter from "../components/Newsletter";
 import Products from "../components/Products";
 import { Divider, Stack, Typography } from "@mui/material";
 import Offers from "../components/Offers";
+import FlashSale from "../components/FlashSale";
 
 const Home = () => {
   return (
     <>
       <Offers />
-      {/* <FlashSell /> */}
+      <FlashSale />
 
       <Typography variant="h5" sx={{ mt: 2 }}>
         JUST FOR YOU

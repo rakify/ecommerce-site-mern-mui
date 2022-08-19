@@ -162,7 +162,7 @@ const Checkout = () => {
         </Typography>
       )}
       {cart.products.length > 0 && (
-        <Stepper activeStep={activeStep} orientation="vertical">
+        <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((step, index) => (
             <Step key={step.label}>
               <StepLabel

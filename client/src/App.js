@@ -30,6 +30,8 @@ import Footer from "./components/Footer";
 import Shop from "./pages/Shop";
 import SellerDashboard from "./pages/SellerDashboard";
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Button,
   Dialog,
   DialogActions,
@@ -44,11 +46,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Paper,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Inbox, Mail, ShoppingBag } from "@mui/icons-material";
+import { Favorite, Inbox, Mail, ShoppingBag } from "@mui/icons-material";
 import Dashboard from "./pages/Dashboard";
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -91,23 +94,13 @@ const App = () => {
             }
           />
 
-          <Route
+          {/* <Route
             path="/products/:category"
             element={
               user.accountType === 1 || user.accountType === 2 ? (
                 <Navigate to="/" />
               ) : (
                 <ProductList />
-              )
-            }
-          />
-          <Route
-            path="/product/:id"
-            element={
-              user.accountType === 1 || user.accountType === 2 ? (
-                <Navigate to="/" />
-              ) : (
-                <Product />
               )
             }
           />
@@ -156,7 +149,7 @@ const App = () => {
           <Route
             path="/profile"
             element={user.accountType === 0 && <Profile />}
-          />
+          /> */}
           <Route
             path="/login"
             element={user ? <Navigate to="/" /> : <Login />}
@@ -164,10 +157,6 @@ const App = () => {
           <Route
             path="/register"
             element={user ? <Navigate to="/" /> : <Register />}
-          />
-          <Route
-            path="/shop/:shopId"
-            element={user.accountType !== 1 ? <Shop /> : <Navigate to="/" />}
           />
           <Route
             path="/sell-online"
@@ -179,6 +168,11 @@ const App = () => {
             path="/seller/:screen"
             element={user.accountType === 1 && <SellerDashboard />}
           />
+          <Route
+            path="/shop/:shopName"
+            element={user.accountType !== 1 && <Dashboard />}
+          />
+          <Route path="/:screen" element={<Dashboard />} />
         </Routes>
       </Router>
       <Footer />
@@ -188,14 +182,43 @@ const App = () => {
           color="primary"
           aria-label="cart"
           variant="extended"
-          sx={{ position: "fixed", bottom: "50%", right: 16 }}
+          sx={{
+            display: { xs: "none", sm: "block" },
+            position: "fixed",
+            bottom: "50%",
+            right: 16,
+            borderRadius: "20px",
+            height: 70,
+          }}
           onClick={() => setCartOpen(true)}
         >
           <Stack alignItems="center">
-            <ShoppingBag />
+            <ShoppingBag fontSize="large" />
             <Typography>{cart.products.length} Items</Typography>
+            <Typography>৳ {cart.total}</Typography>
           </Stack>
         </Fab>
+      )}
+
+      {!cartOpen && (
+        <Paper
+          sx={{
+            display: { xs: "block", sm: "none" },
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}
+          elevation={3}
+        >
+          <BottomNavigation showLabels>
+            <BottomNavigationAction
+              label={`${cart.products.length} Items`}
+              icon={<ShoppingBag color="primary" />}
+              onClick={() => setCartOpen(true)}
+            />
+          </BottomNavigation>
+        </Paper>
       )}
 
       {cartOpen && (

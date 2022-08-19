@@ -31,7 +31,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 
 const Navbar = () => {
   const [catList, setCatList] = useState([]);
-  console.log(catList);
+ 
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {

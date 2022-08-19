@@ -33,10 +33,10 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const Product = () => {
+const Product = ({productId}) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const productId = location.pathname.split("/")[2];
+  // const location = useLocation();
+  // const productId = location.pathname.split("/")[2];
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
@@ -77,12 +77,10 @@ const Product = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Typography variant="h4">{product.title}</Typography>
-        <Typography variant="subtitle2">ID: {product._id}</Typography>
-
+     
         <Stack
-          direction="row"
-          sx={{ flexDirection: { xs: "column", sm: "row" } }}
+          direction="column"
+          // sx={{ flexDirection: { xs: "column", sm: "row" } }}
           spacing={2}
           justifyContent="space-between"
         >
@@ -235,10 +233,10 @@ const Product = () => {
           </Stack>
         </Stack>
       </Container>
-      <Typography sx={{ ml: 5, mt: 5 }} variant="h6">
+      {/* <Typography sx={{ ml: 5, mt: 5 }} variant="h6">
         You may also like
       </Typography>
-      <Products cat={product.cat[0].value} limit={3} />
+      <Products cat={product.cat[0].value} limit={3} /> */}
 
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

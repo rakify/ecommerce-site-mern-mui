@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Box, Grid, Stack, styled, Typography } from "@mui/material";
 import Product from "./Product";
 import { useSelector } from "react-redux";
-import { FeedSharp } from "@mui/icons-material";
 import { getProductsAsCategory } from "../redux/apiCalls";
 
 const Select = styled("select")(({ theme }) => ({
@@ -20,7 +19,7 @@ const Products = ({ cat, limit }) => {
     getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
   }, [cat]);
 
-  console.log(filteredProducts)
+  // console.log(filteredProducts)
 
   useEffect(() => {
     if (sort === "newest") {
@@ -40,26 +39,30 @@ const Products = ({ cat, limit }) => {
 
   return (
     <>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        sx={{ bgcolor: "whitesmoke" }}
-      >
-        <Box flex={7} p={2}>
-          <Grid container columns={10} sx={{}}>
-            {" "}
-            {/* 10 columns thus each with size 2 = 5 items in a column */}
-            {cat
-              ? filteredProducts
-                  .slice(0, limit)
-                  .map((item) => <Product item={item} key={item._id} />)
-              : products
-                  .slice(0, limit)
-                  .map((item) => <Product item={item} key={item._id} />)}
-          </Grid>
-        </Box>
-      </Stack>
+      {cat && filteredProducts.length === 0 ? (
+        <Typography>No products available yet under this category.</Typography>
+      ) : (
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          sx={{ bgcolor: "whitesmoke" }}
+        >
+          <Box flex={7} p={2}>
+            <Grid container columns={10} sx={{}}>
+              {" "}
+              {/* 10 columns thus each with size 2 = 5 items in a column */}
+              {cat
+                ? filteredProducts
+                    .slice(0, limit)
+                    .map((item) => <Product item={item} key={item._id} />)
+                : products
+                    .slice(0, limit)
+                    .map((item) => <Product item={item} key={item._id} />)}
+            </Grid>
+          </Box>
+        </Stack>
+      )}
     </>
   );
 };
