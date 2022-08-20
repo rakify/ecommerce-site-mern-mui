@@ -33,9 +33,8 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const Product = () => {
+const ProductQuickView = ({ productId }) => {
   const navigate = useNavigate();
-  const productId = useParams().productId;
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
@@ -82,10 +81,6 @@ const Product = () => {
           spacing={2}
           justifyContent="space-between"
         >
-          <Typography variant="h4">
-            {product.title}{" "}
-            <Typography variant="subtitle2">ID: {product._id}</Typography>
-          </Typography>{" "}
           <Stack
             alignItems="center"
             justifyContent="space-between"
@@ -214,33 +209,9 @@ const Product = () => {
                 </Link>
               </Typography>
             </Stack>
-            <Stack>
-              <Typography variant="h5">
-                <GppGood />
-                Top rated seller
-              </Typography>
-              <Typography>
-                Trusted seller, fast shipping and easy returns. You can shop
-                with confidence.
-              </Typography>
             </Stack>
-            <Stack>
-              <Typography variant="h5">
-                <SecurityUpdateGood />
-                Money Back Gurantee
-              </Typography>
-              <Typography>
-                Get the product you ordered or get full refund.
-              </Typography>
-            </Stack>
-          </Stack>
         </Stack>
       </Container>
-
-      <Typography sx={{mt: 5 }} variant="h5">
-        You may also like
-      </Typography>
-      <Products cat={product.cat[0].value} limit={3} />
 
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -263,4 +234,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductQuickView;

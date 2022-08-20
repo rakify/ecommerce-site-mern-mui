@@ -13,7 +13,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Navbar from "../components/Navbar";
 import Home from "./Home";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCats, logout } from "../redux/apiCalls";
 import Checkout from "./Checkout";
@@ -23,6 +28,11 @@ import {
   Avatar,
   Badge,
   Breadcrumbs,
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   InputAdornment,
   InputBase,
   Link,
@@ -33,6 +43,7 @@ import {
 } from "@mui/material";
 import {
   AccountCircle,
+  Cancel,
   Favorite,
   Inventory,
   LocalFlorist,
@@ -48,6 +59,8 @@ import RegisterSeller from "./RegisterSeller";
 import { useSelector } from "react-redux";
 import Wishlist from "./Wishlist";
 import Shop from "./Shop";
+import NotFoundPage from "./NotFoundPage";
+import Product from "./Product";
 
 const drawerWidth = 170;
 
@@ -84,6 +97,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       }),
       marginLeft: 0,
     }),
+
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
   })
 );
 
@@ -138,6 +155,7 @@ export default function Dashboard() {
   const [nowShowing, setNowShowing] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   document.title =
     nowShowing === "" ? "Bettermart" : nowShowing + " - Bettermart";
@@ -153,13 +171,21 @@ export default function Dashboard() {
 
   const screen = useParams().screen;
   const shopName = useParams().shopName;
+  const categoryName = useParams().categoryName;
+  const productId = useParams().productId;
 
+  // console.log(productId, shopName, categoryName, screen);
   //Control which screen is displaying
   useEffect(() => {
     !screen
       ? setNowShowing("")
+      : (screen === "login" ||
+          screen === "register" ||
+          screen === "sell-online") &&
+        user !== ""
+      ? navigate("/")
       : setNowShowing(screen[0].toUpperCase() + screen.slice(1));
-  }, [screen]);
+  }, [screen, user, navigate]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -216,16 +242,11 @@ export default function Dashboard() {
             </Search>
 
             {user === "" && (
-              <>
-                <Stack direction="column" justifyContent="space-between">
-                  <Link href="/login" underline="hover" color="inherit">
-                    <p>Login</p>
-                  </Link>
-                  <Link href="/register" underline="hover" color="inherit">
-                    <p>Register</p>
-                  </Link>
-                </Stack>
-              </>
+              <Stack direction="column" justifyContent="space-between">
+                <Button component="a" href="/login" color="inherit">
+                  <Typography variant="overline">Sign In</Typography>
+                </Button>
+              </Stack>
             )}
 
             {user && (
@@ -281,6 +302,10 @@ export default function Dashboard() {
 
           {shopName ? (
             <Shop />
+          ) : categoryName ? (
+            <ProductList />
+          ) : productId ? (
+            <Product />
           ) : nowShowing === "" ? (
             <Home />
           ) : nowShowing === "Checkout" ? (
@@ -298,7 +323,7 @@ export default function Dashboard() {
           ) : nowShowing === "Sell-online" ? (
             <RegisterSeller />
           ) : (
-            <ProductList />
+            <NotFoundPage />
           )}
         </Main>
       </Box>

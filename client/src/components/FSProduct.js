@@ -2,10 +2,6 @@ import styled from "@emotion/styled";
 import { ButtonBase, Stack, Typography } from "@mui/material";
 
 const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
 });
 const FSProduct = ({ item }) => {
   return (
@@ -13,6 +9,7 @@ const FSProduct = ({ item }) => {
       sx={{ flex: 3, padding: { sm: 0, md: 2 } }}
       alignItems="center"
       justifyContent="center"
+      height={150}
     >
       <ButtonBase
         sx={{
@@ -28,7 +25,7 @@ const FSProduct = ({ item }) => {
         <Img
           alt="PRODUCT"
           src={item.img}
-          sx={{ maxWidth: 70, maxHeight: 60 }}
+          style={{ width: "100%", height: "100%" }}
         />
       </ButtonBase>
       <Stack direction="column" justifyContent="center" sx={{ flex: 1 }}>

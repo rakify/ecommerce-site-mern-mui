@@ -34,6 +34,7 @@ import {
 } from "@mui/material";
 import { Favorite, Inbox, Mail, ShoppingBag } from "@mui/icons-material";
 import Dashboard from "./pages/Dashboard";
+import Product from "./pages/Product";
 
 const drawerWidth = 300;
 const App = () => {
@@ -71,18 +72,18 @@ const App = () => {
               )
             }
           />
-          <Route
+          {/* <Route
             path="/login"
-            element={user ? <Navigate to="/" /> : <Login />}
+            element={user ? <Navigate to="/" /> : <Dashboard />}
           />
           <Route
             path="/register"
-            element={user ? <Navigate to="/" /> : <Register />}
+            element={user ? <Navigate to="/" /> : <Dashboard />}
           />
           <Route
             path="/sell-online"
-            element={user ? <Navigate to="/" /> : <RegisterSeller />}
-          />
+            element={user ? <Navigate to="/" /> : <Dashboard />}
+          /> */}
 
           <Route
             exact
@@ -93,7 +94,8 @@ const App = () => {
             path="/shop/:shopName"
             element={user.accountType !== 1 && <Dashboard />}
           />
-          <Route path="/products/:screen" element={<Dashboard />} />
+          <Route path="/products/:categoryName" element={<Dashboard />} />
+          <Route path="/product/:productId" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
       </Router>
@@ -111,6 +113,7 @@ const App = () => {
             right: 16,
             borderRadius: "20px",
             height: 70,
+            bgcolor: "#D0C5AC",
           }}
           onClick={() => setCartOpen(true)}
         >

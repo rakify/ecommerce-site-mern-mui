@@ -7,7 +7,7 @@ const Newsletter = () => {
       direction="column"
       justifyContent="center"
       alignItems="center"
-      sx={{ height: "20vh", bgcolor:"#CBF1F5" }}
+      sx={{ bgcolor:"#CBF1F5", flex:1 }}
     >
       <Typography variant="h6" sx={{ marginBottom: "20px" }}>
         Sign Up For 20% Off Your First Order

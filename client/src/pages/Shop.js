@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getSellerDetails, getSellerProducts } from "../redux/apiCalls";
-import Product from "../components/Product";
+import Product from "../components/ProductComponent";
 
 const Shop = () => {
   const location = useLocation();

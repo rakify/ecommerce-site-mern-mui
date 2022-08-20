@@ -1,5 +1,15 @@
 import Carousel from "react-material-ui-carousel";
-import { CardContent, CardMedia, Paper } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 export default function Offers() {
   const sliderItems = [
@@ -27,20 +37,26 @@ export default function Offers() {
     {
       id: 4,
       img: "https://s.alicdn.com/@img/imgextra/i2/O1CN01rYC4hI1lJzSxuJUm1_!!6000000004799-2-tps-990-400.png",
+      title: "Kids LOVE",
+      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 20% OFF ON KIDS LOVE BRAND.",
     },
     {
       id: 5,
       img: "https://s.alicdn.com/@img/imgextra/i2/O1CN01ZM2MjW1hZKHv1l8DM_!!6000000004291-0-tps-990-400.jpg",
+      title: "Kids LOVE",
+      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 20% OFF ON KIDS LOVE BRAND.",
     },
     {
       id: 6,
       img: "https://s.alicdn.com/@img/imgextra/i1/O1CN01Un39pX1QqrxlUkbBG_!!6000000002028-2-tps-990-400.png",
+      title: "Kids LOVE",
+      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 20% OFF ON KIDS LOVE BRAND.",
     },
   ];
 
   return (
     <>
-      <Carousel indicators={true} sx={{}}>
+      <Carousel indicators={true} sx={{ mb: 10 }}>
         {sliderItems.map((item) => (
           <Paper key={item.id} elevation={1}>
             {/* <CardHeader
@@ -60,7 +76,7 @@ export default function Offers() {
                   height: 300,
                 }}
               />
-              {/* <Stack
+              <Stack
                 sx={{
                   position: "absolute",
                   top: "50%",
@@ -69,16 +85,19 @@ export default function Offers() {
               >
                 <Typography gutterBottom variant="h5" component="div">
                   {item.title}
-                </Typography> */}
-              {/* <Typography variant="body2" color="text.secondary">
+                </Typography>{" "}
+                <Typography variant="body2" color="text.secondary">
                   {item.desc}
-                </Typography> */}
-              {/* <CardActions>
-                  <Button variant="contained" sx={{ bgcolor: "black", borderRadius:"50%" }}>
+                </Typography>
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    sx={{ bgcolor: "black", borderRadius: "50%" }}
+                  >
                     Shop Now
                   </Button>
-                </CardActions> */}
-              {/* </Stack> */}
+                </CardActions>
+              </Stack>
             </CardContent>
           </Paper>
         ))}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Grid, Stack, styled, Typography } from "@mui/material";
-import Product from "./Product";
+import Product from "./ProductComponent";
 import { useSelector } from "react-redux";
 import { getProductsAsCategory } from "../redux/apiCalls";
 

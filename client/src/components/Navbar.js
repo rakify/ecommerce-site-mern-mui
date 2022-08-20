@@ -31,7 +31,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 
 const Navbar = () => {
   const [catList, setCatList] = useState([]);
- 
+
   // get categories from api
   useEffect(() => {
     getCats().then((res) => {
@@ -46,7 +46,7 @@ const Navbar = () => {
       <Stack
         justifyContent="space-between"
         sx={{
-          p: 2,
+          padding: 2,
           gap: 2,
           cursor: "grab",
         }}
@@ -62,6 +62,7 @@ const Navbar = () => {
                 alignItems: "center",
               }}
             >
+              <Avatar src={cat.img} sx={{ width: 25, height: 25 }} alt="img" />
               <Typography
                 sx={{
                   display: "flex",
@@ -71,11 +72,6 @@ const Navbar = () => {
                   fontSize: 10,
                 }}
               >
-                <Avatar
-                  src={cat.img}
-                  sx={{ width: 25, height: 25 }}
-                  alt="img"
-                />
                 {cat.label}
               </Typography>
               <ChevronRight />

@@ -31,6 +31,7 @@ import { useDispatch } from "react-redux";
 import { forwardRef, useState } from "react";
 import { Link } from "@mui/material";
 import Product, { default as ProductPage } from "../pages/Product";
+import ProductQuickView from "./ProductQuickView";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade direction="left" ref={ref} {...props} />;
@@ -68,7 +69,7 @@ function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const _Product = ({ item }) => {
+const ProductComponent = ({ item }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
@@ -165,10 +166,10 @@ const _Product = ({ item }) => {
               </Tooltip>
             </IconButton>
             <IconButton
+              component="a"
+              href={`/product/${item._id}`}
               color="primary"
               size="small"
-              onClick={() => setOpenProduct(true)}
-              // href={`/product/${item._id}`}
               sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
             >
               <Tooltip title="View Details" placement="top" arrow>
@@ -235,7 +236,7 @@ const _Product = ({ item }) => {
           />
         </DialogTitle>
         <DialogContent>
-          <Product productId={item._id} />
+          <ProductQuickView productId={item._id} />
         </DialogContent>
       </Dialog>
 
@@ -260,4 +261,4 @@ const _Product = ({ item }) => {
   );
 };
 
-export default _Product;
+export default ProductComponent;
