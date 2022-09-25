@@ -1,11 +1,8 @@
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Cart from "./pages/Cart";
+import Cart from "./pages/user/Cart";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,10 +12,8 @@ import {
   getUser,
 } from "./redux/apiCalls";
 import { useEffect, useState } from "react";
-import RegisterSeller from "./pages/RegisterSeller";
 import ToBeSeller from "./components/ToBeSeller";
-import Footer from "./components/Footer";
-import SellerDashboard from "./pages/SellerDashboard";
+import SellerDashboard from "./pages/seller/SellerDashboard";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -26,15 +21,13 @@ import {
   Divider,
   Drawer,
   Fab,
-  Fade,
   Paper,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Favorite, Inbox, Mail, ShoppingBag } from "@mui/icons-material";
-import Dashboard from "./pages/Dashboard";
-import Product from "./pages/Product";
+import { ShoppingBag } from "@mui/icons-material";
+import Dashboard from "./pages/public/Dashboard";
 
 const drawerWidth = 300;
 const App = () => {
@@ -72,19 +65,6 @@ const App = () => {
               )
             }
           />
-          {/* <Route
-            path="/login"
-            element={user ? <Navigate to="/" /> : <Dashboard />}
-          />
-          <Route
-            path="/register"
-            element={user ? <Navigate to="/" /> : <Dashboard />}
-          />
-          <Route
-            path="/sell-online"
-            element={user ? <Navigate to="/" /> : <Dashboard />}
-          /> */}
-
           <Route
             exact
             path="/seller/:screen"
@@ -99,7 +79,6 @@ const App = () => {
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
       </Router>
-      <Footer />
 
       {!cartOpen && user.accountType !== 1 && (
         <Fab
@@ -112,8 +91,8 @@ const App = () => {
             bottom: "50%",
             right: 16,
             borderRadius: "20px",
-            height: 70,
-            bgcolor: "#D0C5AC",
+            height: 90,
+            bgcolor: "lightblue",
           }}
           onClick={() => setCartOpen(true)}
         >

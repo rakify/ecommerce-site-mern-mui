@@ -9,9 +9,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Footer from "../components/Footer";
+import Footer from "../../components/Footer";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/apiCalls";
+import { login } from "../../redux/apiCalls";
 import { useState } from "react";
 import { Alert, Snackbar } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
@@ -43,7 +43,10 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        maxWidth="xs"
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -99,13 +102,13 @@ export default function Login() {
             <Grid container>
               <Grid item xs>
                 Forgot password?
-                <Link href="#" variant="body2" sx={{ml:1}}>
+                <Link href="#" variant="body2" sx={{ ml: 1 }}>
                   Reset Password
                 </Link>
               </Grid>
               <Grid item>
                 Don't have an account?{" "}
-                <Link href="/register" variant="body2" sx={{ml:1}}>
+                <Link href="/register" variant="body2" sx={{ ml: 1 }}>
                   Sign Up
                 </Link>
               </Grid>

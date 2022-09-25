@@ -128,6 +128,14 @@ export const getSellerProducts = async (seller) => {
     return err;
   }
 };
+export const searchProducts = async (query) => {
+  try {
+    const res = await axios.get(`/products/search?query=${query}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
 
 export const getProductsAsCategory = async (cat) => {
   try {

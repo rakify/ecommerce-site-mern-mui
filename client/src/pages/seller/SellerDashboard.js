@@ -43,14 +43,14 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import Notification from "../components/Notification";
-import ViewProfile from "../components/ViewProfile";
+import Notification from "../../components/Notification";
+import ViewProfile from "../../components/ViewProfile";
 import SellerOrders from "./SellerOrders";
-import SellerProductList from "../components/SellerProductList";
-import EditProfile from "../components/EditProfile";
-import AddressBook from "../components/AddressBook";
-import AddProduct from "../components/AddProduct";
-import { logout } from "../redux/apiCalls";
+import SellerProductList from "../../components/SellerProductList";
+import EditProfile from "../../components/EditProfile";
+import AddressBook from "../../components/AddressBook";
+import AddProduct from "../../components/AddProduct";
+import { logout } from "../../redux/apiCalls";
 
 const drawerWidth = 200;
 

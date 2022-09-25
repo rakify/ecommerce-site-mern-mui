@@ -41,42 +41,106 @@ const Navbar = () => {
 
   return (
     <>
-      <Typography sx={{ pl: 5, fontSize: 15 }}>Categories</Typography>
-      <Divider sx={{ m: 2 }} />
+      <Typography sx={{ m: 2, pl: 5, fontSize: 15 }}>Menu</Typography>
+      <Divider sx={{ mb: 2 }} />
       <Stack
-        justifyContent="space-between"
         sx={{
-          padding: 2,
-          gap: 2,
+          paddingLeft: 2,
+          gap: 1,
           cursor: "grab",
         }}
       >
-        {catList.map((cat) => (
-          <React.Fragment key={cat._id}>
-            <Link
-              underline="hover"
-              href={"/products/" + cat.value}
+        <Link
+          underline="hover"
+          href={"#"}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 1,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <Stack direction="row" gap={1}>
+            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                fontSize: 10,
               }}
             >
+              Offers
+            </Typography>
+          </Stack>
+        </Link>
+        <Link
+          underline="hover"
+          href={"#"}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 1,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <Stack direction="row" gap={1}>
+            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
+            <Typography
+              sx={{
+                fontSize: 10,
+              }}
+            >
+              Flash Sales
+            </Typography>
+          </Stack>
+        </Link>
+        <Link
+          underline="hover"
+          href={"#"}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 1,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <Stack direction="row" gap={1}>
+            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
+            <Typography
+              sx={{
+                fontSize: 10,
+              }}
+            >
+              Popular
+            </Typography>
+          </Stack>
+        </Link>
+        {catList.map((cat) => (
+          <Link
+            key={cat._id}
+            underline="hover"
+            href={"/products/" + cat.value}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 1,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <Stack direction="row" gap={1}>
               <Avatar src={cat.img} sx={{ width: 25, height: 25 }} alt="img" />
               <Typography
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 2,
                   fontSize: 10,
                 }}
               >
                 {cat.label}
               </Typography>
-              <ChevronRight />
-            </Link>
-          </React.Fragment>
+            </Stack>
+            <ChevronRight color="disabled" />
+          </Link>
         ))}
       </Stack>
     </>

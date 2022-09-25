@@ -12,11 +12,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import EditProfile from "../components/EditProfile";
-import ViewProfile from "../components/ViewProfile";
+import EditProfile from "../../components/EditProfile";
+import ViewProfile from "../../components/ViewProfile";
 import { forwardRef, useState } from "react";
 import { useSelector } from "react-redux";
-import AddressBook from "../components/AddressBook";
+import AddressBook from "../../components/AddressBook";
 import { AddRoad, Edit } from "@mui/icons-material";
 
 const Transition = forwardRef(function Transition(props, ref) {

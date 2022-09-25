@@ -2,8 +2,8 @@ import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getSellerDetails, getSellerProducts } from "../redux/apiCalls";
-import Product from "../components/ProductComponent";
+import { getSellerDetails, getSellerProducts } from "../../redux/apiCalls";
+import Product from "../../components/ProductComponent";
 
 const Shop = () => {
   const location = useLocation();

@@ -7,8 +7,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "@firebase/storage";
-import app from "../firebase";
-import { login, register, sendNotification } from "../redux/apiCalls";
+import app from "../../firebase";
+import { login, register } from "../../redux/apiCalls";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,12 +20,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Footer from "../components/Footer";
-import { Shop, Store } from "@mui/icons-material";
+import Footer from "../../components/Footer";
 
 const theme = createTheme();
 
-export default function RegisterSeller() {
+export default function Register() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
@@ -42,16 +41,10 @@ export default function RegisterSeller() {
     e.preventDefault();
     const user = {
       ...inputs,
-      accountType: 2,
     };
     register(user).then((res) => {
       if (res.response) setResponse(res.response.data);
       else {
-        let notification = {
-          from: user,
-          messageSubject: 1,
-        };
-        sendNotification(notification);
         navigate("/login?registerSuccess=1");
       }
     });
@@ -92,7 +85,6 @@ export default function RegisterSeller() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           const user = {
             ...inputs,
-            accountType: 2,
             img: downloadURL,
           };
           register(user).then((res) => {
@@ -108,29 +100,29 @@ export default function RegisterSeller() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 1,
+            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <Store />
+            <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" sx={{ mb: 5 }}>
-            Seller Registration
+          <Typography component="h1" variant="h5">
+            Sign up
           </Typography>
           <Box
             component="form"
             noValidate
             onSubmit={(e) => (file ? handleSubmitWithFile(e) : handleSubmit(e))}
+            sx={{ mt: 1 }}
           >
             <TextField
-              variant="standard"
               autoComplete="given-name"
               name="username"
               required
@@ -139,7 +131,7 @@ export default function RegisterSeller() {
               label="Username"
               autoFocus
               onChange={handleChange}
-              helperText="* username will be used as your shop name, it can not be changed later."
+              variant="standard"
             />
             <TextField
               variant="standard"
@@ -149,16 +141,6 @@ export default function RegisterSeller() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              onChange={handleChange}
-            />
-            <TextField
-              variant="standard"
-              required
-              fullWidth
-              id="phoneNumber"
-              label="Phone Number"
-              name="phoneNumber"
-              autoComplete="phoneNumber"
               onChange={handleChange}
             />
             <TextField
@@ -195,12 +177,19 @@ export default function RegisterSeller() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up as Seller
+              Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="space-between">
               <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Sign in
+                Own Business?
+                <Link href="/sell-online" variant="body2" sx={{ ml: 1 }}>
+                  Register as Seller Instead
+                </Link>
+              </Grid>
+              <Grid item>
+                Already have an account?{" "}
+                <Link href="/login" variant="body2" sx={{ ml: 1 }}>
+                  Sign in
                 </Link>
               </Grid>
             </Grid>

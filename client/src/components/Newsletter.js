@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, TextField, Typography, InputBase } from "@mui/material";
 
 const Newsletter = () => {
   return (
@@ -7,7 +7,7 @@ const Newsletter = () => {
       direction="column"
       justifyContent="center"
       alignItems="center"
-      sx={{ bgcolor:"#CBF1F5", flex:1 }}
+      sx={{ flex: 1 }}
     >
       <Typography variant="h6" sx={{ marginBottom: "20px" }}>
         Sign Up For 20% Off Your First Order
@@ -23,16 +23,22 @@ const Newsletter = () => {
         inbox.)
       </Typography>
       <Stack direction="row" alignItems="center" justifyContent="center">
-        <TextField
-          variant="standard"
-          InputProps={{
-            disableUnderline: true,
+        <input
+          placeholder="Your email"
+          style={{
+            backgroudColor: "lightblue",
+            borderRadius: 5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "center",
+            height: 40,
+            outline: "none",
           }}
-          fullWidth
-          label="Your email"
-          size="smalll"
         />
-        <Button variant="contained">Subscribe</Button>
+        <Button variant="contained" sx={{ width: 100, ml: 1, height: 30 }}>
+          Subscribe
+        </Button>
       </Stack>
     </Stack>
   );

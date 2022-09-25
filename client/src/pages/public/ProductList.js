@@ -1,5 +1,5 @@
 import { Container, Stack, styled, Typography } from "@mui/material";
-import Products from "../components/Products";
+import Products from "../../components/Products";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 

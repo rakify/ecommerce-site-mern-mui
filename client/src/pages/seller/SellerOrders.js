@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getOrdersAsSeller } from "../redux/apiCalls";
+import { getOrdersAsSeller } from "../../redux/apiCalls";
 
 export default function SellerOrders() {
   useEffect(() => {

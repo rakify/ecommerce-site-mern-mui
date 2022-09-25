@@ -6,7 +6,7 @@ import {
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCart, addToCart } from "../redux/apiCalls";
+import { deleteCart, addToCart } from "../../redux/apiCalls";
 import {
   Avatar,
   Button,

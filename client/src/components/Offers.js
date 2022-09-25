@@ -59,28 +59,15 @@ export default function Offers() {
       <Carousel indicators={true} sx={{ mb: 10 }}>
         {sliderItems.map((item) => (
           <Paper key={item.id} elevation={1}>
-            {/* <CardHeader
-              title="Ongoing Offers"
-              avatar={<Avatar sx={{ bgcolor: "red" }}>NEW</Avatar>}
-            />{" "} */}
-            <CardContent>
-              <CardMedia
-                component="img"
-                image={item.img}
-                alt="Image"
-                sx={{
-                  cursor: "pointer",
-                  objectFit: "contain",
-                  objectPosition: "60% 100%",
-                  width: "100%",
-                  height: 300,
-                }}
-              />
+            <CardContent
+              sx={{
+                display: "flex",
+              }}
+            >
               <Stack
                 sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: 10,
+                  flexDirection: "center",
+                  justifyContent: "center",
                 }}
               >
                 <Typography gutterBottom variant="h5" component="div">
@@ -98,6 +85,19 @@ export default function Offers() {
                   </Button>
                 </CardActions>
               </Stack>
+
+              <CardMedia
+                component="img"
+                image={item.img}
+                alt="Image"
+                sx={{
+                  cursor: "pointer",
+                  objectFit: "contain",
+                  objectPosition: "60% 100%",
+                  width: "100%",
+                  height: 400,
+                }}
+              />
             </CardContent>
           </Paper>
         ))}

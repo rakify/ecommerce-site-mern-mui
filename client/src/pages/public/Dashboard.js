@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import Home from "./Home";
 import {
   Navigate,
@@ -20,10 +20,10 @@ import {
   useParams,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCats, logout } from "../redux/apiCalls";
-import Checkout from "./Checkout";
-import Profile from "./Profile";
-import Orders from "./Orders";
+import { getCats, logout, searchProducts } from "../../redux/apiCalls";
+import Checkout from "../user/Checkout";
+import Profile from "../user/Profile";
+import Orders from "../user/Orders";
 import {
   Avatar,
   Badge,
@@ -53,16 +53,17 @@ import {
   Whatshot,
 } from "@mui/icons-material";
 import ProductList from "./ProductList";
-import Login from "./Login";
-import Register from "./Register";
-import RegisterSeller from "./RegisterSeller";
+import Login from "../public/Login";
+import Register from "../public/Register";
+import RegisterSeller from "../public/RegisterSeller";
 import { useSelector } from "react-redux";
-import Wishlist from "./Wishlist";
-import Shop from "./Shop";
-import NotFoundPage from "./NotFoundPage";
-import Product from "./Product";
+import Wishlist from "../user/Wishlist";
+import Shop from "../public/Shop";
+import NotFoundPage from "../public/NotFoundPage";
+import Product from "../public/Product";
+import ProductSearch from "./ProductSearch";
 
-const drawerWidth = 170;
+const drawerWidth = 250;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -83,8 +84,6 @@ const AppBar = styled(MuiAppBar, {
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -95,7 +94,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
-      marginLeft: 0,
+      margin: 0,
     }),
 
     display: "flex",
@@ -154,11 +153,14 @@ export default function Dashboard() {
   const [open, setOpen] = useState(false);
   const [nowShowing, setNowShowing] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [query, setQuery] = useState("");
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
   document.title =
-    nowShowing === "" ? "Bettermart" : nowShowing + " - Bettermart";
+    nowShowing === ""
+      ? "Bettermart - Online Shopping Mall"
+      : nowShowing + " - Bettermart - Online Shopping Mall";
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -174,7 +176,6 @@ export default function Dashboard() {
   const categoryName = useParams().categoryName;
   const productId = useParams().productId;
 
-  // console.log(productId, shopName, categoryName, screen);
   //Control which screen is displaying
   useEffect(() => {
     !screen
@@ -238,6 +239,7 @@ export default function Dashboard() {
                   </InputAdornment>
                 }
                 placeholder="Search..."
+                onChange={(e) => setQuery(e.target.value)}
               ></InputBase>
             </Search>
 
@@ -299,8 +301,9 @@ export default function Dashboard() {
 
         <Main open={open}>
           <DrawerHeader />
-
-          {shopName ? (
+          {query !== "" ? (
+            <ProductSearch query={query} />
+          ) : shopName ? (
             <Shop />
           ) : categoryName ? (
             <ProductList />
@@ -373,23 +376,18 @@ export default function Dashboard() {
             Your Profile
           </Link>
         </MenuItem>
+        <MenuItem>
+          <Link href="/orders/" underline="none" color="inherit">
+            Your Orders
+          </Link>
+        </MenuItem>
         <Divider />
-        {user.accountType === 0 && (
-          <>
-            <MenuItem>
-              <Link href="/orders/" underline="none" color="inherit">
-                Your Orders
-              </Link>
-            </MenuItem>
-            <Divider />
-            <MenuItem>
-              <Link href="/wishlist/" underline="none" color="inherit">
-                Your Wishlist
-              </Link>
-            </MenuItem>
-            <Divider />
-          </>
-        )}
+        <MenuItem>
+          <Link href="/wishlist/" underline="none" color="inherit">
+            Your Wishlist
+          </Link>
+        </MenuItem>
+        <Divider />
         <IconButton onClick={() => logout()}>
           <Tooltip title="Logout">
             <Typography>Logout</Typography>

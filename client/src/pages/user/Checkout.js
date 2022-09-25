@@ -26,7 +26,7 @@ import {
   StepContent,
 } from "@mui/material";
 import { useState } from "react";
-import { addOrder, updateUser } from "../redux/apiCalls";
+import { addOrder, updateUser } from "../../redux/apiCalls";
 import { Box } from "@mui/system";
 
 const steps = [
@@ -146,7 +146,7 @@ const Checkout = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 200,
+    width: "100%",
     bgcolor: "#4bd67b",
     border: "2px solid #000",
     boxShadow: 24,
@@ -162,7 +162,12 @@ const Checkout = () => {
         </Typography>
       )}
       {cart.products.length > 0 && (
-        <Stepper activeStep={activeStep} alternativeLabel>
+        <Stepper
+        nonLinear 
+          activeStep={activeStep}
+          alternativeLabel
+          sx={{width:"90vw"}}
+        >
           {steps.map((step, index) => (
             <Step key={step.label}>
               <StepLabel
@@ -374,9 +379,8 @@ const Checkout = () => {
                 )}
                 {index === 2 && (
                   <Stack
-                    direction="row"
+                    direction="column"
                     justifyContent="space-evenly"
-                    sx={{ flexDirection: { xs: "column", sm: "row" } }}
                   >
                     {/* Delivery Time Slot */}
                     <Box component="form" sx={{ mt: 1 }}>
@@ -515,7 +519,7 @@ const Checkout = () => {
             id="modal-modal-title"
             variant="h4"
             component="h2"
-            sx={{ color: "black", fontWeight:"bolder" }}
+            sx={{ color: "black", fontWeight: "bolder" }}
           >
             Order Placed Successfully
           </Typography>

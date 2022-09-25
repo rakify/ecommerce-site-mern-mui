@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getOrders } from "../redux/apiCalls";
+import { getOrders } from "../../redux/apiCalls";
 
 const Orders = () => {
   const user = useSelector((state) => state.user.currentUser);

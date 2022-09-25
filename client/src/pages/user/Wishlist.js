@@ -8,7 +8,7 @@ import {
   addToCart,
   deleteWishlist,
   getWishlistProducts,
-} from "../redux/apiCalls";
+} from "../../redux/apiCalls";
 import {
   Avatar,
   Button,

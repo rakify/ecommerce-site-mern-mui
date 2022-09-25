@@ -25,9 +25,9 @@ router.post("/", verifyTokenAndSeller, async (req, res) => {
     if (err.code && err.code == 11000) {
       res.status(400).json({
         field: Object.keys(err.keyValue)[0],
-        message: `A product with this ${Object.keys(
-          err.keyValue
-        )[0]} already exists.`,
+        message: `A product with this ${
+          Object.keys(err.keyValue)[0]
+        } already exists.`,
       });
     } else res.status(500).json(err);
   }
@@ -49,14 +49,16 @@ router.put("/:id", verifyTokenAndSeller, async (req, res) => {
       req.body,
       { new: true }
     );
-    res.status(200).json({ message: "Product updated successfully.", data: updatedProduct});
+    res
+      .status(200)
+      .json({ message: "Product updated successfully.", data: updatedProduct });
   } catch (err) {
     if (err.code && err.code == 11000) {
       res.status(400).json({
         field: Object.keys(err.keyValue)[0],
-        message: `A product with this ${Object.keys(
-          err.keyValue
-        )[0]} already exists.`,
+        message: `A product with this ${
+          Object.keys(err.keyValue)[0]
+        } already exists.`,
       });
     } else res.status(500).json(err);
   }
@@ -81,6 +83,23 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     res.status(200).json(product);
   } catch (err) {
     return res.status(500).json(err);
+  }
+});
+
+//SEARCH PRODUCTS
+router.get("/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    let products = await Product.find({
+      slug: {
+        $regex: query,
+      },
+    }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 

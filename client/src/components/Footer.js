@@ -6,7 +6,11 @@ import Link from "@mui/material/Link";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{ textAlign: "center" }}
+    >
       {"Copyright © "}
       <Link
         variant="body2"
@@ -31,10 +35,9 @@ export default function Footer() {
         py: 3,
         px: 2,
         mt: "auto",
-        bgcolor: "#CBF1F5",
       }}
     >
-      <Container maxWidth="sm">
+      <Container maxWidth="xl">
         <Copyright />
       </Container>
     </Box>
