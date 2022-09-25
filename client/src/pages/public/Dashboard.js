@@ -4,7 +4,6 @@ import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -13,26 +12,16 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Navbar from "../../components/Navbar";
 import Home from "./Home";
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCats, logout, searchProducts } from "../../redux/apiCalls";
+import { logout } from "../../redux/apiCalls";
 import Checkout from "../user/Checkout";
 import Profile from "../user/Profile";
 import Orders from "../user/Orders";
 import {
   Avatar,
   Badge,
-  Breadcrumbs,
   Button,
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   InputAdornment,
   InputBase,
   Link,
@@ -41,17 +30,7 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import {
-  AccountCircle,
-  Cancel,
-  Favorite,
-  Inventory,
-  LocalFlorist,
-  LogoutSharp,
-  SearchRounded,
-  ShoppingCart,
-  Whatshot,
-} from "@mui/icons-material";
+import { SearchRounded } from "@mui/icons-material";
 import ProductList from "./ProductList";
 import Login from "../public/Login";
 import Register from "../public/Register";
@@ -302,7 +281,7 @@ export default function Dashboard() {
         <Main open={open}>
           <DrawerHeader />
           {query !== "" ? (
-            <ProductSearch query={query} />
+            <ProductSearch query={query.toLowerCase().split(" ").join("-")} />
           ) : shopName ? (
             <Shop />
           ) : categoryName ? (

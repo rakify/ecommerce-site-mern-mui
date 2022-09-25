@@ -6,10 +6,10 @@ import { searchProducts } from "../../redux/apiCalls";
 
 const ProductSearch = ({ query }) => {
   const [searchResults, setSearchResults] = useState([]);
-  console.log(query);
   useEffect(() => {
-    searchProducts(query).then((res) => setSearchResults(res));
-    console.log(searchResults);
+    searchProducts(query).then((res) =>
+      setSearchResults(res)
+    );
   }, [query]);
   return (
     <>
