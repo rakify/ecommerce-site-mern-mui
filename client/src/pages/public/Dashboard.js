@@ -126,7 +126,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function Dashboard({cartOpen}) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [nowShowing, setNowShowing] = useState("");
@@ -172,12 +172,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <Box sx={{ display: "flex", mr:6 }}>
+      <Box sx={{ display: "flex", width: "calc(100 % -300)" }}>
         <CssBaseline />
-        <AppBar
-          position="fixed"
-          sx={{ zIndex: theme.zIndex.drawer + 1, }}
-        >
+        <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
             <Stack
               direction="row"
@@ -262,7 +259,7 @@ export default function Dashboard() {
         </Drawer>
         <Toolbar />
 
-        <Main open={open}>
+        <Main open={open} sx={{ mr: cartOpen && "350px" }}>
           <DrawerHeader />
           {query !== "" ? (
             <ProductSearch query={query.toLowerCase().split(" ").join("-")} />

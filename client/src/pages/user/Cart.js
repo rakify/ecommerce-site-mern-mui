@@ -1,6 +1,9 @@
 import {
   ArrowDownwardOutlined,
   ArrowUpwardOutlined,
+  Clear,
+  Delete,
+  Store,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCart, addToCart } from "../../redux/apiCalls";
@@ -16,6 +19,8 @@ import {
   DialogActions,
   Slide,
   Checkbox,
+  IconButton,
+  Divider,
 } from "@mui/material";
 import React, { useState } from "react";
 import styled from "@emotion/styled";
@@ -126,36 +131,29 @@ const Cart = () => {
         {cart.products.length > 0 && !cart.error && (
           <Stack
             direction="column"
-            sx={{ maxHeight: "70vh", overflowY: "scroll", overflowX: "hide" }}
+            sx={{
+              height: "70vh",
+              overflowY: "scroll",
+              overflowX: "hide",
+            }}
           >
             {Object.entries(groupedCart).map(([seller, { products }]) => {
               return (
                 <Stack direction="column" key={seller}>
-                  {seller}
+                  <Typography variant="overline" sx={{ bgcolor: "#D2D2CF", pl:1 }}>
+                    {seller}
+                  </Typography>
                   {products.map(
                     ({ productId, title, img, quantity, price, seller }) => (
                       <Stack
                         direction="row"
+                        justifyContent="space-between"
                         sx={{
-                          borderBottom: "1px solid gray",
+                          borderBottom: "0.1px solid #D2D2CF",
                           flexDirection: { xs: "column", sm: "row" },
                         }}
                         key={productId}
                       >
-                        <Checkbox
-                          defaultChecked
-                          onChange={() =>
-                            handleQuantity(
-                              "remove",
-                              productId,
-                              title,
-                              img,
-                              quantity,
-                              price,
-                              seller
-                            )
-                          }
-                        />
                         <Stack
                           direction="column"
                           justifyContent="space-between"
@@ -225,10 +223,26 @@ const Cart = () => {
                               ৳ {price}
                             </Typography>
                           </Stack>
-                          <Typography variant="subtitle2">
+                          <Typography variant="subtitle2" sx={{color:"orangered"}}>
                             ৳ {price * quantity}
                           </Typography>
                         </Stack>
+                        <IconButton
+                          size="large"
+                          onClick={() =>
+                            handleQuantity(
+                              "remove",
+                              productId,
+                              title,
+                              img,
+                              quantity,
+                              price,
+                              seller
+                            )
+                          }
+                        >
+                          <Clear />
+                        </IconButton>
                       </Stack>
                     )
                   )}

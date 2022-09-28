@@ -134,7 +134,7 @@ function Copyright() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ cartOpen }) {
   return (
     <Box
       component="footer"
@@ -142,6 +142,7 @@ export default function Footer() {
         py: 3,
         px: 2,
         mt: "auto",
+        mr: cartOpen && "350px",
       }}
     >
       <LinksAndNewsletter />

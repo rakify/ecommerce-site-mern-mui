@@ -22,11 +22,11 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { ShoppingBag } from "@mui/icons-material";
+import { Cancel, ShoppingBag } from "@mui/icons-material";
 import Dashboard from "./pages/public/Dashboard";
 import Footer from "./components/Footer";
 
-const drawerWidth = 500;
+const drawerWidth = 350;
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser) || 0;
@@ -58,7 +58,7 @@ const App = () => {
               ) : user.accountType === 2 ? (
                 <ToBeSeller />
               ) : (
-                <Dashboard />
+                <Dashboard cartOpen={cartOpen} />
               )
             }
           />
@@ -75,7 +75,7 @@ const App = () => {
           <Route path="/product/:productId" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
-        <Footer />
+        <Footer cartOpen={cartOpen} />
       </Router>
 
       {/* Pc or tab users cart */}
@@ -96,8 +96,8 @@ const App = () => {
             "&:hover": {
               opacity: 1,
               bgcolor: "transparent",
-              height:90,
-              transition:"height 0.5s ease"
+              height: 90,
+              transition: "height 0.5s ease",
             },
           }}
           onClick={() => setCartOpen(true)}
@@ -149,13 +149,27 @@ const App = () => {
           <Toolbar />
           <Divider />
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h6">Your Cart</Typography>
+            <Typography
+              variant="overline"
+              sx={{
+                display: "flex",
+                flexDirection: "center",
+                alignItems: "center",
+                fontWeight: 700,
+                fontSize: 18,
+                gap: 1,
+                fontFamily: "Brush Script MT, cursive",
+                letterSpacing: ".2rem",
+              }}
+            >
+              <ShoppingBag fontSize="large" /> {cart.products.length} Items
+            </Typography>
             <Button
               color="error"
               variant="outlined"
               onClick={() => setCartOpen(!cartOpen)}
             >
-              Close
+              <Cancel />
             </Button>
           </Stack>
           <Cart />
