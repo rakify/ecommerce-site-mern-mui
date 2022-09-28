@@ -1,9 +1,5 @@
 import Cart from "./pages/user/Cart";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCartProducts,
@@ -28,8 +24,9 @@ import {
 } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
 import Dashboard from "./pages/public/Dashboard";
+import Footer from "./components/Footer";
 
-const drawerWidth = 300;
+const drawerWidth = 500;
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser) || 0;
@@ -78,8 +75,10 @@ const App = () => {
           <Route path="/product/:productId" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
+        <Footer />
       </Router>
 
+      {/* Pc or tab users cart */}
       {!cartOpen && user.accountType !== 1 && (
         <Fab
           color="primary"
@@ -89,21 +88,30 @@ const App = () => {
             display: { xs: "none", sm: "block" },
             position: "fixed",
             bottom: "50%",
-            right: 16,
-            borderRadius: "20px",
-            height: 90,
-            bgcolor: "lightblue",
+            right: 0,
+            height: 85,
+            bgcolor: "transparent",
+            color: "blue",
+            opacity: 0.7,
+            "&:hover": {
+              opacity: 1,
+              bgcolor: "transparent",
+              height:90,
+              transition:"height 0.5s ease"
+            },
           }}
           onClick={() => setCartOpen(true)}
         >
-          <Stack alignItems="center">
+          <Stack alignItems="center" justifyContent="center">
             <ShoppingBag fontSize="large" />
             <Typography>{cart.products.length} Items</Typography>
+            <Divider sx={{ width: "100%" }} />
             <Typography>৳ {cart.total}</Typography>
           </Stack>
         </Fab>
       )}
 
+      {/* mobile users cart */}
       {!cartOpen && user.accountType !== 1 && (
         <Paper
           sx={{

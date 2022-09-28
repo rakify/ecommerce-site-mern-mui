@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { ChevronRight } from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   Button,
   ButtonBase,
   Divider,
@@ -40,7 +41,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <>
+    <Box>
       <Typography sx={{ m: 2, pl: 5, fontSize: 15 }}>Menu</Typography>
       <Divider sx={{ mb: 2 }} />
       <Stack
@@ -143,7 +144,7 @@ const Navbar = () => {
           </Link>
         ))}
       </Stack>
-    </>
+    </Box>
   );
 };
 

@@ -56,6 +56,7 @@ const Product = () => {
     img: product.img,
     quantity: quantity,
     price: product.price,
+    seller: product.seller
   };
 
   const handleAddToCart = () => {

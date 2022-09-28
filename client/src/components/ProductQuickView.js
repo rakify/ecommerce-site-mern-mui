@@ -55,6 +55,7 @@ const ProductQuickView = ({ productId }) => {
     img: product.img,
     quantity: quantity,
     price: product.price,
+    seller: product.seller
   };
 
   const handleAddToCart = () => {

@@ -30,7 +30,7 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import { SearchRounded } from "@mui/icons-material";
+import { Logout, SearchRounded } from "@mui/icons-material";
 import ProductList from "./ProductList";
 import Login from "../public/Login";
 import Register from "../public/Register";
@@ -75,7 +75,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       }),
       margin: 0,
     }),
-
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
@@ -167,22 +166,17 @@ export default function Dashboard() {
       : setNowShowing(screen[0].toUpperCase() + screen.slice(1));
   }, [screen, user, navigate]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawer = () => {
+    setOpen(!open);
   };
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", mr:6 }}>
         <CssBaseline />
         <AppBar
           position="fixed"
-          open={open}
-          sx={{ zIndex: theme.zIndex.drawer + 1 }}
+          sx={{ zIndex: theme.zIndex.drawer + 1, }}
         >
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
             <Stack
@@ -193,9 +187,8 @@ export default function Dashboard() {
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
-                onClick={handleDrawerOpen}
+                onClick={handleDrawer}
                 edge="start"
-                sx={{ mr: 1, ...(open && { display: "none" }) }}
               >
                 <MenuIcon />
               </IconButton>
@@ -264,16 +257,7 @@ export default function Dashboard() {
           anchor="left"
           open={open}
         >
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
+          <DrawerHeader />
           <Navbar />
         </Drawer>
         <Toolbar />
@@ -367,10 +351,12 @@ export default function Dashboard() {
           </Link>
         </MenuItem>
         <Divider />
-        <IconButton onClick={() => logout()}>
-          <Tooltip title="Logout">
-            <Typography>Logout</Typography>
-          </Tooltip>
+        <IconButton
+          sx={{ display: "flex", color: "red" }}
+          onClick={() => logout()}
+        >
+          <Logout />
+          Logout
         </IconButton>
       </Menu>
     </>

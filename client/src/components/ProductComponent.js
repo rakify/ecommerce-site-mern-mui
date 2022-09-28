@@ -83,6 +83,7 @@ const ProductComponent = ({ item }) => {
     img: item.img,
     quantity: 1,
     price: item.price,
+    seller: item.seller,
   };
 
   const handleAddToCart = () => {

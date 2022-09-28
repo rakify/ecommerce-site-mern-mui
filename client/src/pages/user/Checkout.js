@@ -1,4 +1,3 @@
-import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -17,9 +16,6 @@ import {
   Select,
   MenuItem,
   Modal,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Stepper,
   Step,
   StepLabel,

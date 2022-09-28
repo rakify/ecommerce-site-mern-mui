@@ -3,6 +3,113 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
+import { Button, Stack } from "@mui/material";
+
+function LinksAndNewsletter() {
+  return (
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      sx={{ bgcolor: "#2E2E54", color: "white", padding: 1, flex: 3 }}
+    >
+      <Stack flex={1}>
+        <Stack>
+          <Typography variant="h5">About Us</Typography>
+          <Link variant="body2" href="/#about1" underline="hover">
+            Read our blog
+          </Link>
+          <Link variant="body2" href="/#about3" underline="hover">
+            FAQ
+          </Link>
+          <Link variant="body2" href="/#about4" underline="hover">
+            Join us!
+          </Link>
+        </Stack>
+        <Stack>
+          <Typography variant="h5">Earn With Bettermart</Typography>
+          <Link variant="body2" href="/#about1" underline="hover">
+            Sell on Daraz
+          </Link>
+          <Link variant="body2" href="/#about1" underline="hover">
+            Code of Conduct
+          </Link>
+          <Link variant="body2" href="/#about1" underline="hover">
+            Join the Daraz Affiliate Program
+          </Link>
+        </Stack>
+      </Stack>
+      <Stack flex={1}>
+        <Stack>
+          <Typography variant="h5">Customer Care</Typography>
+          <Link variant="body2" href="/#help1" underline="hover">
+            Return policy
+          </Link>
+          <Link variant="body2" href="/#help2" underline="hover">
+            Privacy Policy
+          </Link>
+          <Link variant="body2" href="/#help3" underline="hover">
+            Terms and conditions
+          </Link>
+          <Link variant="body2" href="/#help4" underline="hover">
+            Submit complaint
+          </Link>
+        </Stack>
+        <Stack>
+          <Typography variant="h5">Follow</Typography>
+          <Link variant="body2" href="/#help1" underline="hover">
+            Instagram
+          </Link>
+          <Link variant="body2" href="/#help1" underline="hover">
+            Facebook
+          </Link>
+          <Link variant="body2" href="/#help1" underline="hover">
+            Newsletter
+          </Link>
+        </Stack>
+      </Stack>
+
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        flex={1}
+      >
+        <Typography variant="h6" sx={{ marginBottom: "20px" }}>
+          Sign Up For 20% Off Your First Order
+        </Typography>
+        <Typography
+          sx={{
+            fontWeight: 300,
+            mb: "20px",
+            textAlign: { md: "center" },
+          }}
+        >
+          Hear Updates (Get updates for offers, promo codes directly in your
+          inbox.)
+        </Typography>
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <input
+            placeholder="Your email"
+            style={{
+              backgroudColor: "lightblue",
+              borderRadius: 5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "center",
+              height: 40,
+              outline: "none",
+            }}
+          />
+          <Button variant="contained" sx={{ width: 100, ml: 1, height: 30 }}>
+            Subscribe
+          </Button>
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+}
 
 function Copyright() {
   return (
@@ -37,70 +144,10 @@ export default function Footer() {
         mt: "auto",
       }}
     >
+      <LinksAndNewsletter />
       <Container maxWidth="xl">
         <Copyright />
       </Container>
     </Box>
   );
 }
-
-// import { Container, CssBaseline, Link, Stack, Typography } from "@mui/material";
-// import { Box } from "@mui/system";
-// import React from "react";
-
-// const Footer = () => {
-//   return (
-//     <Box
-//       sx={{
-//         display: "flex",
-//         flexDirection: "column",
-//         color: "white",
-//         bgcolor: "#71C9CE",
-//         minHeight: "100vh",
-//       }}
-//     >
-//       <CssBaseline />
-//       <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="sm">
-//         <Typography variant="h2" component="h1" gutterBottom>
-//           Sticky footer
-//         </Typography>
-//         <Typography variant="h5" component="h2" gutterBottom>
-//           {"Pin a footer to the bottom of the viewport."}
-//           {"The footer will move as the main element of the page grows."}
-//         </Typography>
-//         <Typography variant="body1">Sticky footer placeholder.</Typography>
-//       </Container>
-//       <Box
-//         component="footer"
-//         sx={{
-//           py: 3,
-//           px: 2,
-//           mt: "auto",
-//           backgroundColor: "",
-//         }}
-//       >
-//         <Container maxWidth="sm">
-//           <Typography variant="body1">
-//             My sticky footer can be found here.
-//           </Typography>
-//           <Typography variant="body2" color="text.secondary" align="right">
-//             {"Copyright © "}
-//             <Link
-//               variant="body2"
-//               color="inherit"
-//               href="https://www.linkedin.com/in/rakib-miah/"
-//               underline="hover"
-//               sx={{ fontSize: "large" }}
-//             >
-//               Bettermart
-//             </Link>{" "}
-//             {new Date().getFullYear()}
-//             {"."}
-//           </Typography>
-//         </Container>
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default Footer;

@@ -5,9 +5,10 @@ const {
   verifyTokenAndAdmin,
 } = require("../middlewares/verification");
 
-//CREATE CART
+//CREATE & Update CART
 router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  const { productId, title, img, quantity, price } = req.body;
+  const { productId, title, img, quantity, price, seller } = req.body;
+  console.log(req.body);
   const userId = req.params.id;
 
   try {
@@ -21,14 +22,14 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
         productItem.quantity += quantity;
         if (productItem.quantity <= 0) {
           cart.products.splice(itemIndex, 1);
-          cart.total -= price;
+          cart.total -= price * Math.abs(quantity);
         } else {
           cart.products[itemIndex] = productItem;
           cart.total += price * quantity;
         }
       } else {
         //product does not exists in cart, add new item
-        cart.products.push({ productId, title, img, quantity, price });
+        cart.products.push({ productId, title, img, quantity, price, seller });
         cart.total += price * quantity;
       }
       await cart.save();
@@ -37,7 +38,7 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
       //no cart for user, create new cart
       const newCart = await Cart.create({
         userId,
-        products: [{ productId, title, img, quantity, price }],
+        products: [{ productId, title, img, quantity, price, seller }],
         total: quantity * price,
       });
       return res.status(201).send(newCart);

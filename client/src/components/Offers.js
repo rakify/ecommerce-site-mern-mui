@@ -56,7 +56,7 @@ export default function Offers() {
 
   return (
     <>
-      <Carousel indicators={true} sx={{ mb: 10 }}>
+      <Carousel indicators={false} sx={{ mb: 10 }}>
         {sliderItems.map((item) => (
           <Paper key={item.id} elevation={1}>
             <CardContent
@@ -64,7 +64,7 @@ export default function Offers() {
                 display: "flex",
               }}
             >
-              <Stack
+              {/* <Stack
                 sx={{
                   flexDirection: "center",
                   justifyContent: "center",
@@ -84,7 +84,7 @@ export default function Offers() {
                     Shop Now
                   </Button>
                 </CardActions>
-              </Stack>
+              </Stack> */}
 
               <CardMedia
                 component="img"
@@ -95,7 +95,7 @@ export default function Offers() {
                   objectFit: "contain",
                   objectPosition: "60% 100%",
                   width: "100%",
-                  height: 400,
+                  height: 250,
                 }}
               />
             </CardContent>
