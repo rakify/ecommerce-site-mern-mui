@@ -11,7 +11,7 @@ const Select = styled("select")(({ theme }) => ({
 }));
 const Option = styled("option")(({ theme }) => ({}));
 
-const Products = ({ cat, limit }) => {
+const Products = ({ cartOpen, cat, limit }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sort, setSort] = useState("newest");
@@ -48,19 +48,22 @@ const Products = ({ cat, limit }) => {
           alignItems="flex-start"
           sx={{ bgcolor: "whitesmoke" }}
         >
-          <Box flex={7} p={2}>
-            <Grid container columns={10} sx={{}}>
-              {" "}
-              {/* 10 columns thus each with size 2 = 5 items in a column */}
-              {cat
-                ? filteredProducts
-                    .slice(0, limit)
-                    .map((item) => <Product item={item} key={item._id} />)
-                : products
-                    .slice(0, limit)
-                    .map((item) => <Product item={item} key={item._id} />)}
-            </Grid>
-          </Box>
+          <Grid
+            container
+            rowSpacing={2}
+            columnSpacing={1}
+            columns={{ xs: 5, sm: 10, md: 15, }}
+          >
+            {" "}
+            {/* columns 5 = 1 product */}
+            {cat
+              ? filteredProducts
+                  .slice(0, limit)
+                  .map((item) => <Product item={item} key={item._id} />)
+              : products
+                  .slice(0, limit)
+                  .map((item) => <Product item={item} key={item._id} />)}
+          </Grid>
         </Stack>
       )}
     </>

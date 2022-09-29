@@ -4,14 +4,21 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { Button, Stack } from "@mui/material";
+import { useSelector } from "react-redux";
 
 function LinksAndNewsletter() {
+  const user = useSelector((state) => state.user.currentUser) || "";
   return (
     <Stack
-      direction="row"
       justifyContent="space-between"
-      alignItems="center"
-      sx={{ bgcolor: "#2E2E54", color: "white", padding: 1, flex: 3 }}
+      alignItems="flex-start"
+      sx={{
+        bgcolor: "#2E2E54",
+        color: "white",
+        padding: 1,
+        flex: 3,
+        flexDirection: { sm: "column", md: "row" },
+      }}
     >
       <Stack flex={1}>
         <Stack>
@@ -75,9 +82,11 @@ function LinksAndNewsletter() {
         alignItems="center"
         flex={1}
       >
-        <Typography variant="h6" sx={{ marginBottom: "20px" }}>
-          Sign Up For 20% Off Your First Order
-        </Typography>
+        {user === "" && (
+          <Typography variant="h6" sx={{ marginBottom: "20px" }}>
+            Sign Up For 20% Off Your First Order
+          </Typography>
+        )}
         <Typography
           sx={{
             fontWeight: 300,
@@ -134,19 +143,16 @@ function Copyright() {
   );
 }
 
-export default function Footer({ cartOpen }) {
+export default function Footer() {
   return (
     <Box
       component="footer"
       sx={{
-        py: 3,
-        px: 2,
         mt: "auto",
-        mr: cartOpen && "350px",
       }}
     >
       <LinksAndNewsletter />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ pb: { sm: 20, md: 0 } }}>
         <Copyright />
       </Container>
     </Box>

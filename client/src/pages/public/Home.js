@@ -2,9 +2,9 @@ import Products from "../../components/Products";
 import { Divider, Typography } from "@mui/material";
 import Offers from "../../components/Offers";
 import FlashSale from "../../components/FlashSale";
+import Footer from "../../components/Footer";
 
-
-const Home = () => {
+const Home = ({ cartOpen }) => {
   return (
     <>
       <div
@@ -30,7 +30,8 @@ const Home = () => {
         JUST FOR YOU
       </Typography>
       <Divider variant="middle" />
-      <Products />
+      <Products cartOpen={cartOpen} />
+      <Footer />
     </>
   );
 };

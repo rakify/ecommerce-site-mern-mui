@@ -2,14 +2,11 @@ import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Navbar from "../../components/Navbar";
 import Home from "./Home";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +16,7 @@ import Checkout from "../user/Checkout";
 import Profile from "../user/Profile";
 import Orders from "../user/Orders";
 import {
+  AppBar,
   Avatar,
   Badge,
   Button,
@@ -27,8 +25,10 @@ import {
   Link,
   Menu,
   MenuItem,
+  Paper,
   Stack,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import { Logout, SearchRounded } from "@mui/icons-material";
 import ProductList from "./ProductList";
@@ -41,54 +41,10 @@ import Shop from "../public/Shop";
 import NotFoundPage from "../public/NotFoundPage";
 import Product from "../public/Product";
 import ProductSearch from "./ProductSearch";
+import Footer from "../../components/Footer";
 
-const drawerWidth = 250;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme, open }) => ({
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      margin: 0,
-    }),
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-  })
-);
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
+const drawerWidth = 240;
+const transitionDuration = 1000;
 
 const Search = styled("div")(({ theme }) => ({
   width: "40%",
@@ -126,26 +82,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function Dashboard({cartOpen}) {
+export default function Dashboard({ cartOpen }) {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
   const [nowShowing, setNowShowing] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [query, setQuery] = useState("");
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setOpen(!open);
+  };
 
   document.title =
     nowShowing === ""
       ? "Bettermart - Online Shopping Mall"
       : nowShowing + " - Bettermart - Online Shopping Mall";
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const user = useSelector((state) => state.user.currentUser) || "";
 
@@ -164,15 +117,18 @@ export default function Dashboard({cartOpen}) {
         user !== ""
       ? navigate("/")
       : setNowShowing(screen[0].toUpperCase() + screen.slice(1));
-  }, [screen, user, navigate]);
+  }, []);
 
-  const handleDrawer = () => {
-    setOpen(!open);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
     <>
-      <Box sx={{ display: "flex", width: "calc(100 % -300)" }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -184,7 +140,7 @@ export default function Dashboard({cartOpen}) {
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
-                onClick={handleDrawer}
+                onClick={handleMenuClick}
                 edge="start"
               >
                 <MenuIcon />
@@ -241,26 +197,34 @@ export default function Dashboard({cartOpen}) {
             )}
           </Toolbar>
         </AppBar>
+
         <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="left"
+          variant="temporary"
           open={open}
+          transitionDuration={{
+            enter: transitionDuration,
+            exit: transitionDuration,
+          }}
+          PaperProps={{
+            sx: { width: drawerWidth },
+          }}
+          onClose={() => setOpen(!open)}
         >
-          <DrawerHeader />
+          <Toolbar />
           <Navbar />
         </Drawer>
-        <Toolbar />
-
-        <Main open={open} sx={{ mr: cartOpen && "350px" }}>
-          <DrawerHeader />
+        <Box
+          sx={{
+            transition: theme.transitions.create(["width", "padding"], {
+              easing: theme.transitions.easing.easeInOut,
+              duration: transitionDuration,
+            }),
+            paddingLeft: open ? `${drawerWidth}px` : 0,
+            paddingRight: cartOpen ? "350px" : 0,
+            width: open ? `calc(100% - ${drawerWidth}px)` : "100%",
+          }}
+        >
+          <Toolbar />
           {query !== "" ? (
             <ProductSearch query={query.toLowerCase().split(" ").join("-")} />
           ) : shopName ? (
@@ -270,7 +234,7 @@ export default function Dashboard({cartOpen}) {
           ) : productId ? (
             <Product />
           ) : nowShowing === "" ? (
-            <Home />
+            <Home cartOpen={cartOpen} />
           ) : nowShowing === "Checkout" ? (
             <Checkout />
           ) : nowShowing === "Wishlist" ? (
@@ -288,7 +252,7 @@ export default function Dashboard({cartOpen}) {
           ) : (
             <NotFoundPage />
           )}
-        </Main>
+        </Box>
       </Box>
 
       {/* Menu on click profile picture */}

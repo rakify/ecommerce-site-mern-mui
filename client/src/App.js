@@ -75,7 +75,6 @@ const App = () => {
           <Route path="/product/:productId" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
-        <Footer cartOpen={cartOpen} />
       </Router>
 
       {/* Pc or tab users cart */}
@@ -85,7 +84,7 @@ const App = () => {
           aria-label="cart"
           variant="extended"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", md: "block" },
             position: "fixed",
             bottom: "50%",
             right: 0,
@@ -115,11 +114,18 @@ const App = () => {
       {!cartOpen && user.accountType !== 1 && (
         <Paper
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", md: "none" },
             position: "fixed",
-            bottom: 0,
-            left: 0,
+            bottom: "80%",
             right: 0,
+            bgcolor: "transparent",
+            color: "blue",
+            width:50,
+            opacity: 0.7,
+            "&:hover": {
+              opacity: 1,
+              transition: "opacity 1s ease",
+            },
           }}
           elevation={3}
         >
