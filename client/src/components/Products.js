@@ -14,6 +14,7 @@ const Option = styled("option")(({ theme }) => ({}));
 const Products = ({ cartOpen, cat, limit }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [num, setNum] = useState(20);
   const [sort, setSort] = useState("newest");
   useEffect(() => {
     getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
@@ -37,6 +38,11 @@ const Products = ({ cartOpen, cat, limit }) => {
     }
   }, [sort]);
 
+  useEffect(() => {
+    cartOpen && setNum(15);
+    !cartOpen && setNum(20);
+  }, [cartOpen]);
+
   return (
     <>
       {cat && filteredProducts.length === 0 ? (
@@ -52,9 +58,8 @@ const Products = ({ cartOpen, cat, limit }) => {
             container
             rowSpacing={2}
             columnSpacing={1}
-            columns={{ xs: 5, sm: 10, md: 15, }}
+            columns={{ xs: 5, sm: 10, md: num }}
           >
-            {" "}
             {/* columns 5 = 1 product */}
             {cat
               ? filteredProducts

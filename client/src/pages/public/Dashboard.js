@@ -19,7 +19,10 @@ import {
   AppBar,
   Avatar,
   Badge,
+  BottomNavigation,
+  BottomNavigationAction,
   Button,
+  Fab,
   InputAdornment,
   InputBase,
   Link,
@@ -30,7 +33,7 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import { Logout, SearchRounded } from "@mui/icons-material";
+import { Cancel, Logout, SearchRounded, ShoppingBag } from "@mui/icons-material";
 import ProductList from "./ProductList";
 import Login from "../public/Login";
 import Register from "../public/Register";
@@ -42,8 +45,10 @@ import NotFoundPage from "../public/NotFoundPage";
 import Product from "../public/Product";
 import ProductSearch from "./ProductSearch";
 import Footer from "../../components/Footer";
+import Cart from "../user/Cart";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
+const cartDrawerWidth = 350;
 const transitionDuration = 1000;
 
 const Search = styled("div")(({ theme }) => ({
@@ -82,7 +87,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function Dashboard({ cartOpen }) {
+export default function Dashboard() {
+  const cart = useSelector((state) => state.cart);
+
+  const [cartOpen, setCartOpen] = useState(false);
+
+
   const theme = useTheme();
   const [nowShowing, setNowShowing] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -199,7 +209,7 @@ export default function Dashboard({ cartOpen }) {
         </AppBar>
 
         <Drawer
-          variant="temporary"
+          variant="persistent"
           open={open}
           transitionDuration={{
             enter: transitionDuration,
@@ -215,12 +225,12 @@ export default function Dashboard({ cartOpen }) {
         </Drawer>
         <Box
           sx={{
-            transition: theme.transitions.create(["width", "padding"], {
+            transition: theme.transitions.create(["width", "margin"], {
               easing: theme.transitions.easing.easeInOut,
               duration: transitionDuration,
             }),
-            paddingLeft: open ? `${drawerWidth}px` : 0,
-            paddingRight: cartOpen ? "350px" : 0,
+            marginLeft: open ? `${drawerWidth}px` : 0,
+            marginRight: cartOpen ? "350px" : 0,
             width: open ? `calc(100% - ${drawerWidth}px)` : "100%",
           }}
         >
@@ -230,7 +240,7 @@ export default function Dashboard({ cartOpen }) {
           ) : shopName ? (
             <Shop />
           ) : categoryName ? (
-            <ProductList />
+            <ProductList cartOpen={cartOpen} />
           ) : productId ? (
             <Product />
           ) : nowShowing === "" ? (
@@ -320,6 +330,126 @@ export default function Dashboard({ cartOpen }) {
           Logout
         </IconButton>
       </Menu>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {/* Pc or tab users cart */}
+      {!cartOpen && user.accountType !== 1 && (
+        <Fab
+          color="primary"
+          aria-label="cart"
+          variant="extended"
+          sx={{
+            display: { xs: "none", md: "block" },
+            position: "fixed",
+            bottom: "50%",
+            right: 0,
+            height: 85,
+            bgcolor: "transparent",
+            color: "blue",
+            opacity: 0.7,
+            "&:hover": {
+              opacity: 1,
+              bgcolor: "transparent",
+              height: 90,
+              transition: "height 0.5s ease",
+            },
+          }}
+          onClick={() => setCartOpen(true)}
+        >
+          <Stack alignItems="center" justifyContent="center">
+            <ShoppingBag fontSize="large" />
+            <Typography>{cart.products.length} Items</Typography>
+            <Divider sx={{ width: "100%" }} />
+            <Typography>৳ {cart.total}</Typography>
+          </Stack>
+        </Fab>
+      )}
+
+      {/* mobile users cart */}
+      {!cartOpen && user.accountType !== 1 && (
+        <Paper
+          sx={{
+            display: { xs: "block", md: "none" },
+            position: "fixed",
+            bottom: "80%",
+            right: 0,
+            bgcolor: "transparent",
+            color: "blue",
+            width:50,
+            opacity: 0.7,
+            "&:hover": {
+              opacity: 1,
+              transition: "opacity 1s ease",
+            },
+          }}
+          elevation={3}
+        >
+          <BottomNavigation showLabels>
+            <BottomNavigationAction
+              label={`${cart.products.length} Items`}
+              icon={<ShoppingBag color="primary" />}
+              onClick={() => setCartOpen(true)}
+            />
+          </BottomNavigation>
+        </Paper>
+      )}
+
+      {cartOpen && user.accountType !== 1 && (
+        <Drawer
+          sx={{
+            width: cartDrawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: cartDrawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          variant="permanent"
+          anchor="right"
+        >
+          <Toolbar />
+          <Divider />
+          <Stack direction="row" justifyContent="space-between">
+            <Typography
+              variant="overline"
+              sx={{
+                display: "flex",
+                flexDirection: "center",
+                alignItems: "center",
+                fontWeight: 700,
+                fontSize: 18,
+                gap: 1,
+                fontFamily: "Brush Script MT, cursive",
+                letterSpacing: ".2rem",
+              }}
+            >
+              <ShoppingBag fontSize="large" /> {cart.products.length} Items
+            </Typography>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setCartOpen(!cartOpen)}
+            >
+              <Cancel />
+            </Button>
+          </Stack>
+          <Cart />
+        </Drawer>
+      )}
     </>
   );
 }
