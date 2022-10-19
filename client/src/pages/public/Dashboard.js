@@ -240,11 +240,11 @@ export default function Dashboard() {
           ) : shopName ? (
             <Shop />
           ) : categoryName ? (
-            <ProductList cartOpen={cartOpen} />
+            <ProductList cartOpen={cartOpen} open={open} />
           ) : productId ? (
             <Product />
           ) : nowShowing === "" ? (
-            <Home cartOpen={cartOpen} />
+            <Home cartOpen={cartOpen} open={open} />
           ) : nowShowing === "Checkout" ? (
             <Checkout />
           ) : nowShowing === "Wishlist" ? (

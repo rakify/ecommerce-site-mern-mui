@@ -264,7 +264,7 @@ export default function EditProfile() {
             variant="standard"
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
-          
+
           <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
@@ -276,7 +276,7 @@ export default function EditProfile() {
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
 
-<TextField
+          <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
             name="currentCity"
@@ -286,7 +286,7 @@ export default function EditProfile() {
             variant="standard"
           />
 
-<TextField
+          <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
             name="hometown"
@@ -295,8 +295,8 @@ export default function EditProfile() {
             value={inputs.hometown || ""}
             variant="standard"
           />
-          
-           <TextField
+
+          <TextField
             onChange={(e) => handleChange(e)}
             margin="normal"
             name="phoneNumber"

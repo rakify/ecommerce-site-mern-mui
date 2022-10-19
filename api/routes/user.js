@@ -11,6 +11,7 @@ const { updateUserValidation } = require("../middlewares/validation");
 
 //UPDATE USER
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  console.log(req.body);
   const { error } = updateUserValidation(req.body);
 
   if (error) return res.status(400).json(error.details[0]);
@@ -74,9 +75,6 @@ router.get("/username/:username", async (req, res) => {
     const user = await User.findOne({ username: req.params.username }).select(
       "-password"
     );
-
-    console.log(user);
-
     res.status(200).json(user);
   } catch (err) {
     return res.status(500).json({ msg: err });

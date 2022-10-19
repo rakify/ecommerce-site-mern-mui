@@ -56,7 +56,7 @@ export default function Offers() {
 
   return (
     <>
-      <Carousel indicators={false} sx={{ mb: 10 }}>
+      <Carousel indicators={false} sx={{ mb: 10, }}>
         {sliderItems.map((item) => (
           <Paper key={item.id} elevation={1}>
             <CardContent

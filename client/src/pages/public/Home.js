@@ -4,7 +4,7 @@ import Offers from "../../components/Offers";
 import FlashSale from "../../components/FlashSale";
 import Footer from "../../components/Footer";
 
-const Home = ({ cartOpen }) => {
+const Home = ({ cartOpen, open }) => {
   return (
     <>
       <div
@@ -30,7 +30,7 @@ const Home = ({ cartOpen }) => {
         JUST FOR YOU
       </Typography>
       <Divider variant="middle" />
-      <Products cartOpen={cartOpen} />
+      <Products cartOpen={cartOpen} open={open} />
       <Footer />
     </>
   );

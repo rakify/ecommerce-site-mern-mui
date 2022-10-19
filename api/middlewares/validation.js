@@ -118,6 +118,7 @@ module.exports.updateUserValidation = userValidation = (data) => {
       upazila: Joi.string().max(100).min(3).trim().allow(""),
       street: Joi.string().max(300).min(3).allow(""),
     },
+    followedStores: Joi.array().min(0),
   });
   return schema.validate(data);
 };

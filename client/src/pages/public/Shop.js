@@ -1,11 +1,23 @@
-import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getSellerDetails, getSellerProducts } from "../../redux/apiCalls";
 import Product from "../../components/ProductComponent";
+import { Add } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../redux/apiCalls";
 
 const Shop = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser);
   const location = useLocation();
   const shopName = location.pathname.split("/")[2];
   const [products, setProducts] = useState();
@@ -15,9 +27,28 @@ const Shop = () => {
     getSellerProducts(shopName).then((res) => setProducts(res));
     getSellerDetails(shopName).then((res) => setSeller(res));
   }, [shopName]);
+  const handleFollow = () => {
+    let followedStores = [...user.followedStores];
+    //check if seller id exists
+    let itemIndex = followedStores.findIndex((s) => s === seller._id);
+    if (itemIndex > -1) {
+      //seller id exists in the followedStores, remove it
+      followedStores.splice(itemIndex, 1);
+    } else {
+      //seller id does not exists in followedStores, add new
+      followedStores.push(seller._id);
+    }
+    const updatedUser = {
+      ...user,
+      followedStores: followedStores,
+    };
+
+    updateUser(user._id, updatedUser, dispatch);
+  };
 
   return (
-    <Container maxWidth="xl"
+    <Container
+      maxWidth="xl"
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -43,6 +74,11 @@ const Shop = () => {
           {seller?.username}
         </Typography>
       </Box>
+      <Button variant="outlined" startIcon={<Add />} onClick={handleFollow}>
+        {user?.followedStores.includes(seller?._id)
+          ? "Unfollow Shop"
+          : "Follow Shop"}
+      </Button>
       <Stack
         direction="row"
         justifyContent="space-between"

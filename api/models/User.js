@@ -58,14 +58,19 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    coverImg:{
-      type:String,
-      default:"https://images.pexels.com/photos/6156378/pexels-photo-6156378.jpeg"
+    coverImg: {
+      type: String,
+      default:
+        "https://images.pexels.com/photos/6156378/pexels-photo-6156378.jpeg",
     },
     img: {
       type: String,
       default:
         "https://cdn130.picsart.com/293313240032201.jpg?to=crop&type=webp&r=675x1000&q=95",
+    },
+    followedStores: {
+      type: Array,
+      default: [],
     },
     shippingInfo: {
       type: Object,

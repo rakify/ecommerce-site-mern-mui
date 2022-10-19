@@ -11,7 +11,7 @@ const Select = styled("select")(({ theme }) => ({
 }));
 const Option = styled("option")(({ theme }) => ({}));
 
-const Products = ({ cartOpen, cat, limit }) => {
+const Products = ({ cartOpen, open, cat, limit }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [num, setNum] = useState(20);
@@ -37,11 +37,16 @@ const Products = ({ cartOpen, cat, limit }) => {
       );
     }
   }, [sort]);
-
+  console.log(open);
   useEffect(() => {
-    cartOpen && setNum(15);
-    !cartOpen && setNum(20);
-  }, [cartOpen]);
+    cartOpen && open
+      ? setNum(10)
+      : open && !cartOpen
+      ? setNum(15)
+      : cartOpen && !open
+      ? setNum(15)
+      : setNum(20);
+  }, [cartOpen, open]);
 
   return (
     <>
