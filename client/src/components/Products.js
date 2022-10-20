@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Grid, Stack, styled, Typography } from "@mui/material";
 import Product from "./ProductComponent";
 import { useSelector } from "react-redux";
-import { getProductsAsCategory } from "../redux/apiCalls";
+import { getProductsAsCategory, getSellerProducts } from "../redux/apiCalls";
 
 const Select = styled("select")(({ theme }) => ({
   padding: "5px",
@@ -11,33 +11,34 @@ const Select = styled("select")(({ theme }) => ({
 }));
 const Option = styled("option")(({ theme }) => ({}));
 
-const Products = ({ cartOpen, open, cat, limit }) => {
+const Products = ({ cartOpen, open, cat, limit, shopName, sort }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [num, setNum] = useState(20);
-  const [sort, setSort] = useState("newest");
   useEffect(() => {
-    getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
+    cat && getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
   }, [cat]);
 
-  // console.log(filteredProducts)
+  useEffect(() => {
+    shopName &&
+      getSellerProducts(shopName).then((res) => setFilteredProducts(res));
+  }, [shopName]);
 
   useEffect(() => {
-    if (sort === "newest") {
+    sort === "newest" &&
       setFilteredProducts((prev) =>
         [...prev].sort((a, b) => a.createdAt - b.createdAt)
       );
-    } else if (sort === "asc") {
+    sort === "asc" &&
       setFilteredProducts((prev) =>
         [...prev].sort((a, b) => a.price - b.price)
       );
-    } else {
+    sort === "desc" &&
       setFilteredProducts((prev) =>
         [...prev].sort((a, b) => b.price - a.price)
       );
-    }
   }, [sort]);
-  console.log(open);
+
   useEffect(() => {
     cartOpen && open
       ? setNum(10)
@@ -52,6 +53,8 @@ const Products = ({ cartOpen, open, cat, limit }) => {
     <>
       {cat && filteredProducts.length === 0 ? (
         <Typography>No products available yet under this category.</Typography>
+      ) : shopName && filteredProducts.length === 0 ? (
+        <Typography>No products available yet under this shop.</Typography>
       ) : (
         <Stack
           direction="row"
@@ -66,7 +69,7 @@ const Products = ({ cartOpen, open, cat, limit }) => {
             columns={{ xs: 5, sm: 10, md: num }}
           >
             {/* columns 5 = 1 product */}
-            {cat
+            {cat || shopName
               ? filteredProducts
                   .slice(0, limit)
                   .map((item) => <Product item={item} key={item._id} />)

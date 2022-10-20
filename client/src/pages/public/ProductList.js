@@ -24,20 +24,10 @@ const Select = styled("select")(({ theme }) => ({
 }));
 const Option = styled("option")(({ theme }) => ({}));
 
-const ProductList = () => {
+const ProductList = ({ cartOpen, open }) => {
   const location = useLocation();
   const cat = location.pathname.split("/")[2];
-  const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("newest");
-
-  const handleFilters = (e) => {
-    const value = e.target.value.toLowerCase();
-    setFilters({
-      ...filters,
-      [e.target.name]: value,
-    });
-  };
-
   return (
     <Container maxWidth="xl">
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -51,7 +41,13 @@ const ProductList = () => {
           </Select>
         </Filter>
       </Stack>
-      <Products cat={cat} filters={filters} sort={sort} limit={30} />
+      <Products
+        cat={cat}
+        sort={sort}
+        limit={30}
+        cartOpen={cartOpen}
+        open={open}
+      />
     </Container>
   );
 };

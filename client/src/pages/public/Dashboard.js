@@ -33,7 +33,12 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import { Cancel, Logout, SearchRounded, ShoppingBag } from "@mui/icons-material";
+import {
+  Cancel,
+  Logout,
+  SearchRounded,
+  ShoppingBag,
+} from "@mui/icons-material";
 import ProductList from "./ProductList";
 import Login from "../public/Login";
 import Register from "../public/Register";
@@ -92,7 +97,6 @@ export default function Dashboard() {
 
   const [cartOpen, setCartOpen] = useState(false);
 
-
   const theme = useTheme();
   const [nowShowing, setNowShowing] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -127,7 +131,7 @@ export default function Dashboard() {
         user !== ""
       ? navigate("/")
       : setNowShowing(screen[0].toUpperCase() + screen.slice(1));
-  }, []);
+  }, [navigate, screen, user]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -238,7 +242,7 @@ export default function Dashboard() {
           {query !== "" ? (
             <ProductSearch query={query.toLowerCase().split(" ").join("-")} />
           ) : shopName ? (
-            <Shop />
+            <Shop cartOpen={cartOpen} open={open} />
           ) : categoryName ? (
             <ProductList cartOpen={cartOpen} open={open} />
           ) : productId ? (
@@ -331,21 +335,6 @@ export default function Dashboard() {
         </IconButton>
       </Menu>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {/* Pc or tab users cart */}
       {!cartOpen && user.accountType !== 1 && (
         <Fab
@@ -389,7 +378,7 @@ export default function Dashboard() {
             right: 0,
             bgcolor: "transparent",
             color: "blue",
-            width:50,
+            width: 50,
             opacity: 0.7,
             "&:hover": {
               opacity: 1,

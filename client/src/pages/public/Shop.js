@@ -14,17 +14,16 @@ import Product from "../../components/ProductComponent";
 import { Add } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/apiCalls";
+import Products from "../../components/Products";
 
-const Shop = () => {
+const Shop = ({ cartOpen, open }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
   const location = useLocation();
   const shopName = location.pathname.split("/")[2];
-  const [products, setProducts] = useState();
   const [seller, setSeller] = useState();
 
   useEffect(() => {
-    getSellerProducts(shopName).then((res) => setProducts(res));
     getSellerDetails(shopName).then((res) => setSeller(res));
   }, [shopName]);
   const handleFollow = () => {
@@ -85,15 +84,15 @@ const Shop = () => {
         alignItems="flex-start"
         sx={{ bgcolor: "whitesmoke" }}
       >
-        <Box flex={7} p={2}>
+        <Products cartOpen={cartOpen} open={open} shopName={shopName} />
+        {/* <Box flex={7} p={2}>
           <Grid container columns={10} sx={{}}>
-            {/* 10 columns thus each with size 2 = 5 items in a column */}
             {products &&
               products
                 .slice(0, 20)
                 .map((item) => <Product item={item} key={item._id} />)}
           </Grid>
-        </Box>
+        </Box> */}
       </Stack>
     </Container>
   );
