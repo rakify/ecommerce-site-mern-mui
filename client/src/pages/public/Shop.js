@@ -73,11 +73,13 @@ const Shop = ({ cartOpen, open }) => {
           {seller?.username}
         </Typography>
       </Box>
-      <Button variant="outlined" startIcon={<Add />} onClick={handleFollow}>
-        {user?.followedStores.includes(seller?._id)
-          ? "Unfollow Shop"
-          : "Follow Shop"}
-      </Button>
+      {user && (
+        <Button variant="outlined" startIcon={<Add />} onClick={handleFollow}>
+          {user?.followedStores.includes(seller?._id)
+            ? "Unfollow Shop"
+            : "Follow Shop"}
+        </Button>
+      )}
       <Stack
         direction="row"
         justifyContent="space-between"

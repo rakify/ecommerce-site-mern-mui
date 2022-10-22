@@ -28,6 +28,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
 import Products from "../components/Products";
+import Review from "../pages/user/Review";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
@@ -55,7 +56,7 @@ const ProductQuickView = ({ productId }) => {
     img: product.img,
     quantity: quantity,
     price: product.price,
-    seller: product.seller
+    seller: product.seller,
   };
 
   const handleAddToCart = () => {
@@ -166,7 +167,7 @@ const ProductQuickView = ({ productId }) => {
               </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <Typography variant="h6">Categories:</Typography>
+              <Typography variant="button">Categories:</Typography>
               {product.cat.map((item) => (
                 <Link
                   key={item}
@@ -178,7 +179,7 @@ const ProductQuickView = ({ productId }) => {
                 </Link>
               ))}
             </Stack>
-            <Typography variant="h6">Description:</Typography>
+            <Typography variant="button">Description:</Typography>
             <Typography variant="body1">
               {desc.map((item) => (
                 <li key={item}>{item}</li>
@@ -191,11 +192,12 @@ const ProductQuickView = ({ productId }) => {
                 : "This product can not be returned."}
             </li>
           </Stack>
+          <Review productId={product._id} />
           <Stack flex={1} gap={4}>
             <Stack>
-              <Typography variant="h4">Seller Information</Typography>
+              <Typography>Seller Information</Typography>
               <Divider />
-              <Typography variant="h6" sx={{ mt: 1 }}>
+              <Typography sx={{ mt: 1 }}>
                 {product.seller}
                 <Typography variant="caption">
                   {" "}
@@ -210,7 +212,7 @@ const ProductQuickView = ({ productId }) => {
                 </Link>
               </Typography>
             </Stack>
-            </Stack>
+          </Stack>
         </Stack>
       </Container>
 

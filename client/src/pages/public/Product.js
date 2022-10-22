@@ -28,6 +28,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../../redux/apiCalls";
 import Products from "../../components/Products";
+import Review from "../user/Review";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
@@ -56,7 +57,7 @@ const Product = () => {
     img: product.img,
     quantity: quantity,
     price: product.price,
-    seller: product.seller
+    seller: product.seller,
   };
 
   const handleAddToCart = () => {
@@ -83,7 +84,7 @@ const Product = () => {
           spacing={2}
           justifyContent="space-between"
         >
-          <Typography variant="h4">
+          <Typography variant="button">
             {product.title}{" "}
             <Typography variant="subtitle2">ID: {product._id}</Typography>
           </Typography>{" "}
@@ -171,7 +172,7 @@ const Product = () => {
               </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <Typography variant="h6">Categories:</Typography>
+              <Typography variant="button">Categories:</Typography>
               {product.cat.map((item) => (
                 <Link
                   key={item}
@@ -183,7 +184,7 @@ const Product = () => {
                 </Link>
               ))}
             </Stack>
-            <Typography variant="h6">Description:</Typography>
+            <Typography variant="button">Description:</Typography>
             <Typography variant="body1">
               {desc.map((item) => (
                 <li key={item}>{item}</li>
@@ -196,11 +197,12 @@ const Product = () => {
                 : "This product can not be returned."}
             </li>
           </Stack>
+          <Review productId={productId} />
           <Stack flex={1} gap={4}>
             <Stack>
-              <Typography variant="h4">Seller Information</Typography>
+              <Typography variant="button">Seller Information</Typography>
               <Divider />
-              <Typography variant="h6" sx={{ mt: 1 }}>
+              <Typography variant="button" sx={{ mt: 1 }}>
                 {product.seller}
                 <Typography variant="caption">
                   {" "}
@@ -238,7 +240,7 @@ const Product = () => {
         </Stack>
       </Container>
 
-      <Typography sx={{mt: 5 }} variant="h5">
+      <Typography sx={{ mt: 5 }} variant="h5">
         You may also like
       </Typography>
       <Products cat={product.cat[0].value} limit={3} />

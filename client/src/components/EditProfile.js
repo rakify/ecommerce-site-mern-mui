@@ -297,17 +297,6 @@ export default function EditProfile() {
           />
 
           <TextField
-            onChange={(e) => handleChange(e)}
-            margin="normal"
-            name="phoneNumber"
-            label="Phone Number"
-            id="phoneNumber"
-            value={inputs.phoneNumber || ""}
-            variant="standard"
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          />
-
-          <TextField
             select
             onChange={(e) => handleChange(e)}
             margin="normal"

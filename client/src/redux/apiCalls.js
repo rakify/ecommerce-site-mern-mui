@@ -80,6 +80,24 @@ export const getUser = async (id, dispatch) => {
   }
 };
 
+//Reviews
+export const getReviews = async (productId) => {
+  try {
+    const res = await axios.get(`/reviews/find/${productId}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+export const addReview = async (reviewData) => {
+  try {
+    const res = await axios.post(`/reviews`, reviewData);
+    return res.data.message;
+  } catch (err) {
+    return err.response.data.message;
+  }
+};
+
 //Notifications
 export const getNotifications = async () => {
   try {

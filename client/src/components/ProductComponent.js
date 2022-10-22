@@ -221,10 +221,10 @@ const ProductComponent = ({ item }) => {
       >
         <DialogTitle
           id="title"
-          variant="h6"
+          variant="button"
           sx={{ pb: 1, display: "flex", justifyContent: "space-between" }}
         >
-          <Typography variant="h4">
+          <Typography variant="button">
             {item.title}{" "}
             <Typography variant="subtitle2">ID: {item._id}</Typography>
           </Typography>{" "}
