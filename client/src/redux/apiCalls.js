@@ -292,6 +292,15 @@ export const addOrder = async (order) => {
   }
 };
 
+export const updateOrder = async (orderId, order) => {
+  try {
+    const res = await axios.put(`/orders/${orderId}`, order);
+    return res;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 export const getOrders = async (id) => {
   try {
     const res = await axios.get(`/orders/find/${id}`);

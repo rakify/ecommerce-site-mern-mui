@@ -1,3 +1,6 @@
+// ***** If you make any change in productInfo here u have to change in pages/public/Product component/ProductQuickView component/ProductComponent
+// ***** Also make sure to check api/cart
+
 import {
   ArrowDownwardOutlined,
   ArrowUpwardOutlined,
@@ -35,7 +38,19 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
 
   const groupedCart = cart.products.reduce(
-    (sellers, { productId, title, img, quantity, price, seller }) => {
+    (
+      sellers,
+      {
+        productId,
+        title,
+        img,
+        quantity,
+        price,
+        marketPrice,
+        seller,
+        hasMerchantReturnPolicy,
+      }
+    ) => {
       if (!sellers[seller]) {
         sellers[seller] = {
           products: [],
@@ -47,7 +62,9 @@ const Cart = () => {
         img,
         quantity,
         price,
+        marketPrice,
         seller,
+        hasMerchantReturnPolicy,
       });
       return sellers;
     },
@@ -73,14 +90,18 @@ const Cart = () => {
     img,
     quantity,
     price,
-    seller
+    marketPrice,
+    seller,
+    hasMerchantReturnPolicy
   ) => {
     let productInfo = {
       productId: productId,
       title: title,
       img: img,
       price: price,
+      marketPrice: marketPrice,
       seller: seller,
+      hasMerchantReturnPolicy: hasMerchantReturnPolicy,
     };
     if (type === "dec") {
       productInfo.quantity = -1;
@@ -140,11 +161,23 @@ const Cart = () => {
             {Object.entries(groupedCart).map(([seller, { products }]) => {
               return (
                 <Stack direction="column" key={seller}>
-                  <Typography variant="overline" sx={{ bgcolor: "#D2D2CF", pl:1 }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ bgcolor: "#D2D2CF", pl: 1 }}
+                  >
                     {seller}
                   </Typography>
                   {products.map(
-                    ({ productId, title, img, quantity, price, seller }) => (
+                    ({
+                      productId,
+                      title,
+                      img,
+                      quantity,
+                      price,
+                      marketPrice,
+                      seller,
+                      hasMerchantReturnPolicy,
+                    }) => (
                       <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -170,7 +203,9 @@ const Cart = () => {
                                 img,
                                 quantity,
                                 price,
-                                seller
+                                marketPrice,
+                                seller,
+                                hasMerchantReturnPolicy
                               )
                             }
                           >
@@ -189,7 +224,9 @@ const Cart = () => {
                                 img,
                                 quantity,
                                 price,
-                                seller
+                                marketPrice,
+                                seller,
+                                hasMerchantReturnPolicy
                               )
                             }
                           >
@@ -223,7 +260,10 @@ const Cart = () => {
                               ৳ {price}
                             </Typography>
                           </Stack>
-                          <Typography variant="subtitle2" sx={{color:"orangered"}}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ color: "orangered" }}
+                          >
                             ৳ {price * quantity}
                           </Typography>
                         </Stack>
@@ -237,7 +277,9 @@ const Cart = () => {
                               img,
                               quantity,
                               price,
-                              seller
+                              marketPrice,
+                              seller,
+                              hasMerchantReturnPolicy
                             )
                           }
                         >

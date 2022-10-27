@@ -7,7 +7,16 @@ const {
 
 //CREATE & Update CART
 router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  const { productId, title, img, quantity, price, seller } = req.body;
+  const {
+    productId,
+    title,
+    img,
+    quantity,
+    price,
+    seller,
+    marketPrice,
+    hasMerchantReturnPolicy,
+  } = req.body;
   console.log(req.body);
   const userId = req.params.id;
 
@@ -29,7 +38,16 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
         }
       } else {
         //product does not exists in cart, add new item
-        cart.products.push({ productId, title, img, quantity, price, seller });
+        cart.products.push({
+          productId,
+          title,
+          img,
+          quantity,
+          price,
+          marketPrice,
+          seller,
+          hasMerchantReturnPolicy,
+        });
         cart.total += price * quantity;
       }
       await cart.save();
@@ -38,7 +56,18 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
       //no cart for user, create new cart
       const newCart = await Cart.create({
         userId,
-        products: [{ productId, title, img, quantity, price, seller }],
+        products: [
+          {
+            productId,
+            title,
+            img,
+            quantity,
+            price,
+            seller,
+            marketPrice,
+            hasMerchantReturnPolicy,
+          },
+        ],
         total: quantity * price,
       });
       return res.status(201).send(newCart);

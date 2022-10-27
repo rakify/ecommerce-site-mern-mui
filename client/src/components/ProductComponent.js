@@ -83,7 +83,9 @@ const ProductComponent = ({ item }) => {
     img: item.img,
     quantity: 1,
     price: item.price,
+    marketPrice: item.marketPrice,
     seller: item.seller,
+    hasMerchantReturnPolicy: item.hasMerchantReturnPolicy,
   };
 
   const handleAddToCart = () => {

@@ -6,25 +6,10 @@ const OrderSchema = new mongoose.Schema(
       type: Object,
       required: true,
     },
-    products: [
-      {
-        productId: String,
-        title: String,
-        img: String,
-        price: Number,
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-      },
-    ],
+    products: { type: Object, required: true },
     totalAmount: {
       type: Number,
       required: true,
-    },
-    deliveryTimeSlot: {
-      type: String,
-      default: "Not provided",
     },
     paymentMethod: {
       type: String,
@@ -32,14 +17,19 @@ const OrderSchema = new mongoose.Schema(
     },
     orderStatus: {
       type: String,
-      default: "pending",
+      default: "pending", // pending -> approved -> shipped -> outForDelivery -> delivered || cancelled
+    },
+    orderComment: {
+      // if order is cancelled this will contain the reason
+      type: String,
+      default: "",
     },
     shippingInfo: {
       type: Object,
       default: {
         fullName: "",
         phoneNumber: "",
-        email:"",
+        email: "",
         gender: "male",
         division: "",
         distrcit: "",
@@ -52,7 +42,7 @@ const OrderSchema = new mongoose.Schema(
       default: {
         fullName: "",
         phoneNumber: "",
-        email:"",
+        email: "",
         gender: "male",
         division: "",
         distrcit: "",

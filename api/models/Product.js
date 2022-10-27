@@ -49,8 +49,11 @@ const ProductSchema = new mongoose.Schema(
     color: String,
     brand: String,
     weight: String,
-    hasMerchantReturnPolicy: Boolean,
-    model:String,
+    hasMerchantReturnPolicy: {
+      type: Boolean,
+      default: false,
+    },
+    model: String,
     inStock: {
       type: Number,
       default: 0,

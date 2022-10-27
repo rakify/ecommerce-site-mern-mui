@@ -57,7 +57,9 @@ const Product = () => {
     img: product.img,
     quantity: quantity,
     price: product.price,
+    marketPrice: product.marketPrice,
     seller: product.seller,
+    hasMerchantReturnPolicy: product.hasMerchantReturnPolicy,
   };
 
   const handleAddToCart = () => {

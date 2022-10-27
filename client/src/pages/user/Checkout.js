@@ -20,6 +20,7 @@ import {
   Step,
   StepLabel,
   StepContent,
+  Container,
 } from "@mui/material";
 import { useState } from "react";
 import { addOrder, updateUser } from "../../redux/apiCalls";
@@ -68,10 +69,9 @@ const Checkout = () => {
     bDistrict: user.billingInfo.district,
     bUpazila: user.billingInfo.upazila,
     bStreet: user.billingInfo.street,
-
-    deliveryTimeSlot: "",
   });
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -81,46 +81,92 @@ const Checkout = () => {
   // save billing and shipping info to the user object for re-use purpose
   const handleSave = (e) => {
     e.preventDefault();
-    const shippingInfo = {
-      fullName: inputs.sFullName,
-      phoneNumber: inputs.sPhoneNumber,
-      gender: inputs.sGender,
-      division: inputs.sDivision,
-      district: inputs.sDistrict,
-      upazila: inputs.sUpazila,
-      street: inputs.sStreet,
-    };
-    const billingInfo = {
-      fullName: inputs.bFullName,
-      phoneNumber: inputs.bPhoneNumber,
-      gender: inputs.bGender,
-      division: inputs.bDivision,
-      district: inputs.bDistrict,
-      upazila: inputs.bUpazila,
-      street: inputs.bStreet,
-    };
-    const updatedUser = {
-      ...user,
-      shippingInfo,
-      billingInfo,
-    };
-    updateUser(user._id, updatedUser, dispatch).then((res) => {
-      if (res.status === 200) {
-        setSaveSuccess(true);
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      } else setSaveSuccess(false);
-    });
+    if (
+      inputs.sFullName === "" ||
+      inputs.sPhoneNumber === "" ||
+      inputs.sGender === "" ||
+      inputs.sDivision === "" ||
+      inputs.sDistrict === "" ||
+      inputs.sUpazila === "" ||
+      inputs.sStreet === ""
+    ) {
+      setSaveError(true);
+    } else {
+      const shippingInfo = {
+        fullName: inputs.sFullName,
+        phoneNumber: inputs.sPhoneNumber,
+        gender: inputs.sGender,
+        division: inputs.sDivision,
+        district: inputs.sDistrict,
+        upazila: inputs.sUpazila,
+        street: inputs.sStreet,
+      };
+      const billingInfo = {
+        fullName: inputs.bFullName,
+        phoneNumber: inputs.bPhoneNumber,
+        gender: inputs.bGender,
+        division: inputs.bDivision,
+        district: inputs.bDistrict,
+        upazila: inputs.bUpazila,
+        street: inputs.bStreet,
+      };
+      const updatedUser = {
+        ...user,
+        shippingInfo,
+        billingInfo,
+      };
+      updateUser(user._id, updatedUser, dispatch).then((res) => {
+        if (res.status === 200) {
+          setSaveSuccess(true);
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        } else setSaveSuccess(false);
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const groupedCart = cart.products.reduce(
+      (
+        sellers,
+        {
+          productId,
+          title,
+          img,
+          quantity,
+          price,
+          seller,
+          marketPrice,
+          hasMerchantReturnPolicy,
+        }
+      ) => {
+        if (!sellers[seller]) {
+          sellers[seller] = {
+            products: [],
+          };
+        }
+        sellers[seller].products.push({
+          productId,
+          title,
+          img,
+          quantity,
+          price,
+          seller,
+          marketPrice,
+          hasMerchantReturnPolicy,
+        });
+        return sellers;
+      },
+      {}
+    );
+
     const order = {
       user,
       shippingInfo: user.shippingInfo,
       billingInfo: user.billingInfo,
-      products: cart.products,
+      products: groupedCart,
       totalAmount: cart.total,
-      deliveryTimeSlot: inputs.deliveryTimeSlot,
       paymentMethod: "Cash on delivery",
     };
     addOrder(order).then((res) => {
@@ -130,12 +176,6 @@ const Checkout = () => {
       } else setSubmitSuccess(false);
     });
   };
-
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const dayAfterTomorrow = new Date(today);
-  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
 
   const style = {
     position: "absolute",
@@ -150,7 +190,7 @@ const Checkout = () => {
   };
 
   return (
-    <>
+    <Container maxWidth="xl">
       <Typography variant="h6">Checkout</Typography>
       {cart.products.length === 0 && (
         <Typography variant="h5">
@@ -159,10 +199,10 @@ const Checkout = () => {
       )}
       {cart.products.length > 0 && (
         <Stepper
-        nonLinear 
+          nonLinear
           activeStep={activeStep}
           alternativeLabel
-          sx={{width:"90vw"}}
+          sx={{ width: "90vw" }}
         >
           {steps.map((step, index) => (
             <Step key={step.label}>
@@ -178,12 +218,14 @@ const Checkout = () => {
               <StepContent>
                 {index === 0 && (
                   <Stack
-                    direction="row"
-                    justifyContent="space-evenly"
-                    sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                    direction="column"
+                    sx={{
+                      overflow: "auto",
+                      maxWidth: "100%",
+                      maxHeight: "70vh",
+                    }}
                   >
                     {/* Shipping */}
-
                     <Stack direction="column">
                       <Typography variant="h6" color="primary">
                         Shipping Info
@@ -196,6 +238,8 @@ const Checkout = () => {
                         name="sFullName"
                         value={inputs.sFullName || ""}
                         variant="standard"
+                        required
+                        error={inputs.sFullName === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -205,6 +249,9 @@ const Checkout = () => {
                         name="sPhoneNumber"
                         value={inputs.sPhoneNumber || ""}
                         variant="standard"
+                        required
+                        error={inputs.sPhoneNumber === ""}
+                        helperText="Phone number must contain 11 characters"
                       />
                       <TextField
                         select
@@ -216,6 +263,7 @@ const Checkout = () => {
                         name="sGender"
                         value={inputs.sGender || "male"}
                         variant="standard"
+                        required
                       >
                         <MenuItem value="male">Male</MenuItem>
                         <MenuItem value="female">Female</MenuItem>
@@ -228,6 +276,8 @@ const Checkout = () => {
                         name="sDivision"
                         value={inputs.sDivision || ""}
                         variant="standard"
+                        required
+                        error={inputs.sDivision === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -237,6 +287,8 @@ const Checkout = () => {
                         name="sDistrict"
                         value={inputs.sDistrict || ""}
                         variant="standard"
+                        required
+                        error={inputs.sDistrict === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -246,6 +298,8 @@ const Checkout = () => {
                         name="sUpazila"
                         value={inputs.sUpazila || ""}
                         variant="standard"
+                        required
+                        error={inputs.sUpazila === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -255,11 +309,11 @@ const Checkout = () => {
                         name="sStreet"
                         value={inputs.sStreet || ""}
                         variant="standard"
+                        required
+                        error={inputs.sStreet === ""}
                       />
                     </Stack>
-
                     {/* Billing */}
-
                     <Stack direction="column">
                       <Typography variant="h6" color="primary">
                         Billing Info
@@ -272,6 +326,7 @@ const Checkout = () => {
                         name="bFullName"
                         value={inputs.bFullName || ""}
                         variant="standard"
+                        error={inputs.bFullName === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -281,6 +336,8 @@ const Checkout = () => {
                         name="bPhoneNumber"
                         value={inputs.bPhoneNumber || ""}
                         variant="standard"
+                        error={inputs.bPhoneNumber === ""}
+                        helperText="Phone number must contain 11 characters"
                       />
                       <TextField
                         select
@@ -304,6 +361,7 @@ const Checkout = () => {
                         name="bDivision"
                         value={inputs.bDivision || ""}
                         variant="standard"
+                        error={inputs.bDivision === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -313,6 +371,7 @@ const Checkout = () => {
                         name="bDistrict"
                         value={inputs.bDistrict || ""}
                         variant="standard"
+                        error={inputs.bDistrict === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -322,6 +381,7 @@ const Checkout = () => {
                         name="bUpazila"
                         value={inputs.bUpazila || ""}
                         variant="standard"
+                        error={inputs.bUpazila === ""}
                       />
                       <TextField
                         onChange={(e) => handleChange(e)}
@@ -331,6 +391,7 @@ const Checkout = () => {
                         name="bStreet"
                         value={inputs.bStreet || ""}
                         variant="standard"
+                        error={inputs.bStreet === ""}
                       />
                     </Stack>
                   </Stack>
@@ -342,7 +403,7 @@ const Checkout = () => {
                     sx={{
                       overflow: "auto",
                       maxWidth: "100%",
-                      maxHeight: "50vh",
+                      maxHeight: "70vh",
                     }}
                   >
                     {cart.products.map((product) => (
@@ -363,10 +424,14 @@ const Checkout = () => {
                           }}
                         />
                         <Stack>
-                          <Typography>Product: {product.title}</Typography>
-                          <Typography>Quantity: {product.quantity} </Typography>
-                          <Typography>
-                            Price: ৳ {product.price * product.quantity}
+                          <Typography variant="caption">
+                            {product.title}
+                          </Typography>
+                          <Typography variant="caption">
+                            Qty: {product.quantity}{" "}
+                          </Typography>
+                          <Typography variant="caption">
+                            ৳ {product.price * product.quantity}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -374,51 +439,7 @@ const Checkout = () => {
                   </Stack>
                 )}
                 {index === 2 && (
-                  <Stack
-                    direction="column"
-                    justifyContent="space-evenly"
-                  >
-                    {/* Delivery Time Slot */}
-                    <Box component="form" sx={{ mt: 1 }}>
-                      <Typography variant="h6">
-                        Prefered Delivery Timing
-                      </Typography>
-
-                      <FormControl required>
-                        <FormLabel id="demo-controlled-radio-buttons-group">
-                          Select a date when you want us to deliver your
-                          products
-                        </FormLabel>
-                        <RadioGroup
-                          aria-labelledby="demo-controlled-radio-buttons-group"
-                          name="controlled-radio-buttons-group"
-                          aria-required
-                          onChange={(e) => handleChange(e)}
-                        >
-                          <FormControlLabel
-                            name="deliveryTimeSlot"
-                            id="deliveryTimeSlot"
-                            value={today.toDateString()}
-                            control={<Radio />}
-                            label={today.toDateString()}
-                          />
-                          <FormControlLabel
-                            name="deliveryTimeSlot"
-                            id="deliveryTimeSlot"
-                            value={tomorrow.toDateString()}
-                            control={<Radio />}
-                            label={tomorrow.toDateString()}
-                          />
-                          <FormControlLabel
-                            name="deliveryTimeSlot"
-                            id="deliveryTimeSlot"
-                            value={dayAfterTomorrow.toDateString()}
-                            control={<Radio />}
-                            label={dayAfterTomorrow.toDateString()}
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </Box>
+                  <Stack direction="column" justifyContent="space-evenly">
                     <Stack>
                       <Typography variant="h6">Order Summary</Typography>
                       <Typography>Subtotal: ৳ {cart.total}</Typography>
@@ -492,7 +513,7 @@ const Checkout = () => {
         <Typography sx={{ mt: 2, mb: 1 }}>Thanks for your order.</Typography>
       )}
 
-      {/* Shipping Info Save Messages */}
+      {/* Shipping Info Save Success Message */}
       <Snackbar
         open={Boolean(saveSuccess)}
         autoHideDuration={5000}
@@ -505,6 +526,22 @@ const Checkout = () => {
           onClose={() => setSaveSuccess()}
         >
           Shipping & Billing Information Saved Successfully!
+        </Alert>
+      </Snackbar>
+
+      {/* Shipping Info Save Error Message */}
+      <Snackbar
+        open={Boolean(saveError)}
+        autoHideDuration={5000}
+        onClose={() => setSaveError(false)}
+      >
+        <Alert
+          variant="filled"
+          severity="error"
+          sx={{ width: "100%" }}
+          onClose={() => setSaveError(false)}
+        >
+          Shipping info is required.
         </Alert>
       </Snackbar>
 
@@ -527,7 +564,7 @@ const Checkout = () => {
           </Typography>
         </Box>
       </Modal>
-    </>
+    </Container>
   );
 };
 
