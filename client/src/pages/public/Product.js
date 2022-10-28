@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../../redux/apiCalls";
 import Products from "../../components/Products";
 import Review from "../../components/Review";
+import Question from "../../components/Question";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
@@ -79,17 +80,16 @@ const Product = () => {
 
   return (
     <>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Stack
           direction="column"
           // sx={{ flexDirection: { xs: "column", sm: "row" } }}
           spacing={2}
           justifyContent="space-between"
         >
-          <Typography variant="button">
-            {product.title}{" "}
-            <Typography variant="subtitle2">ID: {product._id}</Typography>
-          </Typography>{" "}
+          <Typography variant="h4">{product.title}</Typography>
+
+          <Typography variant="subtitle2">ID: {product._id}</Typography>
           <Stack
             alignItems="center"
             justifyContent="space-between"
@@ -199,7 +199,10 @@ const Product = () => {
                 : "This product can not be returned."}
             </li>
           </Stack>
-          <Review productId={productId} />
+          {/* Reviews will be here */}
+          <Review productId={productId} from="" />
+          {/* Questions will be here */}
+          <Question productId={productId} seller={product.seller} />
           <Stack flex={1} gap={4}>
             <Stack>
               <Typography variant="button">Seller Information</Typography>

@@ -193,7 +193,6 @@ const ProductQuickView = ({ productId }) => {
                 : "This product can not be returned."}
             </li>
           </Stack>
-          <Review productId={product._id} />
           <Stack flex={1} gap={4}>
             <Stack>
               <Typography>Seller Information</Typography>

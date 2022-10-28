@@ -98,6 +98,24 @@ export const addReview = async (reviewData) => {
   }
 };
 
+//Reviews
+export const getQuestions = async (productId) => {
+  try {
+    const res = await axios.get(`/questions/findAnswers/${productId}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+export const addQuestion = async (questionData) => {
+  try {
+    const res = await axios.post(`/questions`, questionData);
+    return res.data.message;
+  } catch (err) {
+    return err.response.data.message;
+  }
+};
+
 //Notifications
 export const getNotifications = async () => {
   try {

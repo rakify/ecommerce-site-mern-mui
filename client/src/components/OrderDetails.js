@@ -23,12 +23,14 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { updateOrder } from "../redux/apiCalls";
+import Review from "./Review";
 
 const OrderDetails = ({ orderDetails }) => {
   const [order, setOrder] = useState(orderDetails);
   const [activeStep, setActiveStep] = useState(0);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const [reviewProduct, setReviewProduct] = useState(null);
 
   let daysPassed =
     (new Date() - new Date(order.updatedAt)) / (1000 * 3600 * 24);
@@ -240,9 +242,12 @@ const OrderDetails = ({ orderDetails }) => {
                         <Stack direction="column" sx={{ w: "20%" }}>
                           {order.orderStatus === "delivered" ? (
                             <Link
-                              href={`/product/${productId}`}
                               underline="hover"
                               variant="caption"
+                              component="button"
+                              onClick={() =>
+                                setReviewProduct({ productId, title, img })
+                              }
                             >
                               Add Review
                             </Link>
@@ -342,6 +347,7 @@ const OrderDetails = ({ orderDetails }) => {
         </Container>
       </Container>
 
+      {/* Cancel Order Section */}
       <Dialog open={cancelModalOpen} onClose={() => setCancelModalOpen(false)}>
         <DialogTitle>Are you sure</DialogTitle>
         <DialogContent>
@@ -362,6 +368,25 @@ const OrderDetails = ({ orderDetails }) => {
         <DialogActions>
           <Button onClick={() => setCancelModalOpen(false)}>Cancel</Button>
           <Button onClick={handleCancelOrder}>Proceed Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Review Section */}
+      <Dialog
+        open={reviewProduct !== null}
+        onClose={() => setReviewProduct(null)}
+      >
+        <DialogTitle>Add Review</DialogTitle>
+        <DialogContent>
+          <Review
+            productId={reviewProduct?.productId}
+            img={reviewProduct?.img}
+            title={reviewProduct?.title}
+            from="order"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setReviewProduct(null)}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

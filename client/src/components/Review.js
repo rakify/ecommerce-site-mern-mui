@@ -11,10 +11,11 @@ import {
   Paper,
   Card,
   CardContent,
+  Avatar,
 } from "@mui/material";
 import { addReview, getReviews } from "../redux/apiCalls";
 
-const Review = ({ productId }) => {
+const Review = ({ productId, from, img, title }) => {
   const user = useSelector((state) => state.user.currentUser);
   const [reviews, setReviews] = useState([]);
   const [inputs, setInputs] = useState({
@@ -41,72 +42,99 @@ const Review = ({ productId }) => {
   };
   return (
     <>
-      <Container>
-        <Typography
-          variant="caption"
-          sx={{ bgcolor: "gray", color: "white", pl: 1, width: 130 }}
-        >
-          Product Reviews
-        </Typography>
-        <Card variant="outlined">
-          {reviews.map((review) => (
-            <CardContent key={review._id}>
-              <Typography>
-                <Rating value={review.rating} readOnly />
-              </Typography>
-              <Typography variant="h5" component="div">
-                {review.title}
-              </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                reviewed on {new Date(review.createdAt).toDateString()} by{" "}
-                <b>{review.username}</b>
-              </Typography>
-              <Typography variant="body2">
-                <q>{review.message}</q>
-              </Typography>
-            </CardContent>
-          ))}
-        </Card>
-        {!user ? (
-          <Typography>You must login first to add review.</Typography>
-        ) : (
-          <Box component="form" onSubmit={reviewHandler}>
-            <Stack
-              direction="column"
-              gap={2}
-              sx={{ width: 500, border: "2px solid whitesmoke" }}
+      <Container maxWidth="md">
+        {from === "" && (
+          <>
+            <Typography
+              variant="caption"
+              sx={{ bgcolor: "gray", color: "white", width: 130 }}
             >
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Typography component="legend">Title:</Typography>
-                <TextField
-                  name="title"
-                  value={inputs.title}
-                  onChange={handleChange}
-                />
+              Reviews {reviews.length > 0 && `(${reviews.length})`}
+            </Typography>
+            {reviews.length === 0 && (
+              <Typography>This product has no reviews.</Typography>
+            )}
+            {reviews.length > 0 && (
+              <Stack sx={{ height: 240, overflowY: "scroll" }}>
+                {reviews.map((review) => (
+                  <Box key={review._id}>
+                    <Typography>
+                      <Rating value={review.rating} readOnly />
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {review.title}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      reviewed on {new Date(review.createdAt).toDateString()} by{" "}
+                      <b>{review.username}</b>
+                    </Typography>
+                    <Typography variant="body2">
+                      <q>{review.message}</q>
+                    </Typography>
+                  </Box>
+                ))}
               </Stack>
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Typography component="legend">Rating:</Typography>
-                <Rating
-                  name="rating"
-                  value={parseInt(inputs.rating)}
-                  onChange={handleChange}
-                />
-              </Stack>
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Typography component="legend">Message:</Typography>
-                <TextField
-                  multiline
-                  minRows={3}
-                  name="message"
-                  value={inputs.message}
-                  onChange={handleChange}
-                />
-              </Stack>
-              <Button type="submit" variant="outlined" sx={{ width: 100 }}>
-                Submit
-              </Button>
+            )}
+          </>
+        )}
+        {/* If from order page show him input to add review */}
+        {from === "order" && (
+          <>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap={2}
+              sx={{ bgcolor: "#d3d3d3" }}
+            >
+              <Avatar
+                alt="Product Image"
+                src={img}
+                sx={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 0,
+                }}
+              />
+              <Typography variant="h6">{title}</Typography>
             </Stack>
-          </Box>
+            <Box component="form" onSubmit={reviewHandler}>
+              <Stack
+                direction="column"
+                gap={2}
+                sx={{ width: 500, border: "2px solid whitesmoke" }}
+              >
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography component="legend">Title:</Typography>
+                  <TextField
+                    name="title"
+                    value={inputs.title}
+                    onChange={handleChange}
+                  />
+                </Stack>
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography component="legend">Rating:</Typography>
+                  <Rating
+                    name="rating"
+                    value={parseInt(inputs.rating)}
+                    onChange={handleChange}
+                  />
+                </Stack>
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography component="legend">Message:</Typography>
+                  <TextField
+                    multiline
+                    minRows={3}
+                    name="message"
+                    value={inputs.message}
+                    onChange={handleChange}
+                  />
+                </Stack>
+                <Button type="submit" variant="outlined" sx={{ width: 100 }}>
+                  Submit
+                </Button>
+              </Stack>
+            </Box>
+          </>
         )}
       </Container>
     </>
