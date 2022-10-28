@@ -112,6 +112,10 @@ const ProductComponent = ({ item }) => {
             "& .details": {
               opacity: 1,
               height: 30,
+              webkitTransition: "all 1s linear",
+              mozTransition: "all 1s linear",
+              transition: "all 1s linear",
+              overflow: "hidden",
             },
           },
         }}
@@ -132,20 +136,17 @@ const ProductComponent = ({ item }) => {
             className="details"
             sx={{
               opacity: 0,
-              width: "100%",
+              width: 200,
               height: 0,
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               cursor: "pointer",
-              bgcolor: "white",
+              bgcolor: "transparent",
               pt: 1,
               position: "absolute",
               bottom: 0,
               color: "black",
-              webkitTransition: "all 0.5s linear",
-              mozTransition: "all 0.5s linear",
-              transition: "all 0.5s linear",
             }}
           >
             <IconButton

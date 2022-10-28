@@ -4,24 +4,16 @@ import Product from "./ProductComponent";
 import { useSelector } from "react-redux";
 import { getProductsAsCategory, getSellerProducts } from "../redux/apiCalls";
 
-const Select = styled("select")(({ theme }) => ({
-  padding: "5px",
-  marginRight: "20px",
-  // ${mobile({ margin: "10px 0" })}
-}));
-const Option = styled("option")(({ theme }) => ({}));
-
 const Products = ({ cartOpen, open, cat, limit, shopName, sort }) => {
   const products = useSelector((state) => state.product.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [num, setNum] = useState(20);
+  const [num, setNum] = useState(15);
   useEffect(() => {
     cat && getProductsAsCategory(cat).then((res) => setFilteredProducts(res));
   }, [cat]);
 
   useEffect(() => {
-    shopName &&
-      getSellerProducts(shopName).then((res) => setFilteredProducts(res));
+    getSellerProducts(shopName).then((res) => setFilteredProducts(res));
   }, [shopName]);
 
   useEffect(() => {
@@ -46,7 +38,7 @@ const Products = ({ cartOpen, open, cat, limit, shopName, sort }) => {
       ? setNum(15)
       : cartOpen && !open
       ? setNum(15)
-      : setNum(20);
+      : setNum(15);
   }, [cartOpen, open]);
 
   return (
@@ -56,28 +48,21 @@ const Products = ({ cartOpen, open, cat, limit, shopName, sort }) => {
       ) : shopName && filteredProducts.length === 0 ? (
         <Typography>No products available yet under this shop.</Typography>
       ) : (
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          sx={{ bgcolor: "whitesmoke" }}
+        <Grid
+          container
+          rowSpacing={2}
+          columnSpacing={1}
+          columns={{ xs: 5, sm: 10, md: num }}
         >
-          <Grid
-            container
-            rowSpacing={2}
-            columnSpacing={1}
-            columns={{ xs: 5, sm: 10, md: num }}
-          >
-            {/* columns 5 = 1 product */}
-            {cat || shopName
-              ? filteredProducts
-                  .slice(0, limit)
-                  .map((item) => <Product item={item} key={item._id} />)
-              : products
-                  .slice(0, limit)
-                  .map((item) => <Product item={item} key={item._id} />)}
-          </Grid>
-        </Stack>
+          {/* columns 5 = 1 product */}
+          {cat || shopName
+            ? filteredProducts
+                .slice(0, limit)
+                .map((item) => <Product item={item} key={item._id} />)
+            : products
+                .slice(0, limit)
+                .map((item) => <Product item={item} key={item._id} />)}
+        </Grid>
       )}
     </>
   );

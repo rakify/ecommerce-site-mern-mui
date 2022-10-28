@@ -28,7 +28,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../../redux/apiCalls";
 import Products from "../../components/Products";
-import Review from "../user/Review";
+import Review from "../../components/Review";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;

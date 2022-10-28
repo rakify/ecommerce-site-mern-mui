@@ -27,8 +27,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
-import Products from "../components/Products";
-import Review from "../pages/user/Review";
+import Review from "./Review";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;

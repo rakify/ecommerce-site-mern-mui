@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 import { ButtonBase, Stack, Typography } from "@mui/material";
 
-const Img = styled("img")({
-});
+const Img = styled("img")({});
 const FSProduct = ({ item }) => {
   return (
     <Stack
@@ -32,7 +31,6 @@ const FSProduct = ({ item }) => {
         <Typography variant="subtitle1" component="div">
           ৳{item.price}{" "}
         </Typography>
-        <Typography variant="body2">Trending Now</Typography>
       </Stack>
     </Stack>
   );

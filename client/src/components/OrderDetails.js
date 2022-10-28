@@ -239,7 +239,11 @@ const OrderDetails = ({ orderDetails }) => {
                         </Typography>
                         <Stack direction="column" sx={{ w: "20%" }}>
                           {order.orderStatus === "delivered" ? (
-                            <Link href="" underline="hover" variant="caption">
+                            <Link
+                              href={`/product/${productId}`}
+                              underline="hover"
+                              variant="caption"
+                            >
                               Add Review
                             </Link>
                           ) : (

@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import {
   Button,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Fade,
+  Link,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -23,50 +25,64 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade direction="left" ref={ref} {...props} />;
 });
 
-const actions = [
-  { icon: <Edit />, name: "Edit Profile" },
-  { icon: <AddRoad />, name: "Address Book" },
-];
-
 const Profile = () => {
-  const [editProfileOpen, setEditProfileOpen] = useState(false);
-  const [addressBookOpen, setAddressBookOpen] = useState(false);
+  const [nowShowing, setNowShowing] = useState("My Profile");
 
   const user = useSelector((state) => state.user.currentUser);
 
   return (
-    <>
-      <Typography variant="h6">Your Profile</Typography>
-      <Stack
-        direction="row"
-        sx={{
-          height: "100vh",
-        }}
-      >
-        <ViewProfile />
-
-        <SpeedDial
-          ariaLabel="SpeedDial"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
-          icon={<SpeedDialIcon />}
+    <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ display: "flex", flexDirection: "row" }}>
+        <Stack
+          direction="column"
+          sx={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "flex-start",
+            height: "90vh",
+          }}
         >
-          {actions.map((action) => (
-            <SpeedDialAction
-              onClick={() =>
-                action.name === "Edit Profile"
-                  ? setEditProfileOpen(true)
-                  : action.name === "Address Book"
-                  ? setAddressBookOpen(true)
-                  : ""
-              }
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              tooltipOpen
-            />
-          ))}
-        </SpeedDial>
-
+          <Link
+            variant="button"
+            onClick={() => setNowShowing("My Profile")}
+            underline="none"
+            sx={{ cursor: "pointer" }}
+          >
+            My Profile
+          </Link>
+          <Link
+            variant="button"
+            onClick={() => setNowShowing("Edit Profile")}
+            sx={{ cursor: "pointer" }}
+            underline="none"
+          >
+            Edit Profile
+          </Link>
+          <Link
+            variant="button"
+            onClick={() => setNowShowing("Address Book")}
+            underline="none"
+            sx={{ cursor: "pointer" }}
+          >
+            Address Book
+          </Link>
+        </Stack>
+        <Stack
+          sx={{
+            flex: 9,
+          }}
+        >
+          <Typography variant="h6">{nowShowing}</Typography>
+          <Stack sx={{ bgcolor: "white", height: "80vh", overflowY: "scroll" }}>
+            {nowShowing === "My Profile" ? (
+              <ViewProfile />
+            ) : nowShowing === "Edit Profile" ? (
+              <EditProfile />
+            ) : (
+              nowShowing === "Address Book" && <AddressBook />
+            )}
+          </Stack>
+          {/* 
         <Dialog
           TransitionComponent={Transition}
           open={editProfileOpen}
@@ -99,9 +115,10 @@ const Profile = () => {
           <DialogContent>
             <AddressBook />
           </DialogContent>
-        </Dialog>
-      </Stack>
-    </>
+        </Dialog> */}
+        </Stack>
+      </Container>
+    </Container>
   );
 };
 

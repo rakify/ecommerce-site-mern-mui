@@ -13,6 +13,7 @@ import {
   Avatar,
   Button,
   Card,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -189,7 +190,7 @@ export default function EditProfile() {
   };
 
   return (
-    <>
+    <Container>
       <Box
         component="form"
         onSubmit={file ? handleSubmitWithFile : handleSubmit}
@@ -433,6 +434,6 @@ export default function EditProfile() {
           {response.message || "Updated Successfully"}
         </Alert>
       </Snackbar>
-    </>
+    </Container>
   );
 }

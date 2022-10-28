@@ -12,7 +12,7 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { addReview, getReviews } from "../../redux/apiCalls";
+import { addReview, getReviews } from "../redux/apiCalls";
 
 const Review = ({ productId }) => {
   const user = useSelector((state) => state.user.currentUser);
