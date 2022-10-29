@@ -13,11 +13,12 @@ import {
   CardContent,
   Avatar,
 } from "@mui/material";
-import { addReview, getReviews } from "../redux/apiCalls";
+import { addReview, getReviews, updateReview } from "../redux/apiCalls";
 
 const Review = ({ productId, from, img, title }) => {
   const user = useSelector((state) => state.user.currentUser);
   const [reviews, setReviews] = useState([]);
+  const [response, setResponse] = useState(""); // success or failure status
   const [inputs, setInputs] = useState({
     username: user?.username,
     productId: productId,
@@ -31,14 +32,23 @@ const Review = ({ productId, from, img, title }) => {
   };
 
   useEffect(() => {
-    getReviews(productId).then((res) => setReviews(res.data));
+    getReviews(productId).then((res) => {
+      setReviews(res.data);
+      let review = res.data.find((review) => review.username === user.username);
+      review && setInputs(review);
+    });
   }, [productId]);
-
   const reviewHandler = (e) => {
     e.preventDefault();
-    addReview(inputs).then((res) => {
-      getReviews(productId).then((res) => setReviews(res.data));
-    });
+    inputs._id
+      ? updateReview(inputs._id, inputs).then((res) => {
+          setResponse(res);
+          getReviews(productId).then((res) => setReviews(res.data));
+        })
+      : addReview(inputs).then((res) => {
+          setResponse(res);
+          getReviews(productId).then((res) => setReviews(res.data));
+        });
   };
   return (
     <>
@@ -97,6 +107,11 @@ const Review = ({ productId, from, img, title }) => {
               />
               <Typography variant="h6">{title}</Typography>
             </Stack>
+
+            {response !== "" && (
+              <Typography sx={{ color: "green" }}>{response}</Typography>
+            )}
+
             <Box component="form" onSubmit={reviewHandler}>
               <Stack
                 direction="column"
@@ -107,7 +122,7 @@ const Review = ({ productId, from, img, title }) => {
                   <Typography component="legend">Title:</Typography>
                   <TextField
                     name="title"
-                    value={inputs.title}
+                    value={inputs?.title}
                     onChange={handleChange}
                   />
                 </Stack>
@@ -115,7 +130,7 @@ const Review = ({ productId, from, img, title }) => {
                   <Typography component="legend">Rating:</Typography>
                   <Rating
                     name="rating"
-                    value={parseInt(inputs.rating)}
+                    value={parseInt(inputs?.rating)}
                     onChange={handleChange}
                   />
                 </Stack>
@@ -125,12 +140,17 @@ const Review = ({ productId, from, img, title }) => {
                     multiline
                     minRows={3}
                     name="message"
-                    value={inputs.message}
+                    value={inputs?.message}
                     onChange={handleChange}
                   />
                 </Stack>
-                <Button type="submit" variant="outlined" sx={{ width: 100 }}>
-                  Submit
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  sx={{ width: 100 }}
+                  disabled={response !== ""}
+                >
+                  {inputs._id ? "Update" : "Submit"}
                 </Button>
               </Stack>
             </Box>

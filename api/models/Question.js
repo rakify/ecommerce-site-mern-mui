@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ReviewSchema = new mongoose.Schema(
+const QuestionSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -10,27 +10,23 @@ const ReviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    title: {
+    question: {
       type: String,
       trim: true,
-      maxlength: 100,
-      default: "",
+      maxlength: 500,
+      required: true,
     },
-    rating: {
-      type: Number,
-      default: 5,
-    },
-    message: {
+    answer: {
       type: String,
       trim: true,
       default: "",
     },
     status: {
       type: Boolean,
-      default: false, // false = not approved
+      default: false, // false = not answered
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Review", ReviewSchema);
+module.exports = mongoose.model("Question", QuestionSchema);

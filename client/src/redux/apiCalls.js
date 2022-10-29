@@ -97,6 +97,14 @@ export const addReview = async (reviewData) => {
     return err.response.data.message;
   }
 };
+export const updateReview = async (reviewId, reviewData) => {
+  try {
+    const res = await axios.post(`/reviews/${reviewId}`, reviewData);
+    return res.data.message;
+  } catch (err) {
+    return err.response.data.message;
+  }
+};
 
 //Reviews
 export const getQuestions = async (productId) => {

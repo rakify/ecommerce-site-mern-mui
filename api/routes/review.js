@@ -19,6 +19,22 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
+// CREATE A Review
+router.post("/:reviewId", verifyToken, async (req, res) => {
+  try {
+    const updatedReview = await Review.findByIdAndUpdate(
+      req.params.reviewId,
+      req.body
+    );
+    res.status(201).json({
+      message: "Review updated successfully.",
+      data: updatedReview,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //DELETE A Review only admin can do that
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {

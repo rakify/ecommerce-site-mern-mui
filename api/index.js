@@ -12,6 +12,7 @@ const orderRoute = require("./routes/order");
 const notificationRoute = require("./routes/notification");
 const categoryRoute = require("./routes/category");
 const reviewRoute = require("./routes/review");
+const questionRoute = require("./routes/question");
 
 //connect to db
 mongoose
@@ -53,6 +54,7 @@ app.use("/api/orders", orderRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/reviews", reviewRoute);
+app.use("/api/questions", questionRoute);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
