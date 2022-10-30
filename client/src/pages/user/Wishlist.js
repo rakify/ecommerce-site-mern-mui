@@ -14,7 +14,6 @@ import {
   Button,
   Stack,
   Typography,
-  Link,
   Tabs,
   Tab,
   Paper,
@@ -26,6 +25,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -185,9 +185,8 @@ const Wishlist = () => {
               </Stack>
               <Stack direction="column" sx={{ gap: 1 }}>
                 <Link
-                  href={`/product/${product.productId}`}
-                  underline="none"
-                  color="inherit"
+                  to={`/product/${product.productId}`}
+                  sx={{ textDecoration: "none", color: "inherit" }}
                 >
                   <Button variant="outlined">
                     <Typography>View Details</Typography>

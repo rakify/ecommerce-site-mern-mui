@@ -9,7 +9,6 @@ import {
   CardMedia,
   CardActions,
   Stack,
-  Link,
   Container,
   TextField,
   Divider,
@@ -17,12 +16,8 @@ import {
   Slide,
 } from "@mui/material";
 
-import {
-  AddCircle,
-  GppGood,
-  RemoveCircle,
-  SecurityUpdateGood,
-} from "@mui/icons-material";
+import { Link } from "react-router-dom";
+
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -172,9 +167,8 @@ const ProductQuickView = ({ productId }) => {
               {product.cat.map((item) => (
                 <Link
                   key={item}
-                  href={`/products/${item.value}`}
-                  underline="hover"
-                  sx={{ mr: 2 }}
+                  to={`/products/${item.value}`}
+                  sx={{ mr: 2, textDecoration: "none" }}
                 >
                   {item.label}
                 </Link>
@@ -204,9 +198,8 @@ const ProductQuickView = ({ productId }) => {
                   (95% positive feedback)
                 </Typography>
                 <Link
-                  href={`/shop/${product.seller}`}
-                  underline="hover"
-                  sx={{ ml: 1 }}
+                  to={`/shop/${product.seller}`}
+                  sx={{ ml: 1, textDecoration: "none" }}
                 >
                   [Visit Store]
                 </Link>

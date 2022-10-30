@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -43,10 +43,7 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-      >
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -102,13 +99,13 @@ export default function Login() {
             <Grid container>
               <Grid item xs>
                 Forgot password?
-                <Link href="#" variant="body2" sx={{ ml: 1 }}>
+                <Link to="" variant="body2" sx={{ ml: 1 }}>
                   Reset Password
                 </Link>
               </Grid>
               <Grid item>
                 Don't have an account?{" "}
-                <Link href="/register" variant="body2" sx={{ ml: 1 }}>
+                <Link to="/register" sx={{ ml: 1, textDecoration: "none" }}>
                   Sign Up
                 </Link>
               </Grid>

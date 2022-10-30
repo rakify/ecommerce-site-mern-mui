@@ -1,4 +1,5 @@
-import { Container, Link, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -18,7 +19,7 @@ const ToBeSeller = () => {
           </p>
         )}
         <br /> In the meantime you might want to make some changes to your{" "}
-        <Link href="/profile" underline="hover">
+        <Link to="/profile" sx={{ textDecoration: "none" }}>
           profile
         </Link>
         .

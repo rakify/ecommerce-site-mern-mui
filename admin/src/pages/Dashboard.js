@@ -30,18 +30,16 @@ import { useEffect, useState } from "react";
 import Users from "../components/Users";
 import {
   Button,
-  Link,
   ListItemButton,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
 import UserList from "../components/UserList";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import OrderList from "../components/OrderList";
 import Notification from "../components/Notification";
 import CatList from "../components/CatList";
-import AddCat from "./AddCat";
 
 const drawerWidth = 200;
 

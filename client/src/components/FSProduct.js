@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { ButtonBase, Stack, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Img = styled("img")({});
 const FSProduct = ({ item }) => {
@@ -19,13 +20,14 @@ const FSProduct = ({ item }) => {
           "&:hover": { transform: "scale(1.2)" },
           margin: 2,
         }}
-        href={`/product/${item._id}`}
       >
-        <Img
-          alt="PRODUCT"
-          src={item.img}
-          style={{ width: "100%", height: "100%" }}
-        />
+        <Link to={`/product/${item._id}`}>
+          <Img
+            alt="PRODUCT"
+            src={item.img}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </Link>
       </ButtonBase>
       <Stack direction="column" justifyContent="center" sx={{ flex: 1 }}>
         <Typography variant="subtitle1" component="div">

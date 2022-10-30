@@ -2,9 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { Button, Stack } from "@mui/material";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function LinksAndNewsletter() {
   const user = useSelector((state) => state.user.currentUser) || "";
@@ -23,25 +23,49 @@ function LinksAndNewsletter() {
       <Stack flex={1}>
         <Stack>
           <Typography variant="h5">About Us</Typography>
-          <Link variant="body2" href="/#about1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about1"
+            style={{ textDecoration: "none" }}
+          >
             Read our blog
           </Link>
-          <Link variant="body2" href="/#about3" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about3"
+            style={{ textDecoration: "none" }}
+          >
             FAQ
           </Link>
-          <Link variant="body2" href="/#about4" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about4"
+            style={{ textDecoration: "none" }}
+          >
             Join us!
           </Link>
         </Stack>
         <Stack>
           <Typography variant="h5">Earn With Bettermart</Typography>
-          <Link variant="body2" href="/#about1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about1"
+            style={{ textDecoration: "none" }}
+          >
             Sell on Daraz
           </Link>
-          <Link variant="body2" href="/#about1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about1"
+            style={{ textDecoration: "none" }}
+          >
             Code of Conduct
           </Link>
-          <Link variant="body2" href="/#about1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#about1"
+            style={{ textDecoration: "none" }}
+          >
             Join the Daraz Affiliate Program
           </Link>
         </Stack>
@@ -49,28 +73,56 @@ function LinksAndNewsletter() {
       <Stack flex={1}>
         <Stack>
           <Typography variant="h5">Customer Care</Typography>
-          <Link variant="body2" href="/#help1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help1"
+            style={{ textDecoration: "none" }}
+          >
             Return policy
           </Link>
-          <Link variant="body2" href="/#help2" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help2"
+            style={{ textDecoration: "none" }}
+          >
             Privacy Policy
           </Link>
-          <Link variant="body2" href="/#help3" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help3"
+            style={{ textDecoration: "none" }}
+          >
             Terms and conditions
           </Link>
-          <Link variant="body2" href="/#help4" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help4"
+            style={{ textDecoration: "none" }}
+          >
             Submit complaint
           </Link>
         </Stack>
         <Stack>
           <Typography variant="h5">Follow</Typography>
-          <Link variant="body2" href="/#help1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help1"
+            style={{ textDecoration: "none" }}
+          >
             Instagram
           </Link>
-          <Link variant="body2" href="/#help1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help1"
+            style={{ textDecoration: "none" }}
+          >
             Facebook
           </Link>
-          <Link variant="body2" href="/#help1" underline="hover">
+          <Link
+            variant="body2"
+            to="/#help1"
+            style={{ textDecoration: "none" }}
+          >
             Newsletter
           </Link>
         </Stack>
@@ -128,13 +180,7 @@ function Copyright() {
       sx={{ textAlign: "center" }}
     >
       {"Copyright © "}
-      <Link
-        variant="body2"
-        color="inherit"
-        href="/"
-        underline="hover"
-        sx={{ fontSize: "large" }}
-      >
+      <Link to="/" sx={{ fontSize: "large" }}>
         Bettermart
       </Link>{" "}
       {new Date().getFullYear()}

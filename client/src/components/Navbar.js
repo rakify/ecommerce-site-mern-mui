@@ -3,19 +3,15 @@ import { ChevronRight } from "@mui/icons-material";
 import {
   Avatar,
   Box,
-  Button,
-  ButtonBase,
   Divider,
-  Link,
-  Paper,
   Stack,
   Tooltip,
   tooltipClasses,
   Typography,
 } from "@mui/material";
-import SubCatList from "./SubCatList";
 import { getCats } from "../redux/apiCalls";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -42,7 +38,7 @@ const Navbar = () => {
 
   return (
     <Box>
-      <Typography sx={{ m: 2, pl: 5, fontSize: 15 }}>Menu</Typography>
+      <Typography sx={{ m: 2, pl: 5, fontSize: 15 }}>Categories</Typography>
       <Divider sx={{ mb: 2 }} />
       <Stack
         sx={{
@@ -51,83 +47,17 @@ const Navbar = () => {
           cursor: "grab",
         }}
       >
-        <Link
-          underline="hover"
-          href={"#"}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 1,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <Stack direction="row" gap={1}>
-            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
-            <Typography
-              sx={{
-                fontSize: 10,
-              }}
-            >
-              Offers
-            </Typography>
-          </Stack>
-        </Link>
-        <Link
-          underline="hover"
-          href={"#"}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 1,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <Stack direction="row" gap={1}>
-            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
-            <Typography
-              sx={{
-                fontSize: 10,
-              }}
-            >
-              Flash Sales
-            </Typography>
-          </Stack>
-        </Link>
-        <Link
-          underline="hover"
-          href={"#"}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 1,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <Stack direction="row" gap={1}>
-            <Avatar src={""} sx={{ width: 25, height: 25 }} alt="img" />
-            <Typography
-              sx={{
-                fontSize: 10,
-              }}
-            >
-              Popular
-            </Typography>
-          </Stack>
-        </Link>
         {catList.map((cat) => (
           <Link
             key={cat._id}
-            underline="hover"
-            href={"/products/" + cat.value}
+            to={"/products/" + cat.value}
             sx={{
               display: "flex",
               justifyContent: "space-between",
               gap: 1,
               flexWrap: "wrap",
               alignItems: "center",
+              textDecoration: "none",
             }}
           >
             <Stack direction="row" gap={1}>
@@ -140,7 +70,6 @@ const Navbar = () => {
                 {cat.label}
               </Typography>
             </Stack>
-            <ChevronRight color="disabled" />
           </Link>
         ))}
       </Stack>

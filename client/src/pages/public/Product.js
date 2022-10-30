@@ -3,19 +3,16 @@ import {
   Button,
   Typography,
   Card,
-  CardContent,
-  CardHeader,
-  Avatar,
   CardMedia,
-  CardActions,
   Stack,
-  Link,
   Container,
   TextField,
   Divider,
   Snackbar,
   Slide,
 } from "@mui/material";
+
+import { Link } from "react-router-dom";
 
 import {
   AddCircle,
@@ -178,9 +175,8 @@ const Product = () => {
               {product.cat.map((item) => (
                 <Link
                   key={item}
-                  href={`/products/${item.value}`}
-                  underline="hover"
-                  sx={{ mr: 2 }}
+                  to={`/products/${item.value}`}
+                  sx={{ mr: 2, textDecoration: "none" }}
                 >
                   {item.label}
                 </Link>
@@ -214,9 +210,8 @@ const Product = () => {
                   (95% positive feedback)
                 </Typography>
                 <Link
-                  href={`/shop/${product.seller}`}
-                  underline="hover"
-                  sx={{ ml: 1 }}
+                  to={`/shop/${product.seller}`}
+                  sx={{ ml: 1, textDecoration: "none" }}
                 >
                   [Visit Store]
                 </Link>

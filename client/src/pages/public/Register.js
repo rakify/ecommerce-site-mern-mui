@@ -13,7 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -182,13 +182,13 @@ export default function Register() {
             <Grid container justifyContent="space-between">
               <Grid item>
                 Own Business?
-                <Link href="/sell-online" variant="body2" sx={{ ml: 1 }}>
+                <Link to="/sell-online" sx={{ ml: 1, textDecoration: "none" }}>
                   Register as Seller Instead
                 </Link>
               </Grid>
               <Grid item>
                 Already have an account?{" "}
-                <Link href="/login" variant="body2" sx={{ ml: 1 }}>
+                <Link to="/login" sx={{ ml: 1, textDecoration: "none" }}>
                   Sign in
                 </Link>
               </Grid>

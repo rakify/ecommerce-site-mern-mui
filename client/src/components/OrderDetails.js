@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Link,
   Paper,
   Stack,
   Step,
@@ -21,6 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateOrder } from "../redux/apiCalls";
 import Review from "./Review";
@@ -150,7 +150,7 @@ const OrderDetails = ({ orderDetails }) => {
                   <Stack
                     direction="row"
                     sx={{
-                      bgcolor: "#155",
+                      bgcolor: "gray",
                       color: "white",
                       alignItems: "center",
                       justifyContent: "flex-start",
@@ -168,9 +168,8 @@ const OrderDetails = ({ orderDetails }) => {
                       <Typography variant="caption">
                         Sold by:{" "}
                         <Link
-                          href={`/shop/${seller}`}
-                          underline="hover"
-                          color="white"
+                          to={`/shop/${seller}`}
+                          sx={{ textDecoration: "none", color: "white", }}
                         >
                           {seller}
                         </Link>
@@ -209,9 +208,8 @@ const OrderDetails = ({ orderDetails }) => {
                           />
                           <Stack direction="column">
                             <Link
-                              href={`/product/${productId}`}
-                              underline="hover"
-                              color="black"
+                              to={`/product/${productId}`}
+                              sx={{ textDecoration: "none", color: "black" }}
                             >
                               <Typography
                                 sx={{
@@ -241,16 +239,14 @@ const OrderDetails = ({ orderDetails }) => {
                         </Typography>
                         <Stack direction="column" sx={{ w: "20%" }}>
                           {order.orderStatus === "delivered" ? (
-                            <Link
-                              underline="hover"
-                              variant="caption"
-                              component="button"
+                            <Button
+                              variant="text"
                               onClick={() =>
                                 setReviewProduct({ productId, title, img })
                               }
                             >
-                              Add Review
-                            </Link>
+                              Give Review
+                            </Button>
                           ) : (
                             order.orderStatus.toUpperCase()
                           )}

@@ -29,21 +29,9 @@ const ViewProfile = () => {
 
   return (
     <>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        sx={{
-          ml: { xs: 0, md: 3 },
-          ml: { xs: 0, md: 3 },
-          mr: { xs: 0, md: 3 },
-          mt: 10,
-          flex: 5,
-          gap: { xs: 0, md: 10 },
-          flexDirection: { xs: "column", md: "row" },
-        }}
-      >
+      <Stack direction="column" justifyContent="center" gap={2}>
         <Stack flex={2}>
-          <Typography sx={{ mb: 2 }} variant="h6">
+          <Typography variant="body2">
             Contact Information
           </Typography>
           <List>
@@ -79,7 +67,7 @@ const ViewProfile = () => {
         </Stack>
 
         <Stack flex={2}>
-          <Typography sx={{ mb: 2 }} variant="h6">
+          <Typography sx={{ mb: 2 }} variant="body2">
             More Information
           </Typography>
           <List>
@@ -134,7 +122,7 @@ const ViewProfile = () => {
         </Stack>
         <Divider orientation="vertical" flexItem />
         <Stack flex={1}>
-          <Typography sx={{ mb: 2 }} variant="h6">
+          <Typography sx={{ mb: 2 }} variant="body2">
             Account Information
           </Typography>
           <List>

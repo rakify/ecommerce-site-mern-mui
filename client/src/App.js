@@ -70,14 +70,13 @@ const App = () => {
           <Route
             path="/shop/:shopName"
             element={user.accountType !== 1 && <Dashboard />}
+            z
           />
           <Route path="/products/:categoryName" element={<Dashboard />} />
           <Route path="/product/:productId" element={<Dashboard />} />
           <Route path="/:screen" element={<Dashboard />} />
         </Routes>
       </Router>
-
-      
     </>
   );
 };

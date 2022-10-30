@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 import { addToCart, addToWishlist } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import { forwardRef, useState } from "react";
-import { Link } from "@mui/material";
+import { Link } from "react-router-dom";
 import Product, { default as ProductPage } from "../pages/public/Product";
 import ProductQuickView from "./ProductQuickView";
 
@@ -170,15 +170,15 @@ const ProductComponent = ({ item }) => {
               </Tooltip>
             </IconButton>
             <IconButton
-              component="a"
-              href={`/product/${item._id}`}
               color="primary"
               size="small"
               sx={{ "&:hover": { bgcolor: "#CBF1F5", br: "50%" } }}
             >
-              <Tooltip title="View Details" placement="top" arrow>
-                <InfoOutlined fontSize="inherit" />
-              </Tooltip>
+              <Link to={`/product/${item._id}`} sx={{ textDecoration: "none" }}>
+                <Tooltip title="View Details" placement="top" arrow>
+                  <InfoOutlined fontSize="inherit" />
+                </Tooltip>
+              </Link>
             </IconButton>
           </Stack>
         </Stack>

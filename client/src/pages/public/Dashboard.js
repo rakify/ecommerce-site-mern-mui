@@ -25,7 +25,6 @@ import {
   Fab,
   InputAdornment,
   InputBase,
-  Link,
   Menu,
   MenuItem,
   Paper,
@@ -33,6 +32,7 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import {
   Cancel,
   Logout,
@@ -160,10 +160,10 @@ export default function Dashboard() {
                 <MenuIcon />
               </IconButton>
               <Link
-                href="/"
-                underline="none"
-                color="inherit"
-                sx={{
+                to="/"
+                style={{
+                  textDecoration: "none",
+                  color: "white",
                   gap: 1,
                 }}
               >
@@ -310,29 +310,46 @@ export default function Dashboard() {
         sx={{ pointer: "grab" }}
       >
         <MenuItem>
-          <Link href="/profile/" underline="none" color="inherit">
+          <Link
+            to="/profile"
+            href="/profile/"
+            style={{
+              textDecoration: "none",
+            }}
+          >
             Your Profile
           </Link>
         </MenuItem>
         <MenuItem>
-          <Link href="/orders/" underline="none" color="inherit">
+          <Link
+            to="/orders"
+            href="/orders/"
+            style={{
+              textDecoration: "none",
+            }}
+          >
             Your Orders
           </Link>
         </MenuItem>
-        <Divider />
         <MenuItem>
-          <Link href="/wishlist/" underline="none" color="inherit">
+          <Link
+            to="/wishlist"
+            style={{
+              textDecoration: "none",
+            }}
+          >
             Your Wishlist
           </Link>
         </MenuItem>
         <Divider />
-        <IconButton
+        <Button
+          variant="text"
           sx={{ display: "flex", color: "red" }}
           onClick={() => logout()}
         >
           <Logout />
           Logout
-        </IconButton>
+        </Button>
       </Menu>
 
       {/* Pc or tab users cart */}
