@@ -1,5 +1,5 @@
 # !!!Attention 
-This is no longer getting any update. I am pushing update for this project in other repository.
+This is no longer getting any update. I am pushing update for this project in other repository.<br>
 frontend: https://github.com/rakify/ecommerce-frontend <br>
 admin panel: https://github.com/rakify/ecommerce-admin <br>
 api: https://github.com/rakify/ecommerce-api <br>
