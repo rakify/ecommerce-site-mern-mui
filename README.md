@@ -1,4 +1,12 @@
+# !!!Attention 
+This is no longer getting any update. I am pushing update for this project in other repository.
+frontend: https://github.com/rakify/ecommerce-frontend
+admin panel: https://github.com/rakify/ecommerce-admin
+api: https://github.com/rakify/ecommerce-api
+
 # ecommerce-site-mern-mui
+
+
 
 This is a multi vendor **MERN** full stack ecommerce web app project.
 It contains total 3 folders. one for api, one frontend for sellers/customers and another frontend for admin panel.
