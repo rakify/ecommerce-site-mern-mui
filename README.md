@@ -85,6 +85,27 @@ Approve or remove products.
 
 
 ## Screenshots
+
+## Customer
+#### Customer Homepage Products
+![Customer Homepage](https://i.ibb.co/XSmT1hj/image-2023-01-24-182007220.png)
+#### Customer Cart
+![Customer Cart](https://i.ibb.co/wg9krZY/image-2023-01-24-182152388.png)
+#### Customer Checkout
+![Customer Checkout](https://i.ibb.co/SRkfZfm/image-2023-01-24-182252944.png)
+#### Customer Profile
+![Customer Profile](https://i.ibb.co/jHzYTPj/image-2023-01-24-182339185.png)
+
+## Seller
+#### Seller Homepage
+![Seller Homepage](https://i.ibb.co/d4m7CKh/image-2023-01-24-181420297.png)
+#### Seller Products
+![Seller Products](https://i.ibb.co/3BYz2Hc/image-2023-01-24-181524393.png)
+#### Seller Orders
+![Seller Orders](https://i.ibb.co/3dGLKLB/image-2023-01-24-181653404.png)
+#### Seller Questions
+![Seller Questions](https://i.ibb.co/bHxJt6f/image-2023-01-24-181757245.png)
+
 ## Admin Panel
 #### Admin Panel Homepage
 ![Admin Panel Homepage](https://i.ibb.co/3kFsgWR/image-2023-01-24-180442190.png)
@@ -98,25 +119,8 @@ Approve or remove products.
 ![Admin Panel Categories Page](https://i.ibb.co/Lggx77f/image-2023-01-24-181037286.png)
 #### Admin Panel Reviews Page
 ![Admin Panel Reviews Page](https://i.ibb.co/ZcGBBpG/image-2023-01-24-181133235.png)
-## Seller
-#### Seller Homepage
-![Seller Homepage](https://i.ibb.co/d4m7CKh/image-2023-01-24-181420297.png)
-#### Seller Products
-![Seller Products](https://i.ibb.co/3BYz2Hc/image-2023-01-24-181524393.png)
-#### Seller Orders
-![Seller Orders](https://i.ibb.co/3dGLKLB/image-2023-01-24-181653404.png)
-#### Seller Questions
-![Seller Questions](https://i.ibb.co/bHxJt6f/image-2023-01-24-181757245.png)
 
-## Customer
-#### Customer Homepage Products
-![Customer Homepage](https://i.ibb.co/XSmT1hj/image-2023-01-24-182007220.png)
-#### Customer Cart
-![Customer Cart](https://i.ibb.co/wg9krZY/image-2023-01-24-182152388.png)
-#### Customer Checkout
-![Customer Checkout](https://i.ibb.co/SRkfZfm/image-2023-01-24-182252944.png)
-#### Customer Profile
-![Customer Profile](https://i.ibb.co/jHzYTPj/image-2023-01-24-182339185.png)
+
 
 ## Demo
 
